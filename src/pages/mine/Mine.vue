@@ -1,0 +1,96 @@
+<template>
+  <div class="form-container">
+    <a-form-model ref="form" :model="form" :rules="rules" v-bind="layout">
+      <a-form-model-item has-feedback label="密码" prop="pass">
+        <a-input-password v-model="form.pass" placeholder="请输入密码" autocomplete="off"/>
+      </a-form-model-item>
+      <a-form-model-item has-feedback label="确认密码" prop="checkPass">
+        <a-input-password v-model="form.checkPass" placeholder="请再次输入密码" autocomplete="off"/>
+      </a-form-model-item>
+      <a-form-model-item :wrapper-col="buttonItemLayout.wrapperCol">
+        <a-button type="primary" @click="changePassword">
+          更新
+        </a-button>
+      </a-form-model-item>
+    </a-form-model>
+  </div>
+</template>
+
+<script>
+import {changePassword} from '@/services'
+
+export default {
+  name: "Mine",
+  data() {
+    let validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please input the password'));
+      } else {
+        if (this.form.checkPass !== '') {
+          this.$refs.form.validateField('checkPass');
+        }
+        callback();
+      }
+    };
+    let validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('Please input the password again'));
+      } else if (value !== this.form.pass) {
+        callback(new Error("Two inputs don't match!"));
+      } else {
+        callback();
+      }
+    };
+    return {
+      form: {
+        layout: 'horizontal',
+        pass: '',
+        checkPass: '',
+      },
+      rules: {
+        pass: [{ validator: validatePass, trigger: 'change' }],
+        checkPass: [{ validator: validatePass2, trigger: 'change' }],
+      },
+      layout: {
+        labelCol: { span: 4 },
+        wrapperCol: { span: 14 },
+      },
+      buttonItemLayout: {
+        wrapperCol: { span: 14, offset: 4 },
+      }
+    }
+  },
+  methods: {
+    changePassword() {
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          changePassword(this.form.pass).then(
+              res => this.afterChange(res)
+          )
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    afterChange(res) {
+      console.log(res)
+      if (res.data.code === 0) {
+        this.resetForm()
+        this.$message.success(res.data.msg, 3)
+      } else {
+        this.$message.error(res.data.msg, 3)
+      }
+    },
+    resetForm() {
+      this.$refs['form'].resetFields();
+    },
+  },
+}
+</script>
+
+<style lang="less" scoped>
+  .form-container {
+    max-width: 500px;
+  }
+</style>

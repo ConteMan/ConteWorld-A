@@ -1,5 +1,6 @@
-import {LOGIN, ROUTES} from '@/services/api'
+import {BASE_URL, LOGIN, ROUTES} from '@/services/api'
 import {request, METHOD, removeAuthorization} from '@/utils/request'
+import store from '@/store'
 
 /**
  * 登录服务
@@ -28,4 +29,15 @@ function logout() {
   removeAuthorization()
 }
 
-export {login, logout, getRoutesConfig}
+/*
+ * 修改密码
+ */
+async function changePassword(password) {
+  const user = store.getters["account/user"]
+  const id = user.id
+  return request(BASE_URL + '/users/' + id + '/password', METHOD.POST, {
+    password: password
+  })
+}
+
+export {login, logout, getRoutesConfig, changePassword}

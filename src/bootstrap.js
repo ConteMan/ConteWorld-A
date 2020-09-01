@@ -1,4 +1,5 @@
 import {loadRoutes, loginGuard, authorityGuard} from '@/utils/routerUtil'
+import {routerObj} from "@/utils/request"
 
 /**
  * 启动引导方法
@@ -13,6 +14,7 @@ function bootstrap({router, store, i18n}) {
   // 添加路由守卫
   loginGuard(router)
   authorityGuard(router, store)
+  routerObj(router)
 }
 
 export default bootstrap

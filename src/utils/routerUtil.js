@@ -106,7 +106,11 @@ function loginGuard(router) {
     if (!loginIgnore.includes(to) && !checkAuthorization()) {
       next({path: '/login'})
     } else {
-      next()
+      if (to.path === '/login' && checkAuthorization()) {
+        next({path: '/demo'})
+      } else {
+        next()
+      }
     }
   })
 }

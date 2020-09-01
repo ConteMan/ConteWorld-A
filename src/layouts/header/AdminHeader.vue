@@ -11,13 +11,6 @@
         <i-menu class="head-menu" style="height: 64px; line-height: 64px;box-shadow: none" :theme="headerTheme" mode="horizontal" :options="menuData" @select="onSelect"/>
       </div>
       <div :class="['admin-header-right', headerTheme]">
-          <header-search class="header-item" />
-          <a-tooltip class="header-item" title="帮助文档" placement="bottom" >
-            <a href="https://iczer.github.io/vue-antd-admin/" target="_blank">
-              <a-icon type="question-circle-o" />
-            </a>
-          </a-tooltip>
-          <header-notice class="header-item"/>
           <header-avatar class="header-item"/>
           <a-dropdown class="lang header-item">
             <div>
@@ -33,15 +26,13 @@
 </template>
 
 <script>
-import HeaderSearch from './HeaderSearch'
-import HeaderNotice from './HeaderNotice'
 import HeaderAvatar from './HeaderAvatar'
 import IMenu from '@/components/menu/menu'
 import {mapState, mapMutations} from 'vuex'
 
 export default {
   name: 'AdminHeader',
-  components: {IMenu, HeaderAvatar, HeaderNotice, HeaderSearch},
+  components: {IMenu, HeaderAvatar},
   props: ['collapsed', 'menuData'],
   data() {
     return {

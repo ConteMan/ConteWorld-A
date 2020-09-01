@@ -1,5 +1,4 @@
 import TabsView from '@/layouts/tabs/TabsView'
-import BlankView from '@/layouts/BlankView'
 import PageView from '@/layouts/PageView'
 
 // 路由配置
@@ -35,72 +34,35 @@ const options = {
           component: () => import('@/pages/demo')
         },
         {
-          path: 'parent1',
-          name: '父级路由1',
-          meta: {
-            icon: 'dashboard',
-          },
-          component: BlankView,
-          children: [
-            {
-              path: 'demo1',
-              name: '演示页面1',
-              component: () => import('@/pages/demo'),
-            }
-          ]
-        },
-        {
-          path: 'parent2',
-          name: '父级路由2',
+          path: 'mine',
+          name: '个人信息',
           meta: {
             icon: 'form'
           },
           component: PageView,
           children: [
             {
-              path: 'demo2',
-              name: '演示页面2',
-              component: () => import('@/pages/demo'),
+              path: 'info',
+              name: '修改密码',
+              component: () => import('@/pages/mine'),
             }
           ]
         },
         {
-          path: 'exception',
-          name: '异常页',
+          path: 'one',
+          name: '一个',
           meta: {
-            icon: 'warning',
+            icon: 'form'
           },
-          component: BlankView,
+          component: PageView,
           children: [
             {
-              path: '404',
-              name: 'Exp404',
-              component: () => import('@/pages/exception/404')
-            },
-            {
-              path: '403',
-              name: 'Exp403',
-              component: () => import('@/pages/exception/403')
-            },
-            {
-              path: '500',
-              name: 'Exp500',
-              component: () => import('@/pages/exception/500')
+              path: 'index',
+              name: '列表',
+              component: () => import('@/pages/one'),
             }
           ]
         },
-        {
-          name: '验权页面',
-          path: 'auth/demo',
-          meta: {
-            icon: 'file-ppt',
-            authority: {
-              permission: 'form',
-              role: 'manager'
-            },
-            component: () => import('@/pages/demo')
-          }
-        }
       ]
     }
   ]
