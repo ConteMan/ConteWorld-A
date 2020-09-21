@@ -6,12 +6,14 @@
     <a-row :gutter="[16,16]">
       <a-col :xs="24" :sm="24" :md="24" :lg="16" :xl="16">
         <a-card title="系统构建" :loading="depLoading">
-          <json-list :data="dependencies" :depth="0"/>
+          <a-button class="color-grey" slot="extra" type="link" :icon="depShow ? 'minus' : 'plus'" @click="() => {this.depShow = !this.depShow}"></a-button>
+          <json-list v-if="depShow" :data="dependencies" :depth="0"/>
         </a-card>
       </a-col>
       <a-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8">
         <a-card title="主机信息" :loading="osLoading">
-          <json-list :data="os" :depth="0"/>
+          <a-button class="color-grey" slot="extra" type="link" :icon="osShow ? 'minus' : 'plus'" @click="() => {this.osShow = !this.osShow}"></a-button>
+          <json-list v-if="osShow" :data="os" :depth="0"/>
         </a-card>
       </a-col>
     </a-row>
@@ -36,6 +38,8 @@ export default {
       dependencies: {},
       osLoading: true,
       depLoading: true,
+      osShow: false,
+      depShow: false,
     }
   },
   methods: {
@@ -59,6 +63,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+  .color-grey {
+    color: grey;
+  }
 </style>
