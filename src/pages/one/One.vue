@@ -81,7 +81,11 @@ export default {
       this.syncLoading = true;
       const res = await One.sync();
       this.syncLoading = false;
-      this.$message.success('同步成功 '+ res.data.data.add_num + ' 条！');
+      if(res.data.code === 0){
+        this.$message.success('同步成功 '+ res.data.data.add_num + ' 条！');
+      } else {
+        this.$message.error(res.data.msg);
+      }
       this.initIndex();
     },
   },

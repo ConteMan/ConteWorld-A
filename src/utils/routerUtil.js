@@ -1,8 +1,8 @@
-import routerMap from '@/router/router.map'
-import {mergeI18nFromRoutes} from '@/utils/i18n'
-import Router from 'vue-router'
+import routerMap from '@/router/async/router.map'
 import {loginIgnore} from '@/router'
 import {checkAuthorization} from '@/utils/request'
+import {mergeI18nFromRoutes} from '@/utils/i18n'
+import Router from 'vue-router'
 
 /**
  * 根据 路由配置 和 路由组件注册 解析路由
@@ -178,6 +178,10 @@ function formatAuthority(routes) {
         authority.permission = meta.authority
       } else if (typeof meta.authority === 'object') {
         authority = meta.authority
+        const {role} = authority
+        if (typeof role === 'string') {
+          authority.role = [role]
+        }
       } else {
         console.log(typeof meta.authority)
       }
@@ -204,4 +208,24 @@ function getI18nKey(path) {
   return keys.join('.')
 }
 
-export {parseRoutes, loadRoutes, loginGuard, authorityGuard, formatAuthority, getI18nKey}
+/**
+ * 加载导航守卫
+ * @param guards
+ * @param options
+ */
+function loadGuards(guards, options) {
+  const {beforeEach, afterEach} = guards
+  const {router} = options
+  beforeEach.forEach(guard => {
+    if (guard && typeof guard === 'function') {
+      router.beforeEach((to, from, next) => guard(to, from, next, options))
+    }
+  })
+  afterEach.forEach(guard => {
+    if (guard && typeof guard === 'function') {
+      router.afterEach((to, from) => guard(to, from, options))
+    }
+  })
+}
+
+export {parseRoutes, loadRoutes, formatAuthority, getI18nKey, loadGuards, authorityGuard, loginGuard}

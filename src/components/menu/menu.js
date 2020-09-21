@@ -77,7 +77,7 @@ export default {
   },
   created () {
     this.updateMenu()
-    if (!this.options[0].fullPath) {
+    if (this.options.length > 0 && !this.options[0].fullPath) {
       this.formatOptions(this.options, '')
     }
     // 自定义国际化配置
@@ -89,6 +89,19 @@ export default {
     }
   },
   watch: {
+    options(val) {
+      if (val.length > 0 && !val[0].fullPath) {
+        this.formatOptions(this.options, '')
+      }
+    },
+    i18n(val) {
+      if(val && val.messages) {
+        const messages = this.i18n.messages
+        Object.keys(messages).forEach(key => {
+          this.$i18n.mergeLocaleMessage(key, messages[key])
+        })
+      }
+    },
     collapsed (val) {
       if (val) {
         this.cachedOpenKeys = this.sOpenKeys
@@ -106,7 +119,15 @@ export default {
     }
   },
   methods: {
-    renderIcon: function (h, icon) {
+    renderIcon: function (h, icon, key) {
+      if (this.$scopedSlots.icon && icon && icon !== 'none') {
+        const vnodes = this.$scopedSlots.icon({icon, key})
+        vnodes.forEach(vnode => {
+          vnode.data.class = vnode.data.class ? vnode.data.class : []
+          vnode.data.class.push('anticon')
+        })
+        return vnodes
+      }
       return !icon || icon == 'none' ? null : h(Icon, {props: {type:  icon}})
     },
     renderMenuItem: function (h, menu) {
@@ -115,7 +136,7 @@ export default {
         [
           h('router-link', {props: {to: menu.fullPath}},
             [
-              this.renderIcon(h, menu.meta ? menu.meta.icon : 'none'),
+              this.renderIcon(h, menu.meta ? menu.meta.icon : 'none', menu.fullPath),
               h('span', [this.$t(getI18nKey(menu.fullPath))])
             ]
           )
@@ -126,7 +147,7 @@ export default {
       let this_ = this
       let subItem = [h('span', {slot: 'title'},
         [
-          this.renderIcon(h, menu.meta ? menu.meta.icon : 'none'),
+          this.renderIcon(h, menu.meta ? menu.meta.icon : 'none', menu.fullPath),
           h('span', [this.$t(getI18nKey(menu.fullPath))])
         ]
       )]
@@ -174,18 +195,18 @@ export default {
     },
     updateMenu () {
       const menuRoutes = this.$route.matched.filter(item => item.path !== '')
-      const route = menuRoutes.pop()
-      this.selectedKeys = [this.getSelectedKey(route)]
+      this.selectedKeys = this.getSelectedKey(this.$route)
       let openKeys = menuRoutes.map(item => item.path)
       if (!fastEqual(openKeys, this.sOpenKeys)) {
         this.collapsed || this.mode === 'horizontal' ? this.cachedOpenKeys = openKeys : this.sOpenKeys = openKeys
       }
     },
     getSelectedKey (route) {
-      if (route.meta.invisible && route.parent) {
-        return this.getSelectedKey(route.parent)
+      const selectedKeys = route.matched.map(item => item.path)
+      if(typeof (route.meta.selectPath) != "undefined" ) {
+        selectedKeys.push(route.meta.selectPath)
       }
-      return route.path
+      return selectedKeys
     }
   },
   render (h) {
@@ -199,12 +220,12 @@ export default {
           openKeys: this.openKeys ? this.openKeys : this.sOpenKeys
         },
         on: {
-          select: (obj) => {
-            this.selectedKeys = obj.selectedKeys
-            this.$emit('select', obj)
-          },
           'update:openKeys': (val) => {
             this.sOpenKeys = val
+          },
+          click: (obj) => {
+            obj.selectedKeys = [obj.key]
+            this.$emit('select', obj)
           }
         }
       }, this.renderMenu(h, this.options)

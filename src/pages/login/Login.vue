@@ -44,7 +44,7 @@
 
 <script>
 import CommonLayout from '@/layouts/CommonLayout'
-import {login, getRoutesConfig} from '@/services'
+import {login, getRoutesConfig} from '@/services/user'
 import {setAuthorization} from '@/utils/request'
 import {loadRoutes} from '@/utils/routerUtil'
 import {mapMutations} from 'vuex'
@@ -73,7 +73,10 @@ export default {
           this.logging = true
           const name = this.form.getFieldValue('name')
           const password = this.form.getFieldValue('password')
-          login(name, password).then(this.afterLogin)
+          login(name, password).then(this.afterLogin).catch(e => {
+            this.logging = false
+            console.log(e.message)
+          })
         }
       })
     },
@@ -81,9 +84,7 @@ export default {
       this.logging = false
       const loginRes = res.data
       if (loginRes.code === 0) {
-        const user = loginRes.data.user
-        const permissions = loginRes.data.permissions
-        const roles = loginRes.data.roles
+        const {user, permissions, roles} = loginRes.data
         this.setUser(user)
         this.setPermissions(permissions)
         this.setRoles(roles)
@@ -92,7 +93,7 @@ export default {
         getRoutesConfig().then(result => {
           const routesConfig = result.data.data
           loadRoutes({router: this.$router, store: this.$store, i18n: this.$i18n}, routesConfig)
-          this.$router.push('/demo')
+          this.$router.push('/dashboard')
           this.$message.success(loginRes.msg, 3)
         })
       } else {

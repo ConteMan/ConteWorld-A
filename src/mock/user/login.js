@@ -7,8 +7,7 @@ const user = Mock.mock({
   address: '@CITY',
   position: '@POSITION'
 })
-
-Mock.mock('/login', 'post', ({body}) => {
+Mock.mock(`${process.env.VUE_APP_API_BASE_URL}/login`, 'post', ({body}) => {
   let result = {}
   const {name, password} = JSON.parse(body)
 
@@ -22,7 +21,7 @@ Mock.mock('/login', 'post', ({body}) => {
     result.data.user = user
     result.data.token = 'Authorization:' + Math.random()
     result.data.expireAt = new Date(new Date().getTime() + 30 * 60 * 1000)
-    result.data.permissions = [{id: 'queryForm', operation: ['add', 'edit', 'delete']}]
+    result.data.permissions = [{id: 'queryForm', operation: ['add', 'edit']}]
     result.data.roles = [{id: 'admin', operation: ['add', 'edit', 'delete']}]
   }
   return result

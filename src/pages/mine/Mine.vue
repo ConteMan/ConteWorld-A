@@ -1,5 +1,5 @@
 <template>
-  <div class="form-container">
+  <a-card class="form-container">
     <a-form-model ref="form" :model="form" :rules="rules" v-bind="layout">
       <a-form-model-item has-feedback label="密码" prop="pass">
         <a-input-password v-model="form.pass" placeholder="请输入密码" autocomplete="off"/>
@@ -13,7 +13,7 @@
         </a-button>
       </a-form-model-item>
     </a-form-model>
-  </div>
+  </a-card>
 </template>
 
 <script>
@@ -91,6 +91,6 @@ export default {
 
 <style lang="less" scoped>
   .form-container {
-    max-width: 500px;
+    width: 100%;
   }
 </style>

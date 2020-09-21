@@ -22,7 +22,8 @@ const AUTH_TYPE = {
 // http method
 const METHOD = {
   GET: 'get',
-  POST: 'post'
+  POST: 'post',
+  PUT: 'put',
 }
 
 let router = {}
@@ -55,8 +56,6 @@ const errorHandle = (status, other) => {
 instance.interceptors.response.use(
   // 请求成功
   res => {
-    console.log(router)
-    console.log('request success:', res)
     return res.status === 200 ? Promise.resolve(res) : Promise.reject(res)
   },
   // 请求失败
@@ -80,6 +79,7 @@ instance.interceptors.response.use(
       // 关于断网组件中的刷新重新获取数据，会在断网组件中说明
       // if (!window.navigator.onLine) {
       // } else {
+      Message.error('网络异常');
       return Promise.reject(error);
       // }
       // Message.error('网络异常');
@@ -100,6 +100,10 @@ async function request(url, method, params) {
       return instance.get(url, {params})
     case METHOD.POST:
       return instance.post(url, params)
+    case METHOD.PUT:
+      return instance.put(url, params)
+    case METHOD.DELETE:
+      return instance.delete(url, params)
     default:
       return instance.get(url, {params})
   }
@@ -165,6 +169,43 @@ function routerObj(routerObj) {
   router = routerObj
 }
 
+/**
+ * 加载 axios 拦截器
+ * @param interceptors
+ * @param options
+ */
+function loadInterceptors(interceptors, options) {
+  const {request, response} = interceptors
+  // 加载请求拦截器
+  request.forEach(item => {
+    let {onFulfilled, onRejected} = item
+    if (!onFulfilled || typeof onFulfilled !== 'function') {
+      onFulfilled = config => config
+    }
+    if (!onRejected || typeof onRejected !== 'function') {
+      onRejected = error => Promise.reject(error)
+    }
+    axios.interceptors.request.use(
+      config => onFulfilled(config, options),
+      error => onRejected(error, options)
+    )
+  })
+  // 加载响应拦截器
+  response.forEach(item => {
+    let {onFulfilled, onRejected} = item
+    if (!onFulfilled || typeof onFulfilled !== 'function') {
+      onFulfilled = response => response
+    }
+    if (!onRejected || typeof onRejected !== 'function') {
+      onRejected = error => Promise.reject(error)
+    }
+    axios.interceptors.response.use(
+      response => onFulfilled(response, options),
+      error => onRejected(error, options)
+    )
+  })
+}
+
 export {
   METHOD,
   AUTH_TYPE,
@@ -172,5 +213,6 @@ export {
   setAuthorization,
   removeAuthorization,
   checkAuthorization,
-  routerObj
+  routerObj,
+  loadInterceptors,
 }

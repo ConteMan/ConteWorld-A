@@ -2,16 +2,19 @@
  * 获取路由需要的权限
  * @param permissions
  * @param route
- * @returns {*}
+ * @returns {Permission}
  */
 const getRoutePermission = (permissions, route) => permissions.find(item => item.id === route.meta.authority.permission)
 /**
  * 获取路由需要的角色
  * @param roles
  * @param route
- * @returns {*}
+ * @returns {Array[Role]}
  */
-const getRouteRole = (roles, route) => roles.find(item => item.id === route.meta.authority.role)
+const getRouteRole = (roles, route) => {
+  const requiredRoles = route.meta.authority.role
+  return requiredRoles ? roles.filter(item => requiredRoles.findIndex(required => required === item.id) !== -1) : []
+}
 /**
  * 判断是否已为方法注入权限认证
  * @param method
@@ -31,12 +34,41 @@ const hasInjected = (method) => method.toString().indexOf('//--auth-inject') !==
 const auth = function(authConfig, permission, role, permissions, roles) {
   const {check, type} = authConfig
   if (check && typeof check === 'function') {
-    return check(permission, role, permissions, roles)
+    return check.apply(this, [permission, role, permissions, roles])
+  }
+  if (type === 'permission') {
+    return checkFromPermission(check, permission)
+  } else if (type === 'role') {
+    return checkFromRoles(check, role)
   } else {
-    if (type === 'permission') {
-      return permission && permission.operation && permission.operation.indexOf(check) !== -1
-    } else if (type === 'role') {
-      return role && role.operation && role.operation.indexOf(check) !== -1
+    return checkFromPermission(check, permission) || checkFromRoles(check, role)
+  }
+}
+
+/**
+ * 检查权限是否有操作权限
+ * @param check 需要检查的操作权限
+ * @param permission 权限
+ * @returns {boolean}
+ */
+const checkFromPermission = function(check, permission) {
+  return permission && permission.operation && permission.operation.indexOf(check) !== -1
+}
+
+/**
+ * 检查 roles 是否有操作权限
+ * @param check 需要检查的操作权限
+ * @param roles 角色数组
+ * @returns {boolean}
+ */
+const checkFromRoles = function(check, roles) {
+  if (!roles) {
+    return false
+  }
+  for (let role of roles) {
+    const {operation} = role
+    if (operation && operation.indexOf(check) !== -1) {
+      return true
     }
   }
   return false
@@ -96,7 +128,7 @@ const AuthorityPlugin = {
                 this.$options.methods[key] = function () {
                   //--auth-inject
                   if (this.$auth(check, type)) {
-                    return method(...arguments)
+                    return method.apply(this, arguments)
                   } else {
                     if (onFailure && typeof onFailure === 'function') {
                       this[`$${check}Failure`] = onFailure
@@ -125,10 +157,7 @@ const AuthorityPlugin = {
           const roles = this.$store.getters['account/roles']
           const permission = getRoutePermission(permissions, this.$route)
           const role = getRouteRole(roles, this.$route)
-          if (!type) {
-            type = permission ? 'permission' : 'role'
-          }
-          return auth({check, type}, permission, role, permissions, roles)
+          return auth.apply(this, [{check, type}, permission, role, permissions, roles])
         }
       }
     })

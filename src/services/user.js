@@ -8,21 +8,21 @@ import store from '@/store'
  * @param password 账户密码
  * @returns {Promise<AxiosResponse<T>>}
  */
-async function login(name, password) {
+export async function login(name, password) {
   return request(LOGIN, METHOD.POST, {
     name: name,
     password: password
   })
 }
 
-async function getRoutesConfig() {
+export async function getRoutesConfig() {
   return request(ROUTES, METHOD.GET)
 }
 
 /**
  * 退出登录
  */
-function logout() {
+export function logout() {
   localStorage.removeItem(process.env.VUE_APP_ROUTES_KEY)
   localStorage.removeItem(process.env.VUE_APP_PERMISSIONS_KEY)
   localStorage.removeItem(process.env.VUE_APP_ROLES_KEY)
@@ -32,7 +32,7 @@ function logout() {
 /*
  * 修改密码
  */
-async function changePassword(password) {
+export async function changePassword(password) {
   const user = store.getters["account/user"]
   const id = user.id
   return request(BASE_URL + '/users/' + id + '/password', METHOD.POST, {
@@ -40,4 +40,10 @@ async function changePassword(password) {
   })
 }
 
-export {login, logout, getRoutesConfig, changePassword}
+export default {
+  login,
+  logout,
+  getRoutesConfig,
+  changePassword
+}
+

@@ -3,6 +3,7 @@ import PageView from '@/layouts/PageView'
 
 // 路由配置
 const options = {
+  mode: 'history',
   routes: [
     {
       path: '/login',
@@ -26,33 +27,18 @@ const options = {
       redirect: '/login',
       children: [
         {
-          path: 'demo',
-          name: '演示页',
+          path: 'dashboard',
+          name: '主页',
           meta: {
-            icon: 'file-ppt'
+            icon: 'dashboard'
           },
-          component: () => import('@/pages/demo')
-        },
-        {
-          path: 'mine',
-          name: '个人信息',
-          meta: {
-            icon: 'form'
-          },
-          component: PageView,
-          children: [
-            {
-              path: 'info',
-              name: '修改密码',
-              component: () => import('@/pages/mine'),
-            }
-          ]
+          component: () => import('@/pages/dashboard')
         },
         {
           path: 'one',
           name: '一个',
           meta: {
-            icon: 'form'
+            icon: 'form',
           },
           component: PageView,
           children: [
@@ -60,6 +46,54 @@ const options = {
               path: 'index',
               name: '列表',
               component: () => import('@/pages/one'),
+            }
+          ]
+        },
+        {
+          path: 'article',
+          name: '文章',
+          meta: {
+            icon: 'book'
+          },
+          component: PageView,
+          children: [
+            {
+              path: 'index',
+              name: '文章列表',
+              component: () => import('@/pages/article'),
+            },
+            {
+              path: 'create',
+              name: '创建文章',
+              meta: {
+                invisible: true,
+                selectPath: '/article/index',
+              },
+              component: () => import('@/pages/article/ArticleCreate'),
+            },
+            {
+              path: 'update',
+              name: '更新文章',
+              meta: {
+                invisible: true,
+                selectPath: '/article/index',
+              },
+              component: () => import('@/pages/article/ArticleUpdate'),
+            },
+          ]
+        },
+        {
+          path: 'mine',
+          name: '个人中心',
+          meta: {
+            icon: 'user'
+          },
+          component: PageView,
+          children: [
+            {
+              path: 'info',
+              name: '修改密码',
+              component: () => import('@/pages/mine'),
             }
           ]
         },
