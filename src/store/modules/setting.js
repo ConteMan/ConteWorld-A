@@ -2,6 +2,9 @@ import config from '@/config'
 import {ADMIN} from '@/config/default'
 import {formatFullPath} from '@/utils/i18n'
 import {filterMenu} from '@/utils/authority-utils'
+import {getLocalSetting} from '@/utils/themeUtil'
+
+const localSetting = getLocalSetting(true)
 
 export default {
   namespaced: true,
@@ -13,6 +16,7 @@ export default {
     menuData: [],
     activatedFirst: undefined,
     ...config,
+    ...localSetting
   },
   getters: {
     menuData(state, getters, rootState) {
@@ -24,7 +28,7 @@ export default {
     },
     firstMenu(state) {
       const {menuData} = state
-      if (!menuData[0].fullPath) {
+      if (menuData.length > 0 && !menuData[0].fullPath) {
         formatFullPath(menuData)
       }
       return menuData.map(item => {
@@ -82,8 +86,14 @@ export default {
     setAsyncRoutes(state, asyncRoutes) {
       state.asyncRoutes = asyncRoutes
     },
+    setPageWidth(state, pageWidth) {
+      state.pageWidth = pageWidth
+    },
     setActivatedFirst(state, activatedFirst) {
       state.activatedFirst = activatedFirst
+    },
+    setFixedTabs(state, fixedTabs) {
+      state.fixedTabs = fixedTabs
     }
   }
 }

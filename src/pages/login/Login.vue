@@ -92,7 +92,7 @@ export default {
         // 获取路由配置
         getRoutesConfig().then(result => {
           const routesConfig = result.data.data
-          loadRoutes({router: this.$router, store: this.$store, i18n: this.$i18n}, routesConfig)
+          loadRoutes(routesConfig)
           this.$router.push('/dashboard')
           this.$message.success(loginRes.msg, 3)
         })

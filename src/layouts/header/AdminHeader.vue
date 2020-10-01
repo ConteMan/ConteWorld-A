@@ -1,6 +1,6 @@
 <template>
   <a-layout-header :class="[headerTheme, 'admin-header']">
-    <div :class="['admin-header-wide', layout]">
+    <div :class="['admin-header-wide', layout, pageWidth]">
       <router-link v-if="isMobile || layout === 'head'" to="/" :class="['logo', isMobile ? null : 'pc', headerTheme]">
         <img width="32" src="@/assets/img/logo.png" />
         <h1 v-if="!isMobile">{{systemName}}</h1>
@@ -45,7 +45,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('setting', ['theme', 'isMobile', 'layout', 'systemName', 'lang']),
+    ...mapState('setting', ['theme', 'isMobile', 'layout', 'systemName', 'lang', 'pageWidth']),
     headerTheme () {
       if (this.layout == 'side' && this.theme.mode == 'dark' && !this.isMobile) {
         return 'light'
@@ -58,8 +58,8 @@ export default {
     },
     menuWidth() {
       const {layout, searchActive} = this
-      const headWidth = layout === 'head' ? '1236px' : '100%'
-      const extraWidth = searchActive ? '564px' : '364px'
+      const headWidth = layout === 'head' ? '100% - 188px' : '100%'
+      const extraWidth = searchActive ? '600px' : '400px'
       return `calc(${headWidth} - ${extraWidth})`
     }
   },

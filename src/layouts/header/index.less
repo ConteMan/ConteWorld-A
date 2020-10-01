@@ -1,6 +1,6 @@
 .admin-header{
   padding: 0;
-  z-index: 1099;
+  z-index: 2;
   box-shadow: @shadow-down;
   position: relative;
   background: @base-bg-color;
@@ -20,9 +20,11 @@
     }
   }
   .admin-header-wide{
-    &.head{
+    padding-left: 24px;
+    &.head.fixed{
       max-width: 1400px;
       margin: auto;
+      padding-left: 0;
     }
     &.side{
       padding-right: 12px;

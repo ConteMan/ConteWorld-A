@@ -3,6 +3,26 @@ import {loginIgnore} from '@/router'
 import {checkAuthorization} from '@/utils/request'
 import {mergeI18nFromRoutes} from '@/utils/i18n'
 import Router from 'vue-router'
+import deepMerge from 'deepmerge'
+import basicOptions from '@/router/async/config.async'
+
+//应用配置
+let appOptions = {
+  router: undefined,
+  i18n: undefined,
+  store: undefined
+}
+
+/**
+ * 设置应用配置
+ * @param options
+ */
+function setAppOptions(options) {
+  const {router, store, i18n} = options
+  appOptions.router = router
+  appOptions.store = store
+  appOptions.i18n = i18n
+}
 
 /**
  * 根据 路由配置 和 路由组件注册 解析路由
@@ -50,12 +70,24 @@ function parseRoutes(routesConfig, routerMap) {
 
 /**
  * 加载路由
- * @param router 应用路由实例
- * @param store 应用的 vuex.store 实例
- * @param i18n 应用的 vue-i18n 实例
- * @param routesConfig 路由配置
+ * @param routesConfig {RouteConfig[]} 路由配置
  */
-function loadRoutes({router, store, i18n}, routesConfig) {
+function loadRoutes(routesConfig) {
+  //兼容 0.6.1 以下版本
+  /*************** 兼容 version < v0.6.1 *****************/
+  if (arguments.length > 0) {
+    const arg0 = arguments[0]
+    if (arg0.router || arg0.i18n || arg0.store) {
+      routesConfig = arguments[1]
+      console.error('the usage of signature loadRoutes({router, store, i18n}, routesConfig) is out of date, please use the new signature: loadRoutes(routesConfig).')
+      console.error('方法签名 loadRoutes({router, store, i18n}, routesConfig) 的用法已过时, 请使用新的方法签名 loadRoutes(routesConfig)。')
+    }
+  }
+  /*************** 兼容 version < v0.6.1 *****************/
+
+  // 应用配置
+  const {router, store, i18n} = appOptions
+
   // 如果 routesConfig 有值，则更新到本地，否则从本地获取
   if (routesConfig) {
     store.commit('account/setRoutesConfig', routesConfig)
@@ -67,8 +99,8 @@ function loadRoutes({router, store, i18n}, routesConfig) {
   if (asyncRoutes) {
     if (routesConfig && routesConfig.length > 0) {
       const routes = parseRoutes(routesConfig, routerMap)
-      formatAuthority(routes)
-      const finalRoutes = mergeRoutes(router.options.routes, routes)
+      const finalRoutes = mergeRoutes(basicOptions.routes, routes)
+      formatRoutes(finalRoutes)
       router.options = {...router.options, routes: finalRoutes}
       router.matcher = new Router({...router.options, routes:[]}).matcher
       router.addRoutes(finalRoutes)
@@ -95,6 +127,58 @@ function mergeRoutes(target, source) {
   target.forEach(item => routesMap[item.path] = item)
   source.forEach(item => routesMap[item.path] = item)
   return Object.values(routesMap)
+}
+
+/**
+ * 深度合并路由
+ * @param target {Route[]}
+ * @param source {Route[]}
+ * @returns {Route[]}
+ */
+function deepMergeRoutes(target, source) {
+  // 映射路由数组
+  const mapRoutes = routes => {
+    const routesMap = {}
+    routes.forEach(item => {
+      routesMap[item.path] = {
+        ...item,
+        children: item.children ? mapRoutes(item.children) : undefined
+      }
+    })
+    return routesMap
+  }
+  const tarMap = mapRoutes(target)
+  const srcMap = mapRoutes(source)
+
+  // 合并路由
+  const merge = deepMerge(tarMap, srcMap)
+
+  // 转换为 routes 数组
+  const parseRoutesMap = routesMap => {
+    return Object.values(routesMap).map(item => {
+      if (item.children) {
+        item.children = parseRoutesMap(item.children)
+      } else {
+        delete item.children
+      }
+      return item
+    })
+  }
+  return parseRoutesMap(merge)
+}
+
+/**
+ * 格式化路由
+ * @param routes 路由配置
+ */
+function formatRoutes(routes) {
+  routes.forEach(route => {
+    const {path} = route
+    if (!path.startsWith('/') && path !== '*') {
+      route.path = '/' + path
+    }
+  })
+  formatAuthority(routes)
 }
 
 /**
@@ -165,15 +249,17 @@ function hasRole(route, roles) {
 
 /**
  * 格式化路由的权限配置
- * @param routes
+ * @param routes 路由
+ * @param pAuthorities 父级路由权限配置集合
  */
-function formatAuthority(routes) {
+function formatAuthority(routes, pAuthorities = []) {
   routes.forEach(route => {
     const meta = route.meta
+    const defaultAuthority = pAuthorities[pAuthorities.length - 1] || {permission: '*'}
     if (meta) {
       let authority = {}
       if (!meta.authority) {
-        authority.permission = '*'
+        authority = defaultAuthority
       }else if (typeof meta.authority === 'string') {
         authority.permission = meta.authority
       } else if (typeof meta.authority === 'object') {
@@ -182,17 +268,18 @@ function formatAuthority(routes) {
         if (typeof role === 'string') {
           authority.role = [role]
         }
-      } else {
-        console.log(typeof meta.authority)
+        if (!authority.permission && !authority.role) {
+          authority = defaultAuthority
+        }
       }
       meta.authority = authority
     } else {
-      route.meta = {
-        authority: {permission: '*'}
-      }
+      const authority = defaultAuthority
+      route.meta = {authority}
     }
+    route.meta.pAuthorities = pAuthorities
     if (route.children) {
-      formatAuthority(route.children)
+      formatAuthority(route.children, [...pAuthorities, route.meta.authority])
     }
   })
 }
@@ -228,4 +315,4 @@ function loadGuards(guards, options) {
   })
 }
 
-export {parseRoutes, loadRoutes, formatAuthority, getI18nKey, loadGuards, authorityGuard, loginGuard}
+export {parseRoutes, loadRoutes, formatAuthority, getI18nKey, loadGuards, authorityGuard, loginGuard, deepMergeRoutes, formatRoutes, setAppOptions}

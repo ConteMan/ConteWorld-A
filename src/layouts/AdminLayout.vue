@@ -1,6 +1,6 @@
 <template>
   <a-layout :class="['admin-layout', 'beauty-scroll']">
-    <drawer v-if="isMobile" v-model="collapsed">
+    <drawer v-if="isMobile" v-model="drawerOpen">
       <side-menu :theme="theme.mode" :menuData="menuData" :collapsed="false" :collapsible="false" @menuSelect="onMenuSelect"/>
     </drawer>
     <side-menu :class="[fixedSideBar ? 'fixed-side' : '']" :theme="theme.mode" v-else-if="layout === 'side' || layout === 'mix'" :menuData="sideMenuData" :collapsed="collapsed" :collapsible="true" />
@@ -12,8 +12,8 @@
       <setting />
     </drawer>
     <a-layout class="admin-layout-main beauty-scroll">
-      <admin-header :style="headerStyle" :menuData="headMenuData" :collapsed="collapsed" @toggleCollapse="toggleCollapse"/>
-      <a-layout-header v-if="fixedHeader"></a-layout-header>
+      <admin-header :class="[{'fixed-tabs': fixedTabs, 'fixed-header': fixedHeader, 'multi-page': multiPage}]" :style="headerStyle" :menuData="headMenuData" :collapsed="collapsed" @toggleCollapse="toggleCollapse"/>
+      <a-layout-header :class="['virtual-header', {'fixed-tabs' : fixedTabs, 'fixed-header': fixedHeader, 'multi-page': multiPage}]" v-show="fixedHeader"></a-layout-header>
       <a-layout-content class="admin-layout-content">
         <div :style="`min-height: ${minHeight}px; position: relative`">
           <slot></slot>
@@ -43,7 +43,13 @@ export default {
     return {
       minHeight: minHeight,
       collapsed: false,
-      showSetting: false
+      showSetting: false,
+      drawerOpen: false
+    }
+  },
+  provide() {
+    return {
+      adminLayout: this
     }
   },
   watch: {
@@ -52,11 +58,16 @@ export default {
     },
     layout() {
       this.setActivated(this.$route)
+    },
+    isMobile(val) {
+      if(!val) {
+        this.drawerOpen = false
+      }
     }
   },
   computed: {
     ...mapState('setting', ['isMobile', 'theme', 'layout', 'footerLinks', 'copyright', 'fixedHeader', 'fixedSideBar',
-      'hideSetting']),
+      'fixedTabs', 'hideSetting', 'multiPage']),
     ...mapGetters('setting', ['firstMenu', 'subMenu', 'menuData']),
     sideMenuWidth() {
       return this.collapsed ? '80px' : '256px'
@@ -64,8 +75,7 @@ export default {
     headerStyle() {
       let width = (this.fixedHeader && this.layout !== 'head' && !this.isMobile) ? `calc(100% - ${this.sideMenuWidth})` : '100%'
       let position = this.fixedHeader ? 'fixed' : 'static'
-      let transition = this.fixedHeader ? 'transition: width 0.2s' : ''
-      return `width: ${width}; position: ${position}; ${transition}`
+      return `width: ${width}; position: ${position};`
     },
     headMenuData() {
       const {layout, menuData, firstMenu} = this
@@ -121,15 +131,28 @@ export default {
     .virtual-side{
       transition: all 0.2s;
     }
+    .virtual-header{
+      transition: all 0.2s;
+      opacity: 0;
+      &.fixed-tabs.multi-page:not(.fixed-header){
+        height: 0;
+      }
+    }
     .admin-layout-main{
       .admin-header{
         top: 0;
         right: 0;
+        overflow: hidden;
+        transition: all 0.2s;
+        &.fixed-tabs.multi-page:not(.fixed-header){
+          height: 0;
+        }
       }
     }
     .admin-layout-content{
       padding: 24px 24px 0;
-      min-height: auto;
+      overflow-x: hidden;
+      min-height: calc(100vh - 64px - 122px);
     }
     .setting{
       background-color: @primary-color;
