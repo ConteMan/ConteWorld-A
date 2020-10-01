@@ -56,7 +56,6 @@ export default {
   },
   methods: {
     handleTableChange(pagination) {
-      console.log(pagination);
       const pager = { ...this.pagination };
       pager.current = pagination.current;
       this.pagination = pager;
@@ -64,7 +63,6 @@ export default {
     },
     async index(params) {
       const res = await One.index(params);
-      console.log(res.data)
       this.items = res.data.data.items
       const pagination = { ...this.pagination };
       pagination.total = res.data.data.total_count

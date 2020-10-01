@@ -1,7 +1,7 @@
 {
-  "name": "vue-antd-admin",
-  "version": "0.4.2",
-  "homepage": "https://iczer.github.io/vue-antd-admin",
+  "name": "conte-world-a",
+  "version": "0.1.10",
+  "homepage": "https://github.com/ConteMan/ConteWorld-A",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -11,7 +11,6 @@
     "deploy": "gh-pages -d dist -b pages -r https://gitee.com/iczer/vue-antd-admin.git"
   },
   "dependencies": {
-    "@antv/data-set": "^0.11.4",
     "animate.css": "^4.1.0",
     "ant-design-vue": "^1.6.2",
     "axios": "^0.19.2",
@@ -22,13 +21,11 @@
     "enquire.js": "^2.1.6",
     "js-cookie": "^2.2.1",
     "mavon-editor": "^2.9.0",
-    "mockjs": "^1.1.0",
-    "viser-vue": "^2.4.8",
     "vue": "^2.6.11",
     "vue-i18n": "^8.18.2",
     "vue-router": "^3.3.4",
     "vuedraggable": "^2.23.2",
-    "vuex": "^3.4.0"
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
     "@ant-design/colors": "^4.0.1",

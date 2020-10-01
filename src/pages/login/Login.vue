@@ -14,8 +14,8 @@
               <a-input
                 autocomplete="autocomplete"
                 size="large"
-                placeholder="admin"
-                v-decorator="['name', {rules: [{ required: true, message: '请输入账户名', whitespace: true}]}]"
+                placeholder="请输入用户名"
+                v-decorator="['name', {rules: [{ required: true, message: '请输入用户名', whitespace: true}]}]"
               >
                 <a-icon slot="prefix" type="user" />
               </a-input>
@@ -23,7 +23,7 @@
             <a-form-item>
               <a-input
                 size="large"
-                placeholder="888888"
+                placeholder="请输入密码"
                 autocomplete="autocomplete"
                 type="password"
                 v-decorator="['password', {rules: [{ required: true, message: '请输入密码', whitespace: true}]}]"

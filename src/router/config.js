@@ -44,7 +44,7 @@ const options = {
           children: [
             {
               path: 'index',
-              name: '列表',
+              name: '内容列表',
               component: () => import('@/pages/one'),
             }
           ]

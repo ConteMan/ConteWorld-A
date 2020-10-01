@@ -107,7 +107,7 @@ function loginGuard(router) {
       next({path: '/login'})
     } else {
       if (to.path === '/login' && checkAuthorization()) {
-        next({path: '/demo'})
+        next({path: '/dashboard'})
       } else {
         next()
       }
