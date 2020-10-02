@@ -13,5 +13,6 @@ module.exports = {
   animate: {
     name: 'slide',
     direction: 'left',
-  }
+  },
+  fixedHeader: true,
 }

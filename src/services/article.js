@@ -19,6 +19,9 @@ const Article = {
   },
   destroy(id) {
     return request(BASE_URL + '/articles/' + id, METHOD.DELETE);
+  },
+  statuses() {
+    return request(BASE_URL + '/articles/statuses', METHOD.GET);
   }
 }
 

@@ -6,32 +6,36 @@
       </div>
       <a-table rowKey="id" :data-source="items" :columns="columns" :bordered="true" :pagination="pagination" @change="handleTableChange">
         <span slot="status" slot-scope="text">
-          <a-tag v-if="text === 1" color="#108ee9">
-            待发布
-          </a-tag>
-          <a-tag v-if="text === 2" color="red">
-            已发布
-          </a-tag>
-          <a-tag v-if="text === 3" color="grey">
-            已删除
+          <a-tag :color="text.color">
+            {{ text.str }}
           </a-tag>
         </span>
         <span slot="date" slot-scope="text">
           {{ $dayjs(text).format('YYYY-MM-DD HH:mm:ss') }}
         </span>
         <span slot="action" slot-scope="text, record">
-          <a @click="turnUpdate(record.id)">编辑</a>
-          <a-divider type="vertical" />
-          <a-popconfirm
-              title="是否删除？"
-              ok-text="确定"
-              cancel-text="取消"
-              @confirm="destroy(record.id)"
-          >
-            <a href="#">删除</a>
-          </a-popconfirm>
+          <a @click="statusModalClick(record.id)">状态</a>
+          <template v-if="['ORI'].includes(record.platform)">
+            <a-divider type="vertical" />
+            <a @click="turnUpdate(record.id)">编辑</a>
+          </template>
         </span>
       </a-table>
+      <a-modal
+          title="修改状态"
+          :visible="statusModalVisible"
+          :confirm-loading="statusLoading"
+          @ok="statusOK"
+          @cancel="statusCancel"
+      >
+        <a-form-model>
+          <a-form-model-item>
+            <a-select :value="current.status" @change="statusChange">
+              <a-select-option v-for="item in statuses" :value="item.id" :key="item.id">{{ item.str }}</a-select-option>
+            </a-select>
+          </a-form-model-item>
+        </a-form-model>
+      </a-modal>
     </div>
   </a-card>
 </template>
@@ -75,7 +79,7 @@ export default {
         },
         {
           title: '状态',
-          dataIndex: 'status',
+          dataIndex: 'statusObj',
           width: 100,
           scopedSlots: { customRender: 'status' },
         },
@@ -89,6 +93,12 @@ export default {
       pagination: {},
 
       syncLoading: false,
+
+      statusModalVisible: false,
+      statusLoading: false,
+      statuses: [],
+      currentId: 0,
+      current: {},
     }
   },
   methods: {
@@ -123,10 +133,55 @@ export default {
       } else {
         this.$message.error(res.data.msg);
       }
+    },
+    async edit(id) {
+      const res = await Article.edit(id);
+      if(res.data.code === 0){
+        const detail = res.data.data.res;
+        this.current = {
+          status: detail.status,
+        }
+      }
+    },
+    async update() {
+      const res = await Article.update(this.currentId, this.current);
+      if(res.data.code === 0){
+        this.$message.success('更新成功');
+      }
+    },
+    async getStatuses() {
+      const res = await Article.statuses();
+      if(res.data.code === 0) {
+        this.statuses = res.data.data.items;
+      }
+    },
+    statusChange(value) {
+      this.current.status = value;
+    },
+    async statusModalClick(id) {
+      this.statusModalVisible = !this.statusModalVisible;
+      if(this.statusModalVisible) {
+        this.currentId = id;
+        await this.edit(id);
+      } else {
+        this.currentId = 0;
+        this.current = {};
+      }
+    },
+    async statusOK() {
+      await this.update();
+      this.statusModalVisible = false;
+      this.initIndex();
+    },
+    statusCancel() {
+      this.statusModalVisible = false;
+      this.currentId = 0;
+      this.current = {};
     }
   },
   mounted() {
-    this.initIndex()
+    this.initIndex();
+    this.getStatuses();
   }
 }
 </script>

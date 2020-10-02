@@ -1,19 +1,26 @@
 <template>
   <a-card>
-    <a-form-model :model="form" layout="vertical" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-item label="标题">
+    <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
+      <a-form-model-item label="标题">
         <a-input v-model="form.title"></a-input>
-      </a-form-item>
+      </a-form-model-item>
       <a-form-item label="内容">
-        <mavon-editor v-model="form.content" v-bind="markdownOpption" style="height: 100%" />
+        <mavon-editor v-model="form.content" v-bind="markdownOption" style="height: 100%" />
       </a-form-item>
+      <a-form-model-item label="状态">
+        <a-select :value="form.status" @change="statusChange">
+          <a-select-option v-for="item in statuses" :value="item.id" :key="item.id">{{ item.str }}</a-select-option>
+        </a-select>
+      </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="update">
-          更新
-        </a-button>
-        <a-button style="margin-left: 10px;">
-          取消
-        </a-button>
+        <a-space>
+          <a-button type="primary" @click="update">
+            更新
+          </a-button>
+          <a-button @click="$router.push({ path: 'index' })">
+            取消
+          </a-button>
+        </a-space>
       </a-form-model-item>
     </a-form-model>
   </a-card>
@@ -31,26 +38,29 @@ export default {
   },
   data() {
     return {
-      markdownOpption: {
+      markdownOption: {
         subfield: false,
         defaultOpen: 'edit',
         editable: true,
       },
       form: {
-        title: 'aaa',
-        content: '- aaa',
+        title: '',
+        content: '',
+        status: 0,
       },
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
-      createLoding: false,
+      createLoading: false,
       id: 0,
+
+      statuses: [],
     }
   },
   methods: {
     async create() {
-      this.createLoding = true;
+      this.createLoading = true;
       const res = await Article.create(this.form);
-      this.createLoding = false;
+      this.createLoading = false;
       if(res.data.code === 0){
         this.$message.success('添加成功');
       } else {
@@ -68,12 +78,22 @@ export default {
       if(res.data.code === 0){
         this.$message.success('更新成功');
       }
+    },
+    async getStatuses() {
+      const res = await Article.statuses();
+      if(res.data.code === 0) {
+        this.statuses = res.data.data.items;
+      }
+    },
+    statusChange(value) {
+      this.form.status = value;
     }
   },
   mounted() {
-    const id = this.$route.query.id
-    this.id = id
-    this.edit(id)
+    const id = this.$route.query.id;
+    this.id = id;
+    this.edit(id);
+    this.getStatuses();
   }
 }
 </script>
