@@ -1,13 +1,13 @@
 <template>
   <a-card class="form-container">
-    <a-form-model ref="form" :model="form" :rules="rules" v-bind="layout">
+    <a-form-model ref="form" layout="vertical" :model="form" :rules="rules">
       <a-form-model-item has-feedback label="密码" prop="pass">
         <a-input-password v-model="form.pass" placeholder="请输入密码" autocomplete="off"/>
       </a-form-model-item>
       <a-form-model-item has-feedback label="确认密码" prop="checkPass">
         <a-input-password v-model="form.checkPass" placeholder="请再次输入密码" autocomplete="off"/>
       </a-form-model-item>
-      <a-form-model-item :wrapper-col="buttonItemLayout.wrapperCol">
+      <a-form-model-item>
         <a-button type="primary" @click="changePassword">
           更新
         </a-button>
@@ -43,7 +43,6 @@ export default {
     };
     return {
       form: {
-        layout: 'horizontal',
         pass: '',
         checkPass: '',
       },
@@ -51,13 +50,6 @@ export default {
         pass: [{ validator: validatePass, trigger: 'change' }],
         checkPass: [{ validator: validatePass2, trigger: 'change' }],
       },
-      layout: {
-        labelCol: { span: 4 },
-        wrapperCol: { span: 14 },
-      },
-      buttonItemLayout: {
-        wrapperCol: { span: 14, offset: 4 },
-      }
     }
   },
   methods: {

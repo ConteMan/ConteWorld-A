@@ -1,6 +1,6 @@
 <template>
   <a-card>
-    <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
+    <a-form-model :model="form" layout="vertical">
       <a-form-model-item label="标题">
         <a-input v-model="form.title"></a-input>
       </a-form-model-item>
@@ -12,7 +12,7 @@
           <a-select-option v-for="item in statuses" :value="item.id" :key="item.id">{{ item.str }}</a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
+      <a-form-model-item>
         <a-space>
           <a-button type="primary" @click="update">
             更新
@@ -39,17 +39,17 @@ export default {
   data() {
     return {
       markdownOption: {
-        subfield: false,
+        subfield: true,
         defaultOpen: 'edit',
         editable: true,
+        toolbarsFlag: true,
+        boxShadow: true,
       },
       form: {
         title: '',
         content: '',
         status: 0,
       },
-      labelCol: { span: 4 },
-      wrapperCol: { span: 14 },
       createLoading: false,
       id: 0,
 

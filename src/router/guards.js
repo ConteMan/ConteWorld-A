@@ -32,7 +32,11 @@ const loginGuard = (to, from, next, options) => {
     message.warning('登录已失效，请重新登录')
     next({path: '/login'})
   } else {
-    next()
+    if (to.path === '/login' && checkAuthorization()) {
+      next({path: '/dashboard'})
+    } else {
+      next()
+    }
   }
 }
 

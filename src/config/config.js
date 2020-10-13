@@ -1,6 +1,4 @@
 // 自定义配置，参考 ./default/setting.config.js，需要自定义的属性在这里配置即可
-// 自定义配置，参考 ./default/setting.config.js，需要自定义的属性在这里配置即可
-// 自定义配置，参考 ./default/setting.config.js，需要自定义的属性在这里配置即可
 module.exports = {
   theme: {                              //主题
     color: '#1890ff',                   //主题色
@@ -9,10 +7,12 @@ module.exports = {
     warning: '#faad14',                 //警告色
     error: '#f5222d',                   //错误色
   },
-  multiPage: false,
+  multiPage: true,
   animate: {
+    disabled: false,
     name: 'slide',
-    direction: 'left',
+    direction: 'left'
   },
   fixedHeader: true,
+  hideSetting: true,
 }

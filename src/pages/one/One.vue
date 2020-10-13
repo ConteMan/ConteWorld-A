@@ -1,10 +1,10 @@
 <template>
-  <a-card>
-    <div>
+  <a-card class="common-table">
+    <div class="common-table-container">
       <div class="operator">
         <a-button @click="sync" type="primary" :loading="syncLoading">同步</a-button>
       </div>
-      <a-table rowKey="id" :data-source="items" :columns="columns" :bordered="true" :pagination="pagination" @change="handleTableChange">
+      <a-table rowKey="id" :data-source="items" :columns="columns" :bordered="true" :pagination="pagination" @change="handleTableChange" :scroll="{ x: 1000 }">
         <p slot="expandedRowRender" slot-scope="record" style="margin: 0">
           {{ record.data }}
         </p>
@@ -27,7 +27,8 @@ export default {
         {
           title: 'VOL',
           dataIndex: 'vol',
-          width: 100,
+          fixed: 'left',
+          width: 80,
         },
         {
           title: '日期',
@@ -42,6 +43,7 @@ export default {
         {
           title: '作者',
           dataIndex: 'data.text_authors',
+          width: 200,
         },
         {
           title: 'Url',

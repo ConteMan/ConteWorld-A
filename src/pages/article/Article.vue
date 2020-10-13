@@ -4,7 +4,7 @@
       <div class="operator">
         <a-button type="primary" @click="$router.push({ path: '/article/create' })">添加</a-button>
       </div>
-      <a-table rowKey="id" :data-source="items" :columns="columns" :bordered="true" :pagination="pagination" @change="handleTableChange">
+      <a-table rowKey="id" :data-source="items" :columns="columns" :bordered="true" :pagination="pagination" @change="handleTableChange" :scroll="{ x: 1000 }">
         <span slot="status" slot-scope="text">
           <a-tag :color="text.color">
             {{ text.str }}
@@ -54,7 +54,8 @@ export default {
         {
           title: 'ID',
           dataIndex: 'id',
-          width: 80,
+          fixed: 'left',
+          width: 60,
         },
         {
           title: '来源',
@@ -86,7 +87,8 @@ export default {
         {
           title: '操作',
           key: 'action',
-          width: 200,
+          fixed: 'right',
+          width: 120,
           scopedSlots: { customRender: 'action' },
         },
       ],
