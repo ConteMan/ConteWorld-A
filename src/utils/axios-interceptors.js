@@ -8,9 +8,10 @@ const resp401 = {
    * @returns {*}
    */
   onFulfilled(response, options) {
-    const {message} = options
+    const { message, router } = options
     if (response.status === 401) {
       message.error('无此接口权限')
+      router.push({ path: '/login' })
     }
     return response
   },
@@ -45,10 +46,11 @@ const reqCommon = {
    * @returns {*}
    */
   onFulfilled(config, options) {
-    const {message} = options
+    const { message, router } = options
     const {url, xsrfCookieName} = config
     if (url.indexOf('login') === -1 && xsrfCookieName && !Cookie.get(xsrfCookieName)) {
       message.warning('认证 token 已过期，请重新登录')
+      router.push({ path: '/login' })
     }
     return config
   },

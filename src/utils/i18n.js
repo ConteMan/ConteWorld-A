@@ -3,6 +3,7 @@ import VueI18n from 'vue-i18n'
 import routesI18n from '@/router/i18n'
 import './Objects'
 import {getI18nKey} from '@/utils/routerUtil'
+import i18n from '@/lang/i18n'
 
 /**
  * 创建 i18n 配置
@@ -14,6 +15,7 @@ function initI18n(locale, fallback) {
   Vue.use(VueI18n)
   let i18nOptions = {
     locale,
+    messages: i18n.messages,
     fallbackLocale: fallback,
     silentFallbackWarn: true,
   }

@@ -2,7 +2,7 @@
   <a-card>
     <div>
       <div class="operator">
-        <a-button type="primary" @click="$router.push({ path: '/article/create' })">添加</a-button>
+        <a-button type="primary" @click="$router.push({ path: '/article/create' })">{{ $t('add') }}</a-button>
       </div>
       <a-table rowKey="id" :data-source="items" :columns="columns" :bordered="true" :pagination="pagination" @change="handleTableChange" :scroll="{ x: 1000 }">
         <span slot="status" slot-scope="text">
@@ -14,28 +14,30 @@
           {{ $dayjs(text).format('YYYY-MM-DD HH:mm:ss') }}
         </span>
         <span slot="action" slot-scope="text, record">
-          <a @click="statusModalClick(record.id)">状态</a>
+          <a @click="statusModalClick(record.id)">{{ $t('status') }}</a>
           <template v-if="['ORI'].includes(record.platform)">
             <a-divider type="vertical" />
-            <a @click="turnUpdate(record.id)">编辑</a>
+            <a @click="turnUpdate(record.id)">{{ $t('edit') }}</a>
           </template>
         </span>
       </a-table>
+
       <a-modal
-          title="修改状态"
-          :visible="statusModalVisible"
-          :confirm-loading="statusLoading"
-          @ok="statusOK"
-          @cancel="statusCancel"
+        :title="$t('status')"
+        :visible="statusModalVisible"
+        :confirm-loading="statusLoading"
+        @ok="statusOK"
+        @cancel="statusCancel"
       >
         <a-form-model>
           <a-form-model-item>
             <a-select :value="current.status" @change="statusChange">
-              <a-select-option v-for="item in statuses" :value="item.id" :key="item.id">{{ item.str }}</a-select-option>
+              <a-select-option v-for="item in statuses" :key="item.id" :value="item.id">{{ item.str }}</a-select-option>
             </a-select>
           </a-form-model-item>
         </a-form-model>
       </a-modal>
+
     </div>
   </a-card>
 </template>
@@ -44,7 +46,8 @@
 import { Article } from '@/services'
 
 export default {
-  name: "One",
+  name: "Article",
+  i18n: require('./i18n'),
   data() {
     return {
       items: [],
@@ -58,37 +61,37 @@ export default {
           width: 60,
         },
         {
-          title: '来源',
+          title: this.$t('form.platform'),
           dataIndex: 'platform',
           width: 100,
         },
         {
-          title: '标题',
+          title: this.$t('form.title'),
           dataIndex: 'title',
         },
         {
-          title: '发布时间',
+          title: this.$t('form.published_at'),
           dataIndex: 'published_at',
           width: 200,
           scopedSlots: { customRender: 'date' },
         },
         {
-          title: '更新时间',
+          title: this.$t('updated_at'),
           dataIndex: 'updated_at',
           width: 200,
           scopedSlots: { customRender: 'date' },
         },
         {
-          title: '状态',
+          title: this.$t('status'),
           dataIndex: 'statusObj',
           width: 100,
           scopedSlots: { customRender: 'status' },
         },
         {
-          title: '操作',
+          title: this.$t('action'),
           key: 'action',
           fixed: 'right',
-          width: 120,
+          width: 150,
           scopedSlots: { customRender: 'action' },
         },
       ],
@@ -127,15 +130,6 @@ export default {
     turnUpdate(id) {
       this.$router.push({ path: '/article/update', query: { id: id } })
     },
-    async destroy(id) {
-      const res = await Article.destroy(id);
-      if(res.data.code === 0){
-        this.$message.success('已删除');
-        this.initIndex();
-      } else {
-        this.$message.error(res.data.msg);
-      }
-    },
     async edit(id) {
       const res = await Article.edit(id);
       if(res.data.code === 0){
@@ -148,7 +142,9 @@ export default {
     async update() {
       const res = await Article.update(this.currentId, this.current);
       if(res.data.code === 0){
-        this.$message.success('更新成功');
+        this.$message.success(this.$t('result.success'))
+      } else {
+        this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'));
       }
     },
     async getStatuses() {

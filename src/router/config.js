@@ -97,6 +97,21 @@ const options = {
             }
           ]
         },
+        {
+          path: 'system',
+          name: '系统管理',
+          meta: {
+            icon: 'control'
+          },
+          component: PageView,
+          children: [
+            {
+              path: 'config',
+              name: '系统配置',
+              component: () => import('@/pages/config'),
+            }
+          ]
+        },
       ]
     }
   ]

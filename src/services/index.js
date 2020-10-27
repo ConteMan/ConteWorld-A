@@ -3,6 +3,7 @@ import userService from './user'
 import One from '@/services/one'
 import Article from "@/services/article"
 import System from "@/services/system"
+import Config from "@/services/config"
 
 export {
   login,
@@ -10,7 +11,9 @@ export {
   getRoutesConfig,
   changePassword,
   userService,
+
   One,
   Article,
   System,
+  Config,
 }

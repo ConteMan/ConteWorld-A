@@ -45,3 +45,10 @@ export function isJSON(str) {
 }
 
 const _toString = Object.prototype.toString
+
+export function emptyObj(obj) {
+  if (Object.keys(obj).length === 0) {
+    return true;
+  }
+  return false;
+}

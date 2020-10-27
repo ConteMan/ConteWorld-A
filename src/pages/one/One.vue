@@ -5,9 +5,6 @@
         <a-button @click="sync" type="primary" :loading="syncLoading">同步</a-button>
       </div>
       <a-table rowKey="id" :data-source="items" :columns="columns" :bordered="true" :pagination="pagination" @change="handleTableChange" :scroll="{ x: 1000 }">
-        <p slot="expandedRowRender" slot-scope="record" style="margin: 0">
-          {{ record.data }}
-        </p>
       </a-table>
     </div>
   </a-card>

@@ -1,7 +1,11 @@
 <template>
   <a-card>
-    <a-form-model :model="form" layout="vertical">
-      <a-form-model-item label="标题">
+    <a-form-model
+      :model="form"
+      :rules="rules"
+      layout="vertical"
+    >
+      <a-form-model-item label="标题" prop="title">
         <a-input v-model="form.title"></a-input>
       </a-form-model-item>
       <a-form-item label="内容">
@@ -49,6 +53,11 @@ export default {
         title: '',
         content: '',
         status: 0,
+      },
+      rules: {
+        title: [
+          { required: true, message: '请输入名称', trigger: 'blur' },
+        ],
       },
       createLoading: false,
       id: 0,

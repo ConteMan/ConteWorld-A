@@ -1,7 +1,11 @@
 <template>
   <a-card>
-    <a-form-model :model="form" layout="vertical">
-      <a-form-model-item label="标题">
+    <a-form-model
+      :model="form"
+      :rules="rules"
+      layout="vertical"
+    >
+      <a-form-model-item label="标题" prop="title">
         <a-input v-model="form.title"></a-input>
       </a-form-model-item>
       <a-form-model-item label="内容">
@@ -48,6 +52,12 @@ export default {
         title: '',
         content: '',
         status: 1,
+      },
+      rules: {
+        title: [
+          { required: true, message: 'Please input Activity name', trigger: 'blur' },
+          { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
+        ],
       },
       createLoading: false,
 
