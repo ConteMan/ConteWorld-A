@@ -109,7 +109,12 @@ const options = {
               path: 'config',
               name: '系统配置',
               component: () => import('@/pages/config'),
-            }
+            },
+            {
+              path: 'enum',
+              name: '枚举配置',
+              component: () => import('@/pages/enum'),
+            },
           ]
         },
       ]

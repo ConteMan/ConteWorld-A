@@ -2,9 +2,19 @@
   <a-card>
     <div>
       <div class="operator">
-        <a-button type="primary" @click="showAdd">{{ $t('add') }}</a-button>
+        <a-button type="primary" @click="showAdd(0)">{{ $t('add') }}</a-button>
       </div>
-      <a-table rowKey="id" :data-source="items" :columns="columns" :bordered="true" :pagination="pagination" @change="handleTableChange" :scroll="{ x: 1000 }">
+      <a-table
+        rowKey="id"
+        :data-source="items"
+        :columns="columns"
+        :pagination="pagination"
+        :scroll="{ x: 1000 }"
+        :bordered="true"
+        :indentSize="5"
+        :defaultExpandAllRows="true"
+        @change="handleTableChange"
+      >
         <span slot="status" slot-scope="text">
           <a-tag :color="statuses[text].color">
             {{ statuses[text].str }}
@@ -14,6 +24,10 @@
           {{ $dayjs(text).format('YYYY-MM-DD HH:mm:ss') }}
         </span>
         <span slot="action" slot-scope="text, record">
+          <template v-if="record.parent_id === 0">
+            <a @click="showAdd(record.id)">{{ $t('add') }}</a>
+            <a-divider type="vertical" />
+          </template>
           <a @click="showEdit(record.id)">{{ $t('edit') }}</a>
           <a-divider type="vertical" />
           <a-popconfirm
@@ -40,6 +54,20 @@
           :rules="rules"
           layout="vertical"
         >
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-model-item ref="name" :label="$t('form.parent_id')" prop="parent_id">
+                <a-select v-model="form.parent_id">
+                  <a-select-option :value="0">
+                    Empty
+                  </a-select-option>
+                  <a-select-option v-for="item in roots" :key="item.id" :value="item.id">
+                    {{ item.name }} / {{ item.code }}
+                  </a-select-option>
+                </a-select>
+              </a-form-model-item>
+            </a-col>
+          </a-row>
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-model-item ref="name" :label="$t('form.name')" prop="name">
@@ -120,10 +148,10 @@
 </template>
 
 <script>
-import { Config } from '@/services'
+import { SysEnum } from '@/services'
 
 export default {
-  name: "Config",
+  name: "Enum",
   i18n: require('./i18n'),
   data() {
     return {
@@ -131,12 +159,6 @@ export default {
       page: 1,
       per_page: 10,
       columns: [
-        {
-          title: 'ID',
-          dataIndex: 'id',
-          fixed: 'left',
-          width: 60,
-        },
         {
           title: this.$t('form.name'),
           dataIndex: 'name',
@@ -183,7 +205,7 @@ export default {
           title: this.$t('action'),
           key: 'action',
           fixed: 'right',
-          width: 120,
+          width: 170,
           scopedSlots: { customRender: 'action' },
         },
       ],
@@ -194,6 +216,7 @@ export default {
       statuses: [],
 
       formInit: {
+        parent_id: 0,
         name: undefined,
         code: undefined,
         des: undefined,
@@ -202,6 +225,7 @@ export default {
         status: 1,
       },
       form: {
+        parent_id: 0,
         name: undefined,
         code: undefined,
         des: undefined,
@@ -228,6 +252,8 @@ export default {
       },
       submitLoading: false,
       codeInputDisable: false,
+
+      roots: [],
     }
   },
   methods: {
@@ -238,7 +264,7 @@ export default {
       this.index({ page: pagination.current, per_page: pagination.pageSize });
     },
     async index(params) {
-      const res = await Config.index(params);
+      const res = await SysEnum.index(params);
       this.items = res.data.data.items;
       const pagination = { ...this.pagination };
       pagination.total = res.data.data.total_count;
@@ -254,24 +280,27 @@ export default {
     },
     // 获取状态列表
     async getStatuses() {
-      const res = await Config.statuses();
+      const res = await SysEnum.statuses();
       if (res.data.code === 0) {
         this.statuses = res.data.data.items;
       }
     },
     // 显示添加
-    showAdd() {
+    async showAdd(pid = 0) {
+      await this.getRoots();
       this.drawerVisible = true;
       this.$nextTick(() => {
-        this.codeInputDisable = false;
         this.form = this.formInit;
+        this.codeInputDisable = false;
         this.current = {};
         this.$refs.drawerForm.resetFields();
+        this.form.parent_id = pid;
       })
     },
     // 显示编辑
     async showEdit(id) {
-      const res = await Config.edit(id);
+      await this.getRoots();
+      const res = await SysEnum.edit(id);
       if(res.data.code === 0){
         let detail = res.data.data.res;
         this.drawerVisible = true;
@@ -293,9 +322,9 @@ export default {
           this.submitLoading = true;
           let res = {};
           if (this.$emptyObj(this.current)) {
-            res = await Config.create(this.form);
+            res = await SysEnum.create(this.form);
           } else {
-            res = await Config.update(this.current.id, this.form);
+            res = await SysEnum.update(this.current.id, this.form);
           }
           this.submitLoading = false;
           if(res.data.code === 0){
@@ -312,7 +341,7 @@ export default {
     },
     // 删除
     async destroy(id) {
-      const res = await Config.destroy(id);
+      const res = await SysEnum.destroy(id);
       if(res.data.code === 0){
         this.$message.success(this.$t('result.success'));
         this.initIndex();
@@ -327,7 +356,13 @@ export default {
     // 关闭抽屉
     drawerClose() {
       this.drawerVisible = false;
-    }
+    },
+    async getRoots() {
+      const res = await SysEnum.roots();
+      if (res.data.code === 0) {
+        this.roots = res.data.data.items;
+      }
+    },
   },
   mounted() {
     this.initIndex();

@@ -1,9 +1,10 @@
-import { login, logout, getRoutesConfig, changePassword } from './user'
-import userService from './user'
-import One from '@/services/one'
-import Article from "@/services/article"
-import System from "@/services/system"
-import Config from "@/services/config"
+import { login, logout, getRoutesConfig, changePassword } from './modules/user'
+import userService from './modules/user'
+import One from '@/services/modules/one'
+import Article from "@/services/modules/article"
+import System from "@/services/modules/system"
+import Config from "@/services/modules/config"
+import SysEnum from "@/services/modules/sysEnum"
 
 export {
   login,
@@ -16,4 +17,5 @@ export {
   Article,
   System,
   Config,
+  SysEnum,
 }
