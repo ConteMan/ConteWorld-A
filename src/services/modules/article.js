@@ -22,6 +22,9 @@ const Article = {
   },
   statuses() {
     return request(BASE_URL + '/articles/statuses', METHOD.GET);
+  },
+  tags() {
+    return request(BASE_URL + '/articles/tags', METHOD.GET);
   }
 }
 

@@ -8,13 +8,21 @@
       <a-form-model-item label="标题" prop="title">
         <a-input v-model="form.title"></a-input>
       </a-form-model-item>
-      <a-form-item label="内容">
-        <mavon-editor v-model="form.content" v-bind="markdownOption" style="height: 100%" />
+      <a-form-model-item label="标签" prop="tags">
+        <a-select mode="tags" :value="form.tags" @change="tagChange">
+          <a-select-option v-for="item in tags" :value="item" :key="item">{{ item }}</a-select-option>
+        </a-select>
+      </a-form-model-item>
+      <a-form-item label="内容" v-if="['ORI'].includes(form.platform)">
+        <mavon-editor class="mk-container" v-model="form.content" v-bind="markdownOption" style="height: 100%" />
       </a-form-item>
       <a-form-model-item label="状态">
         <a-select :value="form.status" @change="statusChange">
           <a-select-option v-for="item in statuses" :value="item.id" :key="item.id">{{ item.str }}</a-select-option>
         </a-select>
+      </a-form-model-item>
+      <a-form-model-item label="信息时间" prop="info_at">
+        <a-date-picker show-time valueFormat="YYYY-MM-DD HH:mm:ss" :value="form.info_at" @change="infoAtChange" @ok="infoAtChange" />
       </a-form-model-item>
       <a-form-model-item>
         <a-space>
@@ -51,8 +59,11 @@ export default {
       },
       form: {
         title: '',
+        platform: 'ORI',
+        tags: undefined,
         content: '',
         status: 0,
+        info_at: '',
       },
       rules: {
         title: [
@@ -63,6 +74,7 @@ export default {
       id: 0,
 
       statuses: [],
+      tags: [],
     }
   },
   methods: {
@@ -94,8 +106,20 @@ export default {
         this.statuses = res.data.data.items;
       }
     },
+    async getTags() {
+      const res = await Article.tags();
+      if(res.data.code === 0) {
+        this.tags = res.data.data.items;
+      }
+    },
     statusChange(value) {
       this.form.status = value;
+    },
+    tagChange(value) {
+      this.form.tags = value;
+    },
+    infoAtChange(value) {
+      this.form.info_at = value;
     }
   },
   mounted() {
@@ -103,12 +127,11 @@ export default {
     this.id = id;
     this.edit(id);
     this.getStatuses();
+    this.getTags();
   }
 }
 </script>
 
 <style lang="less" scoped>
-  .operator {
-    margin-bottom: 15px;
-  }
+  @import "index";
 </style>

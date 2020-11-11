@@ -10,12 +10,17 @@
             {{ text.str }}
           </a-tag>
         </span>
+        <span slot="tag" slot-scope="text">
+          <a-tag color="blue" v-for="item in text" :key="item">
+            {{ item }}
+          </a-tag>
+        </span>
         <span slot="date" slot-scope="text">
-          {{ $dayjs(text).format('YYYY-MM-DD HH:mm:ss') }}
+          {{ text }}
         </span>
         <span slot="action" slot-scope="text, record">
           <a @click="statusModalClick(record.id)">{{ $t('status') }}</a>
-          <template v-if="['ORI'].includes(record.platform)">
+          <template>
             <a-divider type="vertical" />
             <a @click="turnUpdate(record.id)">{{ $t('edit') }}</a>
           </template>
@@ -70,8 +75,19 @@ export default {
           dataIndex: 'title',
         },
         {
+          title: this.$t('form.tags'),
+          dataIndex: 'tags',
+          scopedSlots: { customRender: 'tag' },
+        },
+        {
           title: this.$t('form.published_at'),
           dataIndex: 'published_at',
+          width: 200,
+          scopedSlots: { customRender: 'date' },
+        },
+        {
+          title: this.$t('form.info_at'),
+          dataIndex: 'info_at',
           width: 200,
           scopedSlots: { customRender: 'date' },
         },
