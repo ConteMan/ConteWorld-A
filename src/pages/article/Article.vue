@@ -1,31 +1,53 @@
 <template>
   <a-card>
     <div>
-      <div class="operator">
-        <a-button type="primary" @click="$router.push({ path: '/article/create' })">{{ $t('add') }}</a-button>
-      </div>
-      <a-table rowKey="id" :data-source="items" :columns="columns" :bordered="true" :pagination="pagination" @change="handleTableChange" :scroll="{ x: 1000 }">
-        <span slot="status" slot-scope="text">
+      <advance-table
+        rowKey="id"
+        :loading="loading"
+        :data-source="items"
+        :columns="columns"
+        :bordered="true"
+        :scroll="{ x: 1000 }"
+        @search="onSearch"
+        @refresh="onRefresh"
+        :format-conditions="true"
+        @reset="onReset"
+        :pagination="{
+        current: page,
+        pageSize: per_page,
+        total: total,
+        showSizeChanger: true,
+        showLessItems: true,
+        showQuickJumper: true,
+        showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，总计 ${total} 条`,
+        onChange: onPageChange,
+        onShowSizeChange: onSizeChange,
+      }"
+      >
+        <div slot="title">
+          <a-button class="table-title-btn" type="primary" @click="$router.push({ path: '/article/create' })">{{ $t('create') }}</a-button>
+        </div>
+        <span slot="status" slot-scope="{text}">
           <a-tag :color="text.color">
             {{ text.str }}
           </a-tag>
         </span>
-        <span slot="tag" slot-scope="text">
+        <span slot="tag" slot-scope="{text}">
           <a-tag color="blue" v-for="item in text" :key="item">
             {{ item }}
           </a-tag>
         </span>
-        <span slot="date" slot-scope="text">
+        <span slot="date" slot-scope="{text}">
           {{ text }}
         </span>
-        <span slot="action" slot-scope="text, record">
+        <span slot="action" slot-scope="{text, record}">
           <a @click="statusModalClick(record.id)">{{ $t('status') }}</a>
           <template>
             <a-divider type="vertical" />
             <a @click="turnUpdate(record.id)">{{ $t('edit') }}</a>
           </template>
         </span>
-      </a-table>
+      </advance-table>
 
       <a-modal
         :title="$t('status')"
@@ -48,16 +70,22 @@
 </template>
 
 <script>
+import AdvanceTable from '@/components/table/advance/AdvanceTable'
 import { Article } from '@/services'
 
 export default {
   name: "Article",
+  components: {
+    AdvanceTable,
+  },
   i18n: require('./i18n'),
   data() {
     return {
+      loading: false,
       items: [],
       page: 1,
       per_page: 10,
+      total: 0,
       columns: [
         {
           title: 'ID',
@@ -78,16 +106,21 @@ export default {
           title: this.$t('form.tags'),
           dataIndex: 'tags',
           scopedSlots: { customRender: 'tag' },
-        },
-        {
-          title: this.$t('form.published_at'),
-          dataIndex: 'published_at',
-          width: 200,
-          scopedSlots: { customRender: 'date' },
+          searchAble: true,
+          dataType: 'select',
+          search: {
+            selectOptions: this.tags,
+          }
         },
         {
           title: this.$t('form.info_at'),
           dataIndex: 'info_at',
+          width: 200,
+          scopedSlots: { customRender: 'date' },
+        },
+        {
+          title: this.$t('form.published_at'),
+          dataIndex: 'published_at',
           width: 200,
           scopedSlots: { customRender: 'date' },
         },
@@ -111,6 +144,7 @@ export default {
           scopedSlots: { customRender: 'action' },
         },
       ],
+      conditions: {},
       pagination: {},
 
       syncLoading: false,
@@ -118,31 +152,49 @@ export default {
       statusModalVisible: false,
       statusLoading: false,
       statuses: [],
+      tags: [],
       currentId: 0,
       current: {},
     }
   },
   methods: {
-    handleTableChange(pagination) {
-      const pager = { ...this.pagination };
-      pager.current = pagination.current;
-      this.pagination = pager;
-      this.index({page: pagination.current, per_page: pagination.pageSize});
+    async index() {
+      this.loading = true
+      const { page, per_page, conditions } = this
+      const res = await Article.index({page, per_page, ...conditions});
+      const { items, page:re_page, per_page:re_per_page, total_count:re_total } = res.data.data;
+      this.items = items
+      this.page = re_page
+      this.per_page = re_per_page
+      this.total = re_total
+      this.loading = false
     },
-    async index(params) {
-      const res = await Article.index(params);
-      this.items = res.data.data.items
-      const pagination = { ...this.pagination };
-      pagination.total = res.data.data.total_count
-      this.pagination = pagination
+    onSearch(conditions, searchOptions) {
+      console.log(conditions)
+      console.log(searchOptions)
+      this.page = 1;
+      this.conditions = conditions;
+      this.index();
     },
-    initIndex() {
-      const params = {page: this.page, per_page: this.per_page};
-      this.index(params);
-      const pagination = { ...this.pagination };
-      pagination.current = this.page
-      this.pagination = pagination
+    onSizeChange(current, size) {
+      this.page = 1;
+      this.pageSize = size;
+      this.index();
     },
+    onRefresh(conditions) {
+      this.conditions = conditions;
+      this.index();
+    },
+    onReset(conditions) {
+      this.conditions = conditions;
+      this.index();
+    },
+    onPageChange(page, pageSize) {
+      this.page = page;
+      this.pageSize = pageSize;
+      this.index();
+    },
+
     turnUpdate(id) {
       this.$router.push({ path: '/article/update', query: { id: id } })
     },
@@ -169,6 +221,20 @@ export default {
         this.statuses = res.data.data.items;
       }
     },
+    async getTags() {
+      const res = await Article.tags();
+      if(res.data.code === 0) {
+        this.tags = res.data.data.items;
+        this.columns[3].search.selectOptions = this.tagToObj(res.data.data.items);
+      }
+    },
+    tagToObj(tags) {
+      const tmp = [];
+      tags.forEach( item => {
+        tmp.push({ title: item, value: item });
+      })
+      return tmp;
+    },
     statusChange(value) {
       this.current.status = value;
     },
@@ -185,7 +251,7 @@ export default {
     async statusOK() {
       await this.update();
       this.statusModalVisible = false;
-      this.initIndex();
+      await this.index();
     },
     statusCancel() {
       this.statusModalVisible = false;
@@ -193,15 +259,16 @@ export default {
       this.current = {};
     }
   },
-  mounted() {
-    this.initIndex();
-    this.getStatuses();
+  async created() {
+    await this.getTags();
+    await this.getStatuses();
+    await this.index();
   }
 }
 </script>
 
 <style lang="less" scoped>
-  .operator {
-    margin-bottom: 15px;
-  }
+.table-title-btn {
+  margin-left: -24px;
+}
 </style>

@@ -11,6 +11,7 @@ module.exports = {
       action: '操作',
       edit: '编辑',
       add: '添加',
+      create: '创建',
       delete: '删除',
       delConfirm: '确定删除？',
       result: {
@@ -30,6 +31,7 @@ module.exports = {
       action: '操作',
       edit: '编辑',
       add: '添加',
+      create: '创建',
       delete: '删除',
       delConfirm: '确定删除？',
       result: {
@@ -49,6 +51,7 @@ module.exports = {
       action: 'Action',
       edit: 'Edit',
       add: 'Add',
+      create: 'Create',
       delete: 'Delete',
       delConfirm: 'Sure Delete?',
       result: {

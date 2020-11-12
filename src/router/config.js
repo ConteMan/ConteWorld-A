@@ -35,48 +35,38 @@ const options = {
           component: () => import('@/pages/dashboard')
         },
         {
-          path: 'one',
-          name: '一个',
-          meta: {
-            icon: 'form',
-          },
-          component: PageView,
-          children: [
-            {
-              path: 'index',
-              name: '内容列表',
-              component: () => import('@/pages/one'),
-            }
-          ]
-        },
-        {
-          path: 'article',
-          name: '文章',
+          path: 'word',
+          name: '文字',
           meta: {
             icon: 'book'
           },
           component: PageView,
           children: [
             {
-              path: 'index',
-              name: '文章列表',
+              path: '/one',
+              name: '一个',
+              component: () => import('@/pages/one'),
+            },
+            {
+              path: '/article',
+              name: '文章',
               component: () => import('@/pages/article'),
             },
             {
-              path: 'create',
+              path: '/article/create',
               name: '创建文章',
               meta: {
                 invisible: true,
-                selectPath: '/article/index',
+                selectPath: '/article',
               },
               component: () => import('@/pages/article/ArticleCreate'),
             },
             {
-              path: 'update',
+              path: '/article/update',
               name: '更新文章',
               meta: {
                 invisible: true,
-                selectPath: '/article/index',
+                selectPath: '/article',
               },
               component: () => import('@/pages/article/ArticleUpdate'),
             },

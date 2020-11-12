@@ -16,14 +16,16 @@
       <a-form-model-item label="内容">
         <mavon-editor class="mk-container" v-model="form.content" v-bind="markdownOption" style="height: 100%" />
       </a-form-model-item>
-      <a-form-model-item label="状态">
-        <a-select :default-value="form.status" @change="statusChange">
-          <a-select-option v-for="item in statuses" :value="item.id" :key="item.id">{{ item.str }}</a-select-option>
-        </a-select>
-      </a-form-model-item>
       <a-form-model-item label="信息时间" prop="info_at">
         <a-date-picker show-time valueFormat="YYYY-MM-DD HH:mm:ss" :value="form.info_at" @change="infoAtChange" @ok="infoAtChange" />
       </a-form-model-item>
+      <div class="item-max-width">
+        <a-form-model-item label="状态">
+          <a-select :default-value="form.status" @change="statusChange">
+            <a-select-option v-for="item in statuses" :value="item.id" :key="item.id">{{ item.str }}</a-select-option>
+          </a-select>
+        </a-form-model-item>
+      </div>
       <a-form-model-item>
         <a-space>
           <a-button type="primary" @click="create">
