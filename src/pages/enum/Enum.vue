@@ -5,14 +5,14 @@
         <a-button type="primary" @click="showAdd(0)">{{ $t('add') }}</a-button>
       </div>
       <a-table
-        rowKey="id"
+        row-key="id"
         :data-source="items"
         :columns="columns"
         :pagination="pagination"
         :scroll="{ x: 1000 }"
         :bordered="true"
-        :indentSize="5"
-        :defaultExpandAllRows="true"
+        :indent-size="5"
+        :default-expand-all-rows="true"
         @change="handleTableChange"
       >
         <span slot="status" slot-scope="text">
@@ -85,7 +85,7 @@
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-model-item :label="$t('form.code')" prop="code">
-                <a-input :disabled="codeInputDisable" v-model="form.code"/>
+                <a-input v-model="form.code" :disabled="codeInputDisable" />
               </a-form-model-item>
             </a-col>
           </a-row>
@@ -109,14 +109,14 @@
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-model-item :label="$t('form.value')" prop="value">
-                <a-textarea v-model="form.value" :rows="4"/>
+                <a-textarea v-model="form.value" :rows="4" />
               </a-form-model-item>
             </a-col>
           </a-row>
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-model-item :label="$t('form.des')" prop="des">
-                <a-textarea v-model="form.des" :rows="4"/>
+                <a-textarea v-model="form.des" :rows="4" />
               </a-form-model-item>
             </a-col>
           </a-row>
@@ -134,12 +134,12 @@
         </a-form-model>
         <div class="drawBottom">
           <a-space>
-          <a-button @click="resetForm">
-            {{ $t('reset') }}
-          </a-button>
-          <a-button type="primary" @click="submit" :loading="submitLoading">
-            {{ $t('submit') }}
-          </a-button>
+            <a-button @click="resetForm">
+              {{ $t('reset') }}
+            </a-button>
+            <a-button type="primary" :loading="submitLoading" @click="submit">
+              {{ $t('submit') }}
+            </a-button>
           </a-space>
         </div>
       </a-drawer>
@@ -151,7 +151,7 @@
 import { SysEnum } from '@/services'
 
 export default {
-  name: "Enum",
+  name: 'Enum',
   i18n: require('./i18n'),
   data() {
     return {
@@ -256,61 +256,64 @@ export default {
       roots: [],
     }
   },
+  mounted() {
+    this.initIndex()
+    this.getStatuses()
+  },
   methods: {
     handleTableChange(pagination) {
-      const pager = { ...this.pagination };
-      pager.current = pagination.current;
-      this.pagination = pager;
-      this.index({ page: pagination.current, per_page: pagination.pageSize });
+      const pager = { ...this.pagination }
+      pager.current = pagination.current
+      this.pagination = pager
+      this.index({ page: pagination.current, per_page: pagination.pageSize })
     },
     async index(params) {
-      const res = await SysEnum.index(params);
-      this.items = res.data.data.items;
-      const pagination = { ...this.pagination };
-      pagination.total = res.data.data.total_count;
-      this.pagination = pagination;
+      const res = await SysEnum.index(params)
+      this.items = res.data.data.items
+      const pagination = { ...this.pagination }
+      pagination.total = res.data.data.total_count
+      this.pagination = pagination
     },
     // 初始化列表
     initIndex() {
-      const params = {page: this.page, per_page: this.per_page};
-      this.index(params);
-      const pagination = { ...this.pagination };
+      const params = { page: this.page, per_page: this.per_page }
+      this.index(params)
+      const pagination = { ...this.pagination }
       pagination.current = this.page
       this.pagination = pagination
     },
     // 获取状态列表
     async getStatuses() {
-      const res = await SysEnum.statuses();
+      const res = await SysEnum.statuses()
       if (res.data.code === 0) {
-        this.statuses = res.data.data.items;
+        this.statuses = res.data.data.items
       }
     },
     // 显示添加
     async showAdd(pid = 0) {
-      await this.getRoots();
-      this.drawerVisible = true;
+      await this.getRoots()
+      this.drawerVisible = true
       this.$nextTick(() => {
-        this.form = this.formInit;
-        this.codeInputDisable = false;
-        this.current = {};
-        this.$refs.drawerForm.resetFields();
-        this.form.parent_id = pid;
+        this.form = this.formInit
+        this.codeInputDisable = false
+        this.current = {}
+        this.$refs.drawerForm.resetFields()
+        this.form.parent_id = pid
       })
     },
     // 显示编辑
     async showEdit(id) {
-      await this.getRoots();
-      const res = await SysEnum.edit(id);
-      if(res.data.code === 0){
-        let detail = res.data.data.res;
-        this.drawerVisible = true;
-        this.codeInputDisable = true;
+      await this.getRoots()
+      const res = await SysEnum.edit(id)
+      if (res.data.code === 0) {
+        const detail = res.data.data.res
+        this.drawerVisible = true
+        this.codeInputDisable = true
         this.$nextTick(() => {
-          this.current = detail;
-          this.form = detail;
-          this.$refs.drawerForm.resetFields();
+          this.current = detail
+          this.form = detail
+          this.$refs.drawerForm.resetFields()
         })
-
       } else {
         this.$message.error(res.data.msg ? res.data.msg : this.$t('result.editError'))
       }
@@ -319,54 +322,50 @@ export default {
     async submit() {
       this.$refs.drawerForm.validate(async valid => {
         if (valid) {
-          this.submitLoading = true;
-          let res = {};
+          this.submitLoading = true
+          let res = {}
           if (this.$emptyObj(this.current)) {
-            res = await SysEnum.create(this.form);
+            res = await SysEnum.create(this.form)
           } else {
-            res = await SysEnum.update(this.current.id, this.form);
+            res = await SysEnum.update(this.current.id, this.form)
           }
-          this.submitLoading = false;
-          if(res.data.code === 0){
+          this.submitLoading = false
+          if (res.data.code === 0) {
             this.$message.success(this.$t('result.success'))
-            this.drawerVisible = false;
-            this.initIndex();
+            this.drawerVisible = false
+            this.initIndex()
           } else {
-            this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'));
+            this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'))
           }
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     // 删除
     async destroy(id) {
-      const res = await SysEnum.destroy(id);
-      if(res.data.code === 0){
-        this.$message.success(this.$t('result.success'));
-        this.initIndex();
+      const res = await SysEnum.destroy(id)
+      if (res.data.code === 0) {
+        this.$message.success(this.$t('result.success'))
+        this.initIndex()
       } else {
-        this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'));
+        this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'))
       }
     },
     // 重置表格
     resetForm() {
-      this.$refs.drawerForm.resetFields();
+      this.$refs.drawerForm.resetFields()
     },
     // 关闭抽屉
     drawerClose() {
-      this.drawerVisible = false;
+      this.drawerVisible = false
     },
     async getRoots() {
-      const res = await SysEnum.roots();
+      const res = await SysEnum.roots()
       if (res.data.code === 0) {
-        this.roots = res.data.data.items;
+        this.roots = res.data.data.items
       }
     },
-  },
-  mounted() {
-    this.initIndex();
-    this.getStatuses();
   },
 }
 </script>
@@ -375,6 +374,7 @@ export default {
 .operator {
   margin-bottom: 15px;
 }
+
 .drawBottom {
   position: absolute;
   right: 0;

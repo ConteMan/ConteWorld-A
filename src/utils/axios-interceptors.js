@@ -30,7 +30,7 @@ const resp401 = {
 
 const resp403 = {
   onFulfilled(response, options) {
-    const {message} = options
+    const { message } = options
     if (response.status === 403) {
       message.error(`请求被拒绝`)
     }
@@ -47,7 +47,7 @@ const reqCommon = {
    */
   onFulfilled(config, options) {
     const { message, router } = options
-    const {url, xsrfCookieName} = config
+    const { url, xsrfCookieName } = config
     if (url.indexOf('login') === -1 && xsrfCookieName && !Cookie.get(xsrfCookieName)) {
       message.warning('认证 token 已过期，请重新登录')
       router.push({ path: '/login' })
@@ -61,7 +61,7 @@ const reqCommon = {
    * @returns {Promise<never>}
    */
   onRejected(error, options) {
-    const {message} = options
+    const { message } = options
     message.error(error.message)
     return Promise.reject(error)
   }

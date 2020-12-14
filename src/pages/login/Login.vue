@@ -9,7 +9,14 @@
     <div class="login">
       <a-form :form="form" @submit="onSubmit">
         <div>
-          <a-alert v-show="error" type="error" :closable="true" :message="error" show-icon style="margin-bottom: 24px;" />
+          <a-alert
+            v-show="error"
+            type="error"
+            :closable="true"
+            :message="error"
+            show-icon
+            style="margin-bottom: 24px;"
+          />
           <a-form-item>
             <a-input
               v-decorator="['name', {rules: [{ required: true, message: '请输入用户名', whitespace: true}]}]"
@@ -33,7 +40,14 @@
           </a-form-item>
         </div>
         <a-form-item>
-          <a-button :loading="logging" style="width: 100%;margin-top: 24px" size="large" html-type="submit" type="primary">登录</a-button>
+          <a-button
+            :loading="logging"
+            style="width: 100%;margin-top: 24px"
+            size="large"
+            html-type="submit"
+            type="primary"
+          >登录
+          </a-button>
         </a-form-item>
       </a-form>
     </div>
@@ -110,60 +124,68 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  @import "./src/theme/index";
-  .common-layout{
-    .top {
-      text-align: center;
-      .header {
-        height: 44px;
-        line-height: 44px;
-        a {
-          text-decoration: none;
-        }
-        .logo {
-          height: 44px;
-          vertical-align: top;
-          margin-right: 16px;
-        }
-        .title {
-          font-size: 33px;
-          color: @title-color;
-          font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
-          font-weight: 600;
-          position: relative;
-          top: 2px;
-        }
+@import "./src/theme/index";
+
+.common-layout {
+  .top {
+    text-align: center;
+
+    .header {
+      height: 44px;
+      line-height: 44px;
+
+      a {
+        text-decoration: none;
       }
-      .desc {
-        font-size: 14px;
-        color: @text-color-second;
-        margin-top: 12px;
-        margin-bottom: 40px;
+
+      .logo {
+        height: 44px;
+        vertical-align: top;
+        margin-right: 16px;
+      }
+
+      .title {
+        font-size: 33px;
+        color: @title-color;
+        font-family: 'Myriad Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        font-weight: 600;
+        position: relative;
+        top: 2px;
       }
     }
-    .login{
-      width: 368px;
-      margin: 0 auto;
-      @media screen and (max-width: 576px) {
-        width: 95%;
-      }
-      @media screen and (max-width: 320px) {
-        .captcha-button{
-          font-size: 14px;
-        }
-      }
-      .icon {
-        font-size: 24px;
-        color: @text-color-second;
-        margin-left: 16px;
-        vertical-align: middle;
-        cursor: pointer;
-        transition: color 0.3s;
 
-        &:hover {
-          color: @primary-color;
-        }
+    .desc {
+      font-size: 14px;
+      color: @text-color-second;
+      margin-top: 12px;
+      margin-bottom: 40px;
+    }
+  }
+
+  .login {
+    width: 368px;
+    margin: 0 auto;
+    @media screen and (max-width: 576px) {
+      width: 95%;
+    }
+    @media screen and (max-width: 320px) {
+      .captcha-button {
+        font-size: 14px;
+      }
+    }
+
+    .icon {
+      font-size: 24px;
+      color: @text-color-second;
+      margin-left: 16px;
+      vertical-align: middle;
+      cursor: pointer;
+      transition: color 0.3s;
+
+      &:hover {
+        color: @primary-color;
       }
     }
   }
+}
 </style>

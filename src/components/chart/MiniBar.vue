@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import {format} from 'date-fns'
+import { format } from 'date-fns'
 
 const data = []
 const beginDay = new Date().getTime()
@@ -43,7 +43,7 @@ const scale = [{
 
 export default {
   name: 'MiniBar',
-  data () {
+  data() {
     return {
       data,
       scale,

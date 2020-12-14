@@ -1,14 +1,15 @@
 <template>
   <div :class="['detail-list', size === 'small' ? 'small' : 'large', layout === 'vertical' ? 'vertical': 'horizontal']">
-    <div v-if="title" class="title">{{title}}</div>
+    <div v-if="title" class="title">{{ title }}</div>
     <a-row>
-      <slot></slot>
+      <slot />
     </a-row>
   </div>
 </template>
 
 <script>
 import ACol from 'ant-design-vue/es/grid/Col'
+
 const Item = {
   name: 'DetailListItem',
   props: {
@@ -23,7 +24,7 @@ const Item = {
     }
   },
   methods: {
-    renderTerm (h, term) {
+    renderTerm(h, term) {
       return term ? h(
         'div',
         {
@@ -34,7 +35,7 @@ const Item = {
         [term]
       ) : null
     },
-    renderContent (h, content) {
+    renderContent(h, content) {
       return h(
         'div',
         {
@@ -46,7 +47,7 @@ const Item = {
       )
     }
   },
-  render (h) {
+  render(h) {
     const term = this.renderTerm(h, this.$props.term)
     const content = this.renderContent(h, this.$slots.default)
     return h(
@@ -69,6 +70,11 @@ const responsive = {
 export default {
   name: 'DetailList',
   Item: Item,
+  provide() {
+    return {
+      col: this.col > 4 ? 4 : this.col
+    }
+  },
   props: {
     title: {
       type: String,
@@ -89,68 +95,71 @@ export default {
       required: false,
       default: 'horizontal'
     }
-  },
-  provide () {
-    return {
-      col: this.col > 4 ? 4 : this.col
-    }
   }
 }
 </script>
 
 <style lang="less">
-  .detail-list{
-    .title {
-      font-size: 16px;
-      color: @title-color;
-      font-weight: bolder;
-      margin-bottom: 16px;
-    }
-    .term {
-      // Line-height is 22px IE dom height will calculate error
-      line-height: 20px;
-      padding-bottom: 16px;
-      margin-right: 8px;
-      color: @title-color;
-      white-space: nowrap;
-      display: table-cell;
-      &:after {
-        content: ':';
-        margin: 0 8px 0 2px;
-        position: relative;
-        top: -0.5px;
-      }
-    }
-    .content{
-      line-height: 22px;
-      width: 100%;
-      padding-bottom: 16px;
-      color: @text-color;
-      display: table-cell;
-    }
-    &.small{
-      .title{
-        font-size: 14px;
-        color: @text-color;
-        font-weight: normal;
-        margin-bottom: 12px;
-      }
-      .term,.content{
-        padding-bottom: 8px;
-      }
-    }
-    &.large{
-      .term,.content{
-        padding-bottom: 16px;
-      }
-    }
-    &.vertical{
-      .term {
-        padding-bottom: 8px;
-      }
-      .term,.content{
-        display: block;
-      }
+.detail-list {
+  .title {
+    font-size: 16px;
+    color: @title-color;
+    font-weight: bolder;
+    margin-bottom: 16px;
+  }
+
+  .term {
+    // Line-height is 22px IE dom height will calculate error
+    line-height: 20px;
+    padding-bottom: 16px;
+    margin-right: 8px;
+    color: @title-color;
+    white-space: nowrap;
+    display: table-cell;
+
+    &:after {
+      content: ':';
+      margin: 0 8px 0 2px;
+      position: relative;
+      top: -0.5px;
     }
   }
+
+  .content {
+    line-height: 22px;
+    width: 100%;
+    padding-bottom: 16px;
+    color: @text-color;
+    display: table-cell;
+  }
+
+  &.small {
+    .title {
+      font-size: 14px;
+      color: @text-color;
+      font-weight: normal;
+      margin-bottom: 12px;
+    }
+
+    .term, .content {
+      padding-bottom: 8px;
+    }
+  }
+
+  &.large {
+    .term, .content {
+      padding-bottom: 16px;
+    }
+  }
+
+  &.vertical {
+    .term {
+      padding-bottom: 8px;
+    }
+
+    .term, .content {
+      display: block;
+    }
+  }
+}
 </style>

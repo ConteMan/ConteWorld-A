@@ -32,7 +32,7 @@ const hasInjected = (method) => method.toString().indexOf('//--auth-inject') !==
  * @returns {boolean}
  */
 const auth = function(authConfig, permission, role, permissions, roles) {
-  const {check, type} = authConfig
+  const { check, type } = authConfig
   if (check && typeof check === 'function') {
     return check.apply(this, [permission, role, permissions, roles])
   }
@@ -65,8 +65,8 @@ const checkFromRoles = function(check, roles) {
   if (!roles) {
     return false
   }
-  for (let role of roles) {
-    const {operation} = role
+  for (const role of roles) {
+    const { operation } = role
     if (operation && operation.indexOf(check) !== -1) {
       return true
     }
@@ -74,7 +74,7 @@ const checkFromRoles = function(check, roles) {
   return false
 }
 
-const checkInject = function (el, binding,vnode) {
+const checkInject = function(el, binding, vnode) {
   const type = binding.arg
   const check = binding.value
   const instance = vnode.context
@@ -86,7 +86,7 @@ const checkInject = function (el, binding,vnode) {
   }
 }
 
-const addDisabled = function (el) {
+const addDisabled = function(el) {
   if (el.tagName === 'BUTTON') {
     el.disabled = true
   } else {
@@ -95,7 +95,7 @@ const addDisabled = function (el) {
   el.setAttribute('title', '无此权限')
 }
 
-const removeDisabled = function (el) {
+const removeDisabled = function(el) {
   el.disabled = false
   el.classList.remove('disabled')
   el.removeAttribute('title')
@@ -104,10 +104,10 @@ const removeDisabled = function (el) {
 const AuthorityPlugin = {
   install(Vue) {
     Vue.directive('auth', {
-      bind(el, binding,vnode) {
+      bind(el, binding, vnode) {
         setTimeout(() => checkInject(el, binding, vnode), 10)
       },
-      componentUpdated(el, binding,vnode) {
+      componentUpdated(el, binding, vnode) {
         setTimeout(() => checkInject(el, binding, vnode), 10)
       },
       unbind(el) {
@@ -123,10 +123,10 @@ const AuthorityPlugin = {
               const method = this.$options.methods[key]
               if (!hasInjected(method)) {
                 let authConfig = authorize[key]
-                authConfig = (typeof authConfig === 'string') ? {check: authConfig} : authConfig
-                const {check, type, onFailure} = authConfig
-                this.$options.methods[key] = function () {
-                  //--auth-inject
+                authConfig = (typeof authConfig === 'string') ? { check: authConfig } : authConfig
+                const { check, type, onFailure } = authConfig
+                this.$options.methods[key] = function() {
+                  // --auth-inject
                   if (this.$auth(check, type)) {
                     return method.apply(this, arguments)
                   } else {
@@ -157,7 +157,7 @@ const AuthorityPlugin = {
           const roles = this.$store.getters['account/roles']
           const permission = getRoutePermission(permissions, this.$route)
           const role = getRouteRole(roles, this.$route)
-          return auth.apply(this, [{check, type}, permission, role, permissions, roles])
+          return auth.apply(this, [{ check, type }, permission, role, permissions, roles])
         }
       }
     })

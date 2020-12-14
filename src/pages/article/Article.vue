@@ -25,7 +25,9 @@
         @reset="onReset"
       >
         <div slot="title">
-          <a-button class="table-title-btn" type="primary" @click="$router.push({ path: '/article/create' })">{{ $t('create') }}</a-button>
+          <a-button class="table-title-btn" type="primary" @click="$router.push({ path: '/article/create' })">
+            {{ $t('create') }}
+          </a-button>
         </div>
         <span slot="status" slot-scope="{text}">
           <a-tag :color="text.color">
@@ -263,5 +265,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  @import "./index";
+@import "./index";
 </style>

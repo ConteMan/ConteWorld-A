@@ -81,6 +81,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  #id{
-  }
+#id {
+}
 </style>

@@ -1,6 +1,6 @@
-import {hasAuthority} from '@/utils/authority-utils'
-import {loginIgnore} from '@/router/index'
-import {checkAuthorization} from '@/utils/request'
+import { hasAuthority } from '@/utils/authority-utils'
+import { loginIgnore } from '@/router/index'
+import { checkAuthorization } from '@/utils/request'
 import NProgress from 'nprogress'
 
 NProgress.configure({ showSpinner: false })
@@ -27,13 +27,13 @@ const progressStart = (to, from, next) => {
  * @param options
  */
 const loginGuard = (to, from, next, options) => {
-  const {message} = options
+  const { message } = options
   if (!loginIgnore.includes(to) && !checkAuthorization()) {
     message.warning('登录已失效，请重新登录')
-    next({path: '/login'})
+    next({ path: '/login' })
   } else {
     if (to.path === '/login' && checkAuthorization()) {
-      next({path: '/dashboard'})
+      next({ path: '/dashboard' })
     } else {
       next()
     }
@@ -48,12 +48,12 @@ const loginGuard = (to, from, next, options) => {
  * @param options
  */
 const authorityGuard = (to, from, next, options) => {
-  const {store, message} = options
+  const { store, message } = options
   const permissions = store.getters['account/permissions']
   const roles = store.getters['account/roles']
   if (!hasAuthority(to, permissions, roles)) {
     message.warning(`对不起，您无权访问页面: ${to.fullPath}，请联系管理员`)
-    next({path: '/403'})
+    next({ path: '/403' })
     // NProgress.done()
   } else {
     next()
@@ -69,14 +69,14 @@ const authorityGuard = (to, from, next, options) => {
  * @returns {*}
  */
 const redirectGuard = (to, from, next, options) => {
-  const {store} = options
+  const { store } = options
   if (store.state.setting.layout === 'mix') {
     const firstMenu = store.getters['setting/firstMenu']
     if (firstMenu.find(item => item.fullPath === to.fullPath)) {
       store.commit('setting/setActivatedFirst', to.fullPath)
       const subMenu = store.getters['setting/subMenu']
       if (subMenu.length > 0) {
-        return next({path: subMenu[0].fullPath})
+        return next({ path: subMenu[0].fullPath })
       }
     }
   }

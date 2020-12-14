@@ -1,13 +1,13 @@
 import enquireJs from 'enquire.js'
 
-export function isDef (v){
+export function isDef(v) {
   return v !== undefined && v !== null
 }
 
 /**
  * Remove an item from an array.
  */
-export function remove (arr, item) {
+export function remove(arr, item) {
   if (arr.length) {
     const index = arr.indexOf(item)
     if (index > -1) {
@@ -16,16 +16,16 @@ export function remove (arr, item) {
   }
 }
 
-export function isRegExp (v) {
+export function isRegExp(v) {
   return _toString.call(v) === '[object RegExp]'
 }
 
 export function enquireScreen(call) {
   const handler = {
-    match: function () {
+    match: function() {
       call && call(true)
     },
-    unmatch: function () {
+    unmatch: function() {
       call && call(false)
     }
   }
@@ -35,20 +35,20 @@ export function enquireScreen(call) {
 export function isJSON(str) {
   if (typeof str === 'string') {
     try {
-      const obj = JSON.parse(str);
-      return !!(typeof obj == 'object' && obj);
+      const obj = JSON.parse(str)
+      return !!(typeof obj === 'object' && obj)
     } catch (e) {
-      return false;
+      return false
     }
   }
-  return !!(typeof str == 'object' && str);
+  return !!(typeof str === 'object' && str)
 }
 
 const _toString = Object.prototype.toString
 
 export function emptyObj(obj) {
   if (Object.keys(obj).length === 0) {
-    return true;
+    return true
   }
-  return false;
+  return false
 }

@@ -5,9 +5,9 @@ import Cookie from 'js-cookie'
 const xsrfHeaderName = 'Authorization'
 
 axios.defaults.timeout = 5000
-axios.defaults.withCredentials= true
-axios.defaults.xsrfHeaderName= xsrfHeaderName
-axios.defaults.xsrfCookieName= xsrfHeaderName
+axios.defaults.withCredentials = true
+axios.defaults.xsrfHeaderName = xsrfHeaderName
+axios.defaults.xsrfCookieName = xsrfHeaderName
 
 // 认证类型
 const AUTH_TYPE = {
@@ -34,7 +34,7 @@ const METHOD = {
 async function request(url, method, params) {
   switch (method) {
     case METHOD.GET:
-      return axios.get(url, {params})
+      return axios.get(url, { params })
     case METHOD.POST:
       return axios.post(url, params)
     case METHOD.PUT:
@@ -42,7 +42,7 @@ async function request(url, method, params) {
     case METHOD.DELETE:
       return axios.delete(url, params)
     default:
-      return axios.get(url, {params})
+      return axios.get(url, { params })
   }
 }
 
@@ -54,7 +54,7 @@ async function request(url, method, params) {
 function setAuthorization(auth, authType = AUTH_TYPE.BEARER) {
   switch (authType) {
     case AUTH_TYPE.BEARER:
-      Cookie.set(xsrfHeaderName, 'Bearer ' + auth.token, {expires: auth.expireAt})
+      Cookie.set(xsrfHeaderName, 'Bearer ' + auth.token, { expires: auth.expireAt })
       break
     case AUTH_TYPE.BASIC:
     case AUTH_TYPE.AUTH1:
@@ -108,10 +108,10 @@ function checkAuthorization(authType = AUTH_TYPE.BEARER) {
  * @param options
  */
 function loadInterceptors(interceptors, options) {
-  const {request, response} = interceptors
+  const { request, response } = interceptors
   // 加载请求拦截器
   request.forEach(item => {
-    let {onFulfilled, onRejected} = item
+    let { onFulfilled, onRejected } = item
     if (!onFulfilled || typeof onFulfilled !== 'function') {
       onFulfilled = config => config
     }
@@ -125,7 +125,7 @@ function loadInterceptors(interceptors, options) {
   })
   // 加载响应拦截器
   response.forEach(item => {
-    let {onFulfilled, onRejected} = item
+    let { onFulfilled, onRejected } = item
     if (!onFulfilled || typeof onFulfilled !== 'function') {
       onFulfilled = response => response
     }

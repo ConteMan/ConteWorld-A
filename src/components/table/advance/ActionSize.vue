@@ -1,9 +1,9 @@
 <template>
-  <div class="action-size" ref="root">
+  <div ref="root" class="action-size">
     <a-tooltip title="密度">
       <a-dropdown placement="bottomCenter" :trigger="['click']" :get-popup-container="() => $refs.root">
         <a-icon class="action" type="column-height" />
-        <a-menu :selected-keys="[value]" slot="overlay" @click="onClick">
+        <a-menu slot="overlay" :selected-keys="[value]" @click="onClick">
           <a-menu-item key="default">
             默认
           </a-menu-item>
@@ -20,25 +20,25 @@
 </template>
 
 <script>
-  export default {
-    name: 'ActionSize',
-    props: ['value'],
-    inject: ['table'],
-    data() {
-      return {
-        selectedKeys: ['middle']
-      }
-    },
-    methods: {
-      onClick({key}) {
-        this.$emit('input', key)
-      }
+export default {
+  name: 'ActionSize',
+  inject: ['table'],
+  props: ['value'],
+  data() {
+    return {
+      selectedKeys: ['middle']
+    }
+  },
+  methods: {
+    onClick({ key }) {
+      this.$emit('input', key)
     }
   }
+}
 </script>
 
 <style scoped lang="less">
-.action-size{
+.action-size {
   display: inline-block;
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
   <a-dropdown>
     <div class="header-avatar" style="cursor: pointer">
-<!--      <a-avatar class="avatar" size="small" shape="circle" :src="user.avatar"/>-->
-      <span class="name">{{user.name}}</span>
+      <!--      <a-avatar class="avatar" size="small" shape="circle" :src="user.avatar"/>-->
+      <span class="name">{{ user.name }}</span>
     </div>
-    <a-menu :class="['avatar-menu']" slot="overlay">
+    <a-menu slot="overlay" :class="['avatar-menu']">
       <a-menu-item @click="() => $router.push({path: '/mine/info'})">
         <a-icon type="user" />
         <span>修改密码</span>
@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import {logout} from '@/services/modules/user'
+import { mapGetters } from 'vuex'
+import { logout } from '@/services/modules/user'
 
 export default {
   name: 'HeaderAvatar',
@@ -37,20 +37,24 @@ export default {
 </script>
 
 <style lang="less">
-  .header-avatar{
-    display: inline-flex;
-    .avatar, .name{
-      align-self: center;
-    }
-    .avatar{
-      margin-right: 8px;
-    }
-    .name{
-      font-weight: 500;
-    }
+.header-avatar {
+  display: inline-flex;
+
+  .avatar, .name {
+    align-self: center;
   }
-  .avatar-menu{
-    width: 150px;
+
+  .avatar {
+    margin-right: 8px;
   }
+
+  .name {
+    font-weight: 500;
+  }
+}
+
+.avatar-menu {
+  width: 150px;
+}
 
 </style>

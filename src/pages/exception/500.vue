@@ -4,10 +4,11 @@
 
 <script>
 import ExceptionPage from '@/components/exception/ExceptionPage'
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
+
 export default {
   name: 'Exp500',
-  components: {ExceptionPage},
+  components: { ExceptionPage },
   computed: {
     ...mapState('setting', ['pageMinHeight']),
     minHeight() {

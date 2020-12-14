@@ -17,7 +17,13 @@
         <mavon-editor v-model="form.content" class="mk-container" v-bind="markdownOption" style="height: 100%" />
       </a-form-model-item>
       <a-form-model-item label="信息时间" prop="info_at">
-        <a-date-picker show-time value-format="YYYY-MM-DD HH:mm:ss" :value="form.info_at" @change="infoAtChange" @ok="infoAtChange" />
+        <a-date-picker
+          show-time
+          value-format="YYYY-MM-DD HH:mm:ss"
+          :value="form.info_at"
+          @change="infoAtChange"
+          @ok="infoAtChange"
+        />
       </a-form-model-item>
       <div class="item-max-width">
         <a-form-model-item label="状态">
@@ -118,5 +124,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  @import "index";
+@import "index";
 </style>

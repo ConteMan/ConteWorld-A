@@ -7,25 +7,25 @@ const Article = {
       page: params.page,
       per_page: params.per_page,
       tag: params.tags,
-    });
+    })
   },
   create(data) {
-    return request(BASE_URL + '/articles', METHOD.POST, data);
+    return request(BASE_URL + '/articles', METHOD.POST, data)
   },
   edit(id) {
-    return request( BASE_URL + '/articles/' + id + '/edit', METHOD.GET);
+    return request(BASE_URL + '/articles/' + id + '/edit', METHOD.GET)
   },
   update(id, data) {
-    return request(BASE_URL + '/articles/' + id, METHOD.PUT, data);
+    return request(BASE_URL + '/articles/' + id, METHOD.PUT, data)
   },
   destroy(id) {
-    return request(BASE_URL + '/articles/' + id, METHOD.DELETE);
+    return request(BASE_URL + '/articles/' + id, METHOD.DELETE)
   },
   statuses() {
-    return request(BASE_URL + '/articles/statuses', METHOD.GET);
+    return request(BASE_URL + '/articles/statuses', METHOD.GET)
   },
   tags() {
-    return request(BASE_URL + '/articles/tags', METHOD.GET);
+    return request(BASE_URL + '/articles/tags', METHOD.GET)
   }
 }
 

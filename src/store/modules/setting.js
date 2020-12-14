@@ -1,8 +1,8 @@
 import config from '@/config'
-import {ADMIN} from '@/config/default'
-import {formatFullPath} from '@/utils/i18n'
-import {filterMenu} from '@/utils/authority-utils'
-import {getLocalSetting} from '@/utils/themeUtil'
+import { ADMIN } from '@/config/default'
+import { formatFullPath } from '@/utils/i18n'
+import { filterMenu } from '@/utils/authority-utils'
+import { getLocalSetting } from '@/utils/themeUtil'
 
 const localSetting = getLocalSetting(true)
 
@@ -21,24 +21,24 @@ export default {
   getters: {
     menuData(state, getters, rootState) {
       if (state.filterMenu) {
-        const {permissions, roles} = rootState.account
+        const { permissions, roles } = rootState.account
         filterMenu(state.menuData, permissions, roles)
       }
       return state.menuData
     },
     firstMenu(state) {
-      const {menuData} = state
+      const { menuData } = state
       if (menuData.length > 0 && !menuData[0].fullPath) {
         formatFullPath(menuData)
       }
       return menuData.map(item => {
-        const menuItem = {...item}
+        const menuItem = { ...item }
         delete menuItem.children
         return menuItem
       })
     },
     subMenu(state) {
-      const {menuData, activatedFirst} = state
+      const { menuData, activatedFirst } = state
       if (!menuData[0].fullPath) {
         formatFullPath(menuData)
       }
@@ -47,19 +47,19 @@ export default {
     }
   },
   mutations: {
-    setDevice (state, isMobile) {
+    setDevice(state, isMobile) {
       state.isMobile = isMobile
     },
-    setTheme (state, theme) {
+    setTheme(state, theme) {
       state.theme = theme
     },
-    setLayout (state, layout) {
+    setLayout(state, layout) {
       state.layout = layout
     },
-    setMultiPage (state, multiPage) {
+    setMultiPage(state, multiPage) {
       state.multiPage = multiPage
     },
-    setAnimate (state, animate) {
+    setAnimate(state, animate) {
       state.animate = animate
     },
     setWeekMode(state, weekMode) {

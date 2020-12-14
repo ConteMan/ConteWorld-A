@@ -1,14 +1,14 @@
 <template>
   <admin-layout>
-    <contextmenu :itemList="menuItemList" :visible.sync="menuVisible" @select="onMenuSelect" />
+    <contextmenu :item-list="menuItemList" :visible.sync="menuVisible" @select="onMenuSelect" />
     <tabs-head
-        v-if="multiPage"
-        :active="activePage"
-        :page-list="pageList"
-        @change="changePage"
-        @close="remove"
-        @refresh="refresh"
-        @contextmenu="onContextmenu"
+      v-if="multiPage"
+      :active="activePage"
+      :page-list="pageList"
+      @change="changePage"
+      @close="remove"
+      @refresh="refresh"
+      @contextmenu="onContextmenu"
     />
     <div :class="['tabs-view-content', layout, pageWidth]" :style="`margin-top: ${multiPage ? -24 : 0}px`">
       <page-toggle-transition :disabled="animate.disabled" :animate="animate.name" :direction="animate.direction">
@@ -25,16 +25,16 @@
 import AdminLayout from '@/layouts/AdminLayout'
 import Contextmenu from '@/components/menu/Contextmenu'
 import PageToggleTransition from '@/components/transition/PageToggleTransition'
-import {mapState, mapMutations} from 'vuex'
-import {getI18nKey} from '@/utils/routerUtil'
+import { mapState, mapMutations } from 'vuex'
+import { getI18nKey } from '@/utils/routerUtil'
 import AKeepAlive from '@/components/cache/AKeepAlive'
 import TabsHead from '@/layouts/tabs/TabsHead'
 
 export default {
   name: 'TabsView',
   i18n: require('./i18n'),
-  components: {TabsHead, PageToggleTransition, Contextmenu, AdminLayout , AKeepAlive },
-  data () {
+  components: { TabsHead, PageToggleTransition, Contextmenu, AdminLayout, AKeepAlive },
+  data() {
     return {
       clearCaches: [],
       pageList: [],
@@ -57,7 +57,33 @@ export default {
       return this.multiPage ? 24 : 0
     }
   },
-  created () {
+  watch: {
+    '$route': function(newRoute) {
+      this.activePage = newRoute.fullPath
+      if (!this.multiPage) {
+        this.pageList = [this.createPage(newRoute)]
+      } else if (this.pageList.findIndex(item => item.fullPath === newRoute.fullPath) === -1) {
+        this.pageList.push(this.createPage(newRoute))
+      }
+      if (this.multiPage) {
+        this.$nextTick(() => {
+          this.setCachedKey(newRoute)
+        })
+      }
+    },
+    'multiPage': function(newVal) {
+      if (!newVal) {
+        this.pageList = [this.createPage(this.$route)]
+        this.removeListener()
+      } else {
+        this.addListener()
+      }
+    },
+    tabsOffset(newVal, oldVal) {
+      this.correctPageMinHeight(oldVal - newVal)
+    }
+  },
+  created() {
     this.loadCachedTabs()
     const route = this.$route
     if (this.pageList.findIndex(item => item.fullPath === route.fullPath) === -1) {
@@ -71,49 +97,23 @@ export default {
       this.addListener()
     }
   },
-  mounted () {
+  mounted() {
     this.correctPageMinHeight(-this.tabsOffset)
   },
   beforeDestroy() {
     this.removeListener()
     this.correctPageMinHeight(this.tabsOffset)
   },
-  watch: {
-    '$route': function (newRoute) {
-      this.activePage = newRoute.fullPath
-      if (!this.multiPage) {
-        this.pageList = [this.createPage(newRoute)]
-      } else if (this.pageList.findIndex(item => item.fullPath === newRoute.fullPath) === -1) {
-        this.pageList.push(this.createPage(newRoute))
-      }
-      if (this.multiPage) {
-        this.$nextTick(() => {
-          this.setCachedKey(newRoute)
-        })
-      }
-    },
-    'multiPage': function (newVal) {
-      if (!newVal) {
-        this.pageList = [this.createPage(this.$route)]
-        this.removeListener()
-      } else {
-        this.addListener()
-      }
-    },
-    tabsOffset(newVal, oldVal) {
-      this.correctPageMinHeight(oldVal - newVal)
-    }
-  },
   methods: {
-    changePage (key) {
+    changePage(key) {
       this.activePage = key
       this.$router.push(key)
     },
-    remove (key, next) {
+    remove(key, next) {
       if (this.pageList.length === 1) {
         return this.$message.warning(this.$t('warn'))
       }
-      //清除缓存
+      // 清除缓存
       let index = this.pageList.findIndex(item => item.fullPath === key)
       this.clearCaches = this.pageList.splice(index, 1).map(page => page.cachedKey)
       if (next) {
@@ -124,14 +124,16 @@ export default {
         this.$router.push(this.activePage)
       }
     },
-    refresh (key, page) {
+    refresh(key, page) {
       page = page || this.pageList.find(item => item.fullPath === key)
       page.loading = true
       this.clearCache(page)
       if (key === this.activePage) {
+        // eslint-disable-next-line no-return-assign
         this.reloadContent(() => page.loading = false)
       } else {
         // 其实刷新很快，加这个延迟纯粹为了 loading 状态多展示一会儿，让用户感知刷新这一过程
+        // eslint-disable-next-line no-return-assign
         setTimeout(() => page.loading = false, 500)
       }
     },
@@ -142,16 +144,25 @@ export default {
         this.menuVisible = true
       }
     },
-    onMenuSelect (key, target, pageKey) {
+    onMenuSelect(key, target, pageKey) {
       switch (key) {
-        case '1': this.closeLeft(pageKey); break
-        case '2': this.closeRight(pageKey); break
-        case '3': this.closeOthers(pageKey); break
-        case '4': this.refresh(pageKey); break
-        default: break
+        case '1':
+          this.closeLeft(pageKey)
+          break
+        case '2':
+          this.closeRight(pageKey)
+          break
+        case '3':
+          this.closeOthers(pageKey)
+          break
+        case '4':
+          this.refresh(pageKey)
+          break
+        default:
+          break
       }
     },
-    closeOthers (pageKey) {
+    closeOthers(pageKey) {
       // 清除缓存
       const clearPages = this.pageList.filter(item => item.fullPath !== pageKey && !item.unclose)
       this.clearCaches = clearPages.map(item => item.cachedKey)
@@ -162,7 +173,7 @@ export default {
         this.$router.push(this.activePage)
       }
     },
-    closeLeft (pageKey) {
+    closeLeft(pageKey) {
       const index = this.pageList.findIndex(item => item.fullPath === pageKey)
       // 清除缓存
       const clearPages = this.pageList.filter((item, i) => i < index && !item.unclose)
@@ -174,7 +185,7 @@ export default {
         this.$router.push(this.activePage)
       }
     },
-    closeRight (pageKey) {
+    closeRight(pageKey) {
       // 清除缓存
       const index = this.pageList.findIndex(item => item.fullPath === pageKey)
       const clearPages = this.pageList.filter((item, i) => i > index && !item.unclose)
@@ -226,7 +237,7 @@ export default {
      * @param event 页签关闭事件
      */
     closePageListener(event) {
-      const {closeRoute, nextRoute} = event.detail
+      const { closeRoute, nextRoute } = event.detail
       const closePath = typeof closeRoute === 'string' ? closeRoute : closeRoute.path
       this.remove(closePath, nextRoute)
     },
@@ -235,14 +246,14 @@ export default {
      * @param event 页签关闭事件
      */
     refreshPageListener(event) {
-      const {pageKey} = event.detail
+      const { pageKey } = event.detail
       this.refresh(pageKey)
     },
     /**
      * 页面 unload 事件监听器，添加页签到 session 缓存，用于刷新时保留页签
      */
     unloadListener() {
-      const tabs = this.pageList.map(item => ({...item, _init_: false}))
+      const tabs = this.pageList.map(item => ({ ...item, _init_: false }))
       sessionStorage.setItem(process.env.VUE_APP_TBAS_KEY, JSON.stringify(tabs))
     },
     createPage(route) {
@@ -288,17 +299,20 @@ export default {
 </script>
 
 <style scoped lang="less">
-  .tabs-view{
-    margin: -16px auto 8px;
-    &.head.fixed{
-      max-width: 1400px;
-    }
+.tabs-view {
+  margin: -16px auto 8px;
+
+  &.head.fixed {
+    max-width: 1400px;
   }
-  .tabs-view-content{
-    position: relative;
-    &.head.fixed{
-      width: 1400px;
-      margin: 0 auto;
-    }
+}
+
+.tabs-view-content {
+  position: relative;
+
+  &.head.fixed {
+    width: 1400px;
+    margin: 0 auto;
   }
+}
 </style>

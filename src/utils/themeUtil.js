@@ -1,7 +1,7 @@
 const client = require('webpack-theme-color-replacer/client')
-const {theme} = require('../config')
-const {getMenuColors, getAntdColors, getThemeToggleColors, getFunctionalColors} = require('../utils/colors')
-const {ANTD} = require('../config/default')
+const { theme } = require('../config')
+const { getMenuColors, getAntdColors, getThemeToggleColors, getFunctionalColors } = require('../utils/colors')
+const { ANTD } = require('../config/default')
 
 function getThemeColors(color, $theme) {
   const _color = color || theme.color
@@ -21,15 +21,15 @@ function getThemeColors(color, $theme) {
 }
 
 function changeThemeColor(newColor, $theme) {
-  let promise = client.changer.changeColor({newColors: getThemeColors(newColor, $theme)})
+  const promise = client.changer.changeColor({ newColors: getThemeColors(newColor, $theme) })
   return promise
 }
 
 function modifyVars(color) {
-  let _color = color || theme.color
+  const _color = color || theme.color
   const palettes = getAntdColors(_color, theme.mode)
   const menuColors = getMenuColors(_color, theme.mode)
-  const {success, warning, error} = getFunctionalColors(theme.mode)
+  const { success, warning, error } = getFunctionalColors(theme.mode)
   const primary = palettes[5]
   return {
     'primary-color': primary,
@@ -67,7 +67,7 @@ function modifyVars(color) {
 
 function loadLocalTheme(localSetting) {
   if (localSetting && localSetting.theme) {
-    let {color, mode} = localSetting.theme
+    let { color, mode } = localSetting.theme
     color = color || theme.color
     mode = mode || theme.mode
     changeThemeColor(color, mode)

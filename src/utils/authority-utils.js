@@ -20,7 +20,7 @@ function hasPermission(authority, permissions) {
  * @param roles 用户角色集合
  */
 function hasRole(authority, roles) {
-  let required = undefined
+  let required
   if (typeof authority === 'object') {
     required = authority.role
   }
@@ -36,7 +36,7 @@ function hasRole(authority, roles) {
 function hasAnyRole(required, roles) {
   if (!required) {
     return false
-  } else if(Array.isArray(required)) {
+  } else if (Array.isArray(required)) {
     return roles.findIndex(role => {
       return required.findIndex(item => item === role || item === role.id) !== -1
     }) !== -1
@@ -54,7 +54,7 @@ function hasAnyRole(required, roles) {
  */
 function hasAuthority(route, permissions, roles) {
   const authorities = [...route.meta.pAuthorities, route.meta.authority]
-  for (let authority of authorities) {
+  for (const authority of authorities) {
     if (!hasPermission(authority, permissions) && !hasRole(authority, roles)) {
       return false
     }
@@ -82,4 +82,4 @@ function filterMenu(menuData, permissions, roles) {
   })
 }
 
-export {filterMenu, hasAuthority}
+export { filterMenu, hasAuthority }

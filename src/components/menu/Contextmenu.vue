@@ -3,10 +3,10 @@
     v-show="visible"
     class="contextmenu"
     :style="style"
-    :selectedKeys="selectedKeys"
+    :selected-keys="selectedKeys"
     @click="handleClick"
   >
-    <a-menu-item :key="item.key" v-for="item in itemList">
+    <a-menu-item v-for="item in itemList" :key="item.key">
       <a-icon v-if="item.icon" :type="item.icon" />
       <span>{{ item.text }}</span>
     </a-menu-item>
@@ -28,7 +28,7 @@ export default {
       default: () => []
     }
   },
-  data () {
+  data() {
     return {
       left: 0,
       top: 0,
@@ -38,14 +38,14 @@ export default {
     }
   },
   computed: {
-    style () {
+    style() {
       return {
         left: this.left + 'px',
         top: this.top + 'px'
       }
     }
   },
-  created () {
+  created() {
     window.addEventListener('click', this.closeMenu)
     window.addEventListener('contextmenu', this.setPosition)
   },
@@ -54,16 +54,16 @@ export default {
     window.removeEventListener('contextmenu', this.setPosition)
   },
   methods: {
-    closeMenu () {
+    closeMenu() {
       this.$emit('update:visible', false)
     },
-    setPosition (e) {
+    setPosition(e) {
       this.left = e.clientX
       this.top = e.clientY
       this.target = e.target
       this.meta = e.meta
     },
-    handleClick ({ key }) {
+    handleClick({ key }) {
       this.$emit('select', key, this.target, this.meta)
       this.closeMenu()
     }
@@ -72,13 +72,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .contextmenu{
-    position: fixed;
-    z-index: 1000;
-    border-radius: 4px;
-    box-shadow: -4px 4px 16px 1px @shadow-color !important;
-  }
-  .ant-menu-item {
-    margin: 0 !important // 菜单项之间的缝隙会影响点击
-  }
+.contextmenu {
+  position: fixed;
+  z-index: 1000;
+  border-radius: 4px;
+  box-shadow: -4px 4px 16px 1px @shadow-color !important;
+}
+
+.ant-menu-item {
+  margin: 0 !important // 菜单项之间的缝隙会影响点击
+}
 </style>

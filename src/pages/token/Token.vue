@@ -5,13 +5,13 @@
         <a-button type="primary" @click="showAdd">{{ $t('add') }}</a-button>
       </div>
       <a-table
-        rowKey="id"
+        row-key="id"
         :data-source="items"
         :columns="columns"
         :bordered="true"
         :pagination="pagination"
-        @change="handleTableChange"
         :scroll="{ x: 1000 }"
+        @change="handleTableChange"
       >
         <span slot="common" slot-scope="text">
           <template v-if="!text">
@@ -22,7 +22,7 @@
           </template>
         </span>
         <span slot="auth" slot-scope="text">
-          <a-tag color="grey" v-for="item in text" :key="item">
+          <a-tag v-for="item in text" :key="item" color="grey">
             {{ item }}
           </a-tag>
         </span>
@@ -78,7 +78,7 @@
                   type="date"
                   placeholder="Pick a date"
                   style="width: 100%;"
-                  valueFormat="YYYY-MM-DD HH:mm:ss"
+                  value-format="YYYY-MM-DD HH:mm:ss"
                 />
               </a-form-model-item>
             </a-col>
@@ -86,12 +86,12 @@
         </a-form-model>
         <div class="drawBottom">
           <a-space>
-          <a-button @click="resetForm">
-            {{ $t('reset') }}
-          </a-button>
-          <a-button type="primary" @click="submit" :loading="submitLoading">
-            {{ $t('submit') }}
-          </a-button>
+            <a-button @click="resetForm">
+              {{ $t('reset') }}
+            </a-button>
+            <a-button type="primary" :loading="submitLoading" @click="submit">
+              {{ $t('submit') }}
+            </a-button>
           </a-space>
         </div>
       </a-drawer>
@@ -103,7 +103,7 @@
 import { Token as PageApi } from '@/services'
 
 export default {
-  name: "Token",
+  name: 'Token',
   i18n: require('./i18n'),
   data() {
     return {
@@ -181,64 +181,68 @@ export default {
       submitLoading: false,
     }
   },
+  mounted() {
+    this.initIndex()
+    this.getStatuses()
+  },
   methods: {
     handleTableChange(pagination) {
-      const pager = { ...this.pagination };
-      pager.current = pagination.current;
-      this.pagination = pager;
-      this.index({ page: pagination.current, per_page: pagination.pageSize });
+      const pager = { ...this.pagination }
+      pager.current = pagination.current
+      this.pagination = pager
+      this.index({ page: pagination.current, per_page: pagination.pageSize })
     },
     async index(params) {
-      const res = await PageApi.index(params);
-      this.items = res.data.data.items;
-      const pagination = { ...this.pagination };
-      pagination.total = res.data.data.total_count;
-      this.pagination = pagination;
+      const res = await PageApi.index(params)
+      this.items = res.data.data.items
+      const pagination = { ...this.pagination }
+      pagination.total = res.data.data.total_count
+      this.pagination = pagination
     },
     // 初始化列表
     initIndex() {
-      const params = {page: this.page, per_page: this.per_page};
-      this.index(params);
-      const pagination = { ...this.pagination };
+      const params = { page: this.page, per_page: this.per_page }
+      this.index(params)
+      const pagination = { ...this.pagination }
       pagination.current = this.page
       this.pagination = pagination
     },
     // 获取状态列表
     async getStatuses() {
-      const res = await PageApi.statuses();
+      const res = await PageApi.statuses()
       if (res.data.code === 0) {
-        this.statuses = res.data.data.items;
+        this.statuses = res.data.data.items
       }
     },
     // 显示添加
     async showAdd() {
-      const authRes = await PageApi.authList();
+      const authRes = await PageApi.authList()
       if (authRes.data.code === 0) {
-        this.authList = authRes.data.data.items;
+        this.authList = authRes.data.data.items
       }
-      this.drawerVisible = true;
+      this.drawerVisible = true
       this.$nextTick(() => {
-        this.codeInputDisable = false;
-        this.form = this.formInit;
-        this.current = {};
-        this.$refs.drawerForm.resetFields();
+        this.codeInputDisable = false
+        this.form = this.formInit
+        this.current = {}
+        this.$refs.drawerForm.resetFields()
       })
     },
     // 显示编辑
     async showEdit(id) {
-      const authRes = await PageApi.authList();
+      const authRes = await PageApi.authList()
       if (authRes.data.code === 0) {
-        this.authList = authRes.data.data.items;
+        this.authList = authRes.data.data.items
       }
-      const res = await PageApi.edit(id);
-      if(res.data.code === 0){
-        let detail = res.data.data.item;
-        this.drawerVisible = true;
-        this.codeInputDisable = true;
+      const res = await PageApi.edit(id)
+      if (res.data.code === 0) {
+        const detail = res.data.data.item
+        this.drawerVisible = true
+        this.codeInputDisable = true
         this.$nextTick(() => {
-          this.current = detail;
-          this.form = detail;
-          this.$refs.drawerForm.resetFields();
+          this.current = detail
+          this.form = detail
+          this.$refs.drawerForm.resetFields()
         })
       } else {
         this.$message.error(res.data.msg ? res.data.msg : this.$t('result.editError'))
@@ -248,48 +252,44 @@ export default {
     async submit() {
       this.$refs.drawerForm.validate(async valid => {
         if (valid) {
-          this.submitLoading = true;
-          let res = {};
+          this.submitLoading = true
+          let res = {}
           if (this.$emptyObj(this.current)) { // 创建 or 更新
-            res = await PageApi.create(this.form);
+            res = await PageApi.create(this.form)
           } else {
-            res = await PageApi.update(this.current.id, this.form);
+            res = await PageApi.update(this.current.id, this.form)
           }
-          this.submitLoading = false;
-          if(res.data.code === 0){
+          this.submitLoading = false
+          if (res.data.code === 0) {
             this.$message.success(this.$t('result.success'))
-            this.drawerVisible = false;
-            this.initIndex();
+            this.drawerVisible = false
+            this.initIndex()
           } else {
-            this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'));
+            this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'))
           }
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     // 删除
     async destroy(id) {
-      const res = await PageApi.destroy(id);
-      if(res.data.code === 0){
-        this.$message.success(this.$t('result.success'));
-        this.initIndex();
+      const res = await PageApi.destroy(id)
+      if (res.data.code === 0) {
+        this.$message.success(this.$t('result.success'))
+        this.initIndex()
       } else {
-        this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'));
+        this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'))
       }
     },
     // 重置表格
     resetForm() {
-      this.$refs.drawerForm.resetFields();
+      this.$refs.drawerForm.resetFields()
     },
     // 关闭抽屉
     drawerClose() {
-      this.drawerVisible = false;
+      this.drawerVisible = false
     }
-  },
-  mounted() {
-    this.initIndex();
-    this.getStatuses();
   },
 }
 </script>
@@ -298,6 +298,7 @@ export default {
 .operator {
   margin-bottom: 15px;
 }
+
 .drawBottom {
   position: absolute;
   right: 0;

@@ -47,7 +47,7 @@ module.exports = {
     'curly': [2, 'multi-line'],
     'dot-location': [2, 'property'],
     'eol-last': 2,
-    'eqeqeq': ['error', 'always', { 'null': 'ignore' }],
+    'eqeqeq': [1, 'smart'],
     'generator-star-spacing': [2, {
       'before': true,
       'after': true
@@ -193,6 +193,7 @@ module.exports = {
     'object-curly-spacing': [2, 'always', {
       objectsInObjects: false
     }],
-    'array-bracket-spacing': [2, 'never']
+    'array-bracket-spacing': [2, 'never'],
+    'vue/no-mutating-props': 1,
   }
 }

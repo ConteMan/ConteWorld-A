@@ -4,7 +4,15 @@
       <div class="operator">
         <a-button type="primary" @click="showAdd">{{ $t('add') }}</a-button>
       </div>
-      <a-table row-key="id" :data-source="items" :columns="columns" :bordered="true" :pagination="pagination" :scroll="{ x: 1000 }" @change="handleTableChange">
+      <a-table
+        row-key="id"
+        :data-source="items"
+        :columns="columns"
+        :bordered="true"
+        :pagination="pagination"
+        :scroll="{ x: 1000 }"
+        @change="handleTableChange"
+      >
         <span slot="status" slot-scope="text">
           <a-tag :color="statuses[text].color">
             {{ statuses[text].str }}
@@ -337,9 +345,11 @@ export default {
 
 <style lang="less" scoped>
 @import "index";
+
 .operator {
   margin-bottom: 15px;
 }
+
 .drawBottom {
   position: absolute;
   right: 0;

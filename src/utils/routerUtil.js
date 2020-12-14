@@ -1,13 +1,13 @@
 import routerMap from '@/router/async/router.map'
-import {loginIgnore} from '@/router'
-import {checkAuthorization} from '@/utils/request'
-import {mergeI18nFromRoutes} from '@/utils/i18n'
+import { loginIgnore } from '@/router'
+import { checkAuthorization } from '@/utils/request'
+import { mergeI18nFromRoutes } from '@/utils/i18n'
 import Router from 'vue-router'
 import deepMerge from 'deepmerge'
 import basicOptions from '@/router/async/config.async'
 
-//应用配置
-let appOptions = {
+// 应用配置
+const appOptions = {
   router: undefined,
   i18n: undefined,
   store: undefined
@@ -18,7 +18,7 @@ let appOptions = {
  * @param options
  */
 function setAppOptions(options) {
-  const {router, store, i18n} = options
+  const { router, store, i18n } = options
   appOptions.router = router
   appOptions.store = store
   appOptions.i18n = i18n
@@ -30,13 +30,13 @@ function setAppOptions(options) {
  * @param routerMap 本地路由组件注册配置
  */
 function parseRoutes(routesConfig, routerMap) {
-  let routes = []
+  const routes = []
   routesConfig.forEach(item => {
     // 获取注册在 routerMap 中的 router，初始化 routeCfg
-    let router = undefined, routeCfg = {}
+    let router; let routeCfg = {}
     if (typeof item === 'string' && routerMap[item]) {
       router = routerMap[item]
-      routeCfg = {path: router.path || item, router: item}
+      routeCfg = { path: router.path || item, router: item }
     } else if (typeof item === 'object') {
       router = routerMap[item.router]
       routeCfg = item
@@ -73,8 +73,8 @@ function parseRoutes(routesConfig, routerMap) {
  * @param routesConfig {RouteConfig[]} 路由配置
  */
 function loadRoutes(routesConfig) {
-  //兼容 0.6.1 以下版本
-  /*************** 兼容 version < v0.6.1 *****************/
+  // 兼容 0.6.1 以下版本
+  /** ************* 兼容 version < v0.6.1 *****************/
   if (arguments.length > 0) {
     const arg0 = arguments[0]
     if (arg0.router || arg0.i18n || arg0.store) {
@@ -83,10 +83,10 @@ function loadRoutes(routesConfig) {
       console.error('方法签名 loadRoutes({router, store, i18n}, routesConfig) 的用法已过时, 请使用新的方法签名 loadRoutes(routesConfig)。')
     }
   }
-  /*************** 兼容 version < v0.6.1 *****************/
+  /** ************* 兼容 version < v0.6.1 *****************/
 
   // 应用配置
-  const {router, store, i18n} = appOptions
+  const { router, store, i18n } = appOptions
 
   // 如果 routesConfig 有值，则更新到本地，否则从本地获取
   if (routesConfig) {
@@ -101,8 +101,8 @@ function loadRoutes(routesConfig) {
       const routes = parseRoutes(routesConfig, routerMap)
       const finalRoutes = mergeRoutes(basicOptions.routes, routes)
       formatRoutes(finalRoutes)
-      router.options = {...router.options, routes: finalRoutes}
-      router.matcher = new Router({...router.options, routes:[]}).matcher
+      router.options = { ...router.options, routes: finalRoutes }
+      router.matcher = new Router({ ...router.options, routes: [] }).matcher
       router.addRoutes(finalRoutes)
     }
   }
@@ -124,7 +124,9 @@ function loadRoutes(routesConfig) {
  */
 function mergeRoutes(target, source) {
   const routesMap = {}
+  // eslint-disable-next-line no-return-assign
   target.forEach(item => routesMap[item.path] = item)
+  // eslint-disable-next-line no-return-assign
   source.forEach(item => routesMap[item.path] = item)
   return Object.values(routesMap)
 }
@@ -173,7 +175,7 @@ function deepMergeRoutes(target, source) {
  */
 function formatRoutes(routes) {
   routes.forEach(route => {
-    const {path} = route
+    const { path } = route
     if (!path.startsWith('/') && path !== '*') {
       route.path = '/' + path
     }
@@ -188,10 +190,10 @@ function formatRoutes(routes) {
 function loginGuard(router) {
   router.beforeEach((to, from, next) => {
     if (!loginIgnore.includes(to) && !checkAuthorization()) {
-      next({path: '/login'})
+      next({ path: '/login' })
     } else {
       if (to.path === '/login' && checkAuthorization()) {
-        next({path: '/dashboard'})
+        next({ path: '/dashboard' })
       } else {
         next()
       }
@@ -209,7 +211,7 @@ function authorityGuard(router, store) {
     const permissions = store.getters['account/permissions']
     const roles = store.getters['account/roles']
     if (!hasPermission(to, permissions) && !hasRole(to, roles)) {
-      next({path: '/403'})
+      next({ path: '/403' })
     } else {
       next()
     }
@@ -240,7 +242,7 @@ function hasPermission(route, permissions) {
  */
 function hasRole(route, roles) {
   const authority = route.meta.authority || '*'
-  let required = undefined
+  let required
   if (typeof authority === 'object') {
     required = authority.role
   }
@@ -255,16 +257,16 @@ function hasRole(route, roles) {
 function formatAuthority(routes, pAuthorities = []) {
   routes.forEach(route => {
     const meta = route.meta
-    const defaultAuthority = pAuthorities[pAuthorities.length - 1] || {permission: '*'}
+    const defaultAuthority = pAuthorities[pAuthorities.length - 1] || { permission: '*' }
     if (meta) {
       let authority = {}
       if (!meta.authority) {
         authority = defaultAuthority
-      }else if (typeof meta.authority === 'string') {
+      } else if (typeof meta.authority === 'string') {
         authority.permission = meta.authority
       } else if (typeof meta.authority === 'object') {
         authority = meta.authority
-        const {role} = authority
+        const { role } = authority
         if (typeof role === 'string') {
           authority.role = [role]
         }
@@ -275,7 +277,7 @@ function formatAuthority(routes, pAuthorities = []) {
       meta.authority = authority
     } else {
       const authority = defaultAuthority
-      route.meta = {authority}
+      route.meta = { authority }
     }
     route.meta.pAuthorities = pAuthorities
     if (route.children) {
@@ -301,8 +303,8 @@ function getI18nKey(path) {
  * @param options
  */
 function loadGuards(guards, options) {
-  const {beforeEach, afterEach} = guards
-  const {router} = options
+  const { beforeEach, afterEach } = guards
+  const { router } = options
   beforeEach.forEach(guard => {
     if (guard && typeof guard === 'function') {
       router.beforeEach((to, from, next) => guard(to, from, next, options))
@@ -315,4 +317,15 @@ function loadGuards(guards, options) {
   })
 }
 
-export {parseRoutes, loadRoutes, formatAuthority, getI18nKey, loadGuards, authorityGuard, loginGuard, deepMergeRoutes, formatRoutes, setAppOptions}
+export {
+  parseRoutes,
+  loadRoutes,
+  formatAuthority,
+  getI18nKey,
+  loadGuards,
+  authorityGuard,
+  loginGuard,
+  deepMergeRoutes,
+  formatRoutes,
+  setAppOptions
+}

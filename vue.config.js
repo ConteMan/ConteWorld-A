@@ -20,8 +20,7 @@ const assetsCDN = {
     '@antv/data-set': 'DataSet',
     'js-cookie': 'Cookies'
   },
-  css: [
-  ],
+  css: [],
   js: [
     '//cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js',
     '//cdn.jsdelivr.net/npm/vue-router@3.3.4/dist/vue-router.min.js',

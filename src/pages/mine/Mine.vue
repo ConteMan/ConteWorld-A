@@ -82,7 +82,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .form-container {
-    width: 100%;
-  }
+.form-container {
+  width: 100%;
+}
 </style>

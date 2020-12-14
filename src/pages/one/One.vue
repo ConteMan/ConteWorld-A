@@ -2,10 +2,17 @@
   <a-card class="common-table">
     <div class="common-table-container">
       <div class="operator">
-        <a-button @click="sync" type="primary" :loading="syncLoading">同步</a-button>
+        <a-button type="primary" :loading="syncLoading" @click="sync">同步</a-button>
       </div>
-      <a-table rowKey="id" :data-source="items" :columns="columns" :bordered="true" :pagination="pagination" @change="handleTableChange" :scroll="{ x: 1000 }">
-      </a-table>
+      <a-table
+        row-key="id"
+        :data-source="items"
+        :columns="columns"
+        :bordered="true"
+        :pagination="pagination"
+        :scroll="{ x: 1000 }"
+        @change="handleTableChange"
+      />
     </div>
   </a-card>
 </template>
@@ -14,7 +21,7 @@
 import { One } from '@/services'
 
 export default {
-  name: "One",
+  name: 'One',
   data() {
     return {
       items: [],
@@ -53,47 +60,47 @@ export default {
       syncLoading: false,
     }
   },
+  mounted() {
+    this.initIndex()
+  },
   methods: {
     handleTableChange(pagination) {
-      const pager = { ...this.pagination };
-      pager.current = pagination.current;
-      this.pagination = pager;
-      this.index({page: pagination.current, per_page: pagination.pageSize});
+      const pager = { ...this.pagination }
+      pager.current = pagination.current
+      this.pagination = pager
+      this.index({ page: pagination.current, per_page: pagination.pageSize })
     },
     async index(params) {
-      const res = await One.index(params);
+      const res = await One.index(params)
       this.items = res.data.data.items
-      const pagination = { ...this.pagination };
+      const pagination = { ...this.pagination }
       pagination.total = res.data.data.total_count
       this.pagination = pagination
     },
     initIndex() {
-      const params = {page: this.page, per_page: this.per_page};
-      this.index(params);
-      const pagination = { ...this.pagination };
+      const params = { page: this.page, per_page: this.per_page }
+      this.index(params)
+      const pagination = { ...this.pagination }
       pagination.current = this.page
       this.pagination = pagination
     },
     async sync() {
-      this.syncLoading = true;
-      const res = await One.sync();
-      this.syncLoading = false;
-      if(res.data.code === 0){
-        this.$message.success('同步成功 '+ res.data.data.add_num + ' 条！');
+      this.syncLoading = true
+      const res = await One.sync()
+      this.syncLoading = false
+      if (res.data.code === 0) {
+        this.$message.success('同步成功 ' + res.data.data.add_num + ' 条！')
       } else {
-        this.$message.error(res.data.msg);
+        this.$message.error(res.data.msg)
       }
-      this.initIndex();
+      this.initIndex()
     },
-  },
-  mounted() {
-    this.initIndex()
   }
 }
 </script>
 
 <style lang="less" scoped>
-  .operator {
-    margin-bottom: 15px;
-  }
+.operator {
+  margin-bottom: 15px;
+}
 </style>
