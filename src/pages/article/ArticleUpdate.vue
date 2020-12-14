@@ -80,20 +80,10 @@ export default {
     }
   },
   methods: {
-    async create() {
-      this.createLoading = true;
-      const res = await Article.create(this.form);
-      this.createLoading = false;
-      if(res.data.code === 0){
-        this.$message.success('添加成功');
-      } else {
-        this.$message.error(res.data.msg);
-      }
-    },
     async edit(id) {
       const res = await Article.edit(id);
       if(res.data.code === 0){
-        this.form = res.data.data.res
+        this.form = res.data.data.item
       }
     },
     async update() {

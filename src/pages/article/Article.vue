@@ -2,27 +2,27 @@
   <a-card>
     <div>
       <advance-table
-        rowKey="id"
+        row-key="id"
         :loading="loading"
         :data-source="items"
         :columns="columns"
         :bordered="true"
         :scroll="{ x: 1000 }"
+        :format-conditions="true"
+        :pagination="{
+          current: page,
+          pageSize: per_page,
+          total: total,
+          showSizeChanger: true,
+          showLessItems: true,
+          showQuickJumper: true,
+          showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，总计 ${total} 条`,
+          onChange: onPageChange,
+          onShowSizeChange: onSizeChange,
+        }"
         @search="onSearch"
         @refresh="onRefresh"
-        :format-conditions="true"
         @reset="onReset"
-        :pagination="{
-        current: page,
-        pageSize: per_page,
-        total: total,
-        showSizeChanger: true,
-        showLessItems: true,
-        showQuickJumper: true,
-        showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，总计 ${total} 条`,
-        onChange: onPageChange,
-        onShowSizeChange: onSizeChange,
-      }"
       >
         <div slot="title">
           <a-button class="table-title-btn" type="primary" @click="$router.push({ path: '/article/create' })">{{ $t('create') }}</a-button>
@@ -33,19 +33,17 @@
           </a-tag>
         </span>
         <span slot="tag" slot-scope="{text}">
-          <a-tag color="blue" v-for="item in text" :key="item">
+          <a-tag v-for="item in text" :key="item" color="blue">
             {{ item }}
           </a-tag>
         </span>
         <span slot="date" slot-scope="{text}">
           {{ text }}
         </span>
-        <span slot="action" slot-scope="{text, record}">
+        <span slot="action" slot-scope="{record}">
           <a @click="statusModalClick(record.id)">{{ $t('status') }}</a>
-          <template>
-            <a-divider type="vertical" />
-            <a @click="turnUpdate(record.id)">{{ $t('edit') }}</a>
-          </template>
+          <a-divider type="vertical" />
+          <a @click="turnUpdate(record.id)">{{ $t('edit') }}</a>
         </span>
       </advance-table>
 
@@ -74,7 +72,7 @@ import AdvanceTable from '@/components/table/advance/AdvanceTable'
 import { Article } from '@/services'
 
 export default {
-  name: "Article",
+  name: 'Article',
   components: {
     AdvanceTable,
   },
@@ -157,118 +155,113 @@ export default {
       current: {},
     }
   },
+  async created() {
+    await this.getTags()
+    await this.getStatuses()
+    await this.index()
+  },
   methods: {
     async index() {
       this.loading = true
       const { page, per_page, conditions } = this
-      const res = await Article.index({page, per_page, ...conditions});
-      const { items, page:re_page, per_page:re_per_page, total_count:re_total } = res.data.data;
+      const res = await Article.index({ page, per_page, ...conditions })
+      const { items, page: re_page, per_page: re_per_page, total_count: re_total } = res.data.data
       this.items = items
       this.page = re_page
       this.per_page = re_per_page
       this.total = re_total
       this.loading = false
     },
-    onSearch(conditions, searchOptions) {
-      console.log(conditions)
-      console.log(searchOptions)
-      this.page = 1;
-      this.conditions = conditions;
-      this.index();
+    onSearch(conditions) {
+      this.page = 1
+      this.conditions = conditions
+      this.index()
     },
     onSizeChange(current, size) {
-      this.page = 1;
-      this.pageSize = size;
-      this.index();
+      this.page = 1
+      this.pageSize = size
+      this.index()
     },
     onRefresh(conditions) {
-      this.conditions = conditions;
-      this.index();
+      this.conditions = conditions
+      this.index()
     },
     onReset(conditions) {
-      this.conditions = conditions;
-      this.index();
+      this.conditions = conditions
+      this.index()
     },
     onPageChange(page, pageSize) {
-      this.page = page;
-      this.pageSize = pageSize;
-      this.index();
+      this.page = page
+      this.pageSize = pageSize
+      this.index()
     },
-
     turnUpdate(id) {
-      this.$router.push({ path: '/article/update', query: { id: id } })
+      this.$router.push({ path: '/article/update', query: { id: id }})
     },
     async edit(id) {
-      const res = await Article.edit(id);
-      if(res.data.code === 0){
-        const detail = res.data.data.res;
+      const res = await Article.edit(id)
+      if (res.data.code === 0) {
+        const detail = res.data.data.item
         this.current = {
           status: detail.status,
         }
       }
     },
     async update() {
-      const res = await Article.update(this.currentId, this.current);
-      if(res.data.code === 0){
+      const res = await Article.update(this.currentId, this.current)
+      if (res.data.code === 0) {
         this.$message.success(this.$t('result.success'))
       } else {
-        this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'));
+        this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'))
       }
     },
     async getStatuses() {
-      const res = await Article.statuses();
-      if(res.data.code === 0) {
-        this.statuses = res.data.data.items;
+      const res = await Article.statuses()
+      if (res.data.code === 0) {
+        this.statuses = res.data.data.items
       }
     },
     async getTags() {
-      const res = await Article.tags();
-      if(res.data.code === 0) {
-        this.tags = res.data.data.items;
-        this.columns[3].search.selectOptions = this.tagToObj(res.data.data.items);
+      const res = await Article.tags()
+      if (res.data.code === 0) {
+        this.tags = res.data.data.items
+        this.columns[3].search.selectOptions = this.tagToObj(res.data.data.items)
       }
     },
     tagToObj(tags) {
-      const tmp = [];
-      tags.forEach( item => {
-        tmp.push({ title: item, value: item });
+      const tmp = []
+      tags.forEach(item => {
+        tmp.push({ title: item, value: item })
       })
-      return tmp;
+      return tmp
     },
     statusChange(value) {
-      this.current.status = value;
+      this.current.status = value
     },
     async statusModalClick(id) {
-      this.statusModalVisible = !this.statusModalVisible;
-      if(this.statusModalVisible) {
-        this.currentId = id;
-        await this.edit(id);
+      this.statusModalVisible = !this.statusModalVisible
+      if (this.statusModalVisible) {
+        this.currentId = id
+        await this.edit(id)
       } else {
-        this.currentId = 0;
-        this.current = {};
+        this.currentId = 0
+        this.current = {}
       }
     },
     async statusOK() {
-      await this.update();
-      this.statusModalVisible = false;
-      await this.index();
+      await this.update()
+      this.statusModalVisible = false
+      await this.index()
     },
     statusCancel() {
-      this.statusModalVisible = false;
-      this.currentId = 0;
-      this.current = {};
+      this.statusModalVisible = false
+      this.currentId = 0
+      this.current = {}
     }
-  },
-  async created() {
-    await this.getTags();
-    await this.getStatuses();
-    await this.index();
   }
 }
 </script>
 
 <style lang="less" scoped>
-.table-title-btn {
-  margin-left: -24px;
-}
+  @import "./index";
 </style>

@@ -21,11 +21,11 @@ const resp401 = {
    * @param options 应用配置 包含: {router, i18n, store, message}
    * @returns {Promise<never>}
    */
-  onRejected(error, options) {
-    const {message} = options
-    message.error(error.message)
-    return Promise.reject(error)
-  }
+  // onRejected(error, options) {
+  //   const {message} = options
+  //   message.error(error.message)
+  //   return Promise.reject(error)
+  // }
 }
 
 const resp403 = {
@@ -67,7 +67,19 @@ const reqCommon = {
   }
 }
 
+const respCommon = {
+  onRejected(error, options) {
+    const { message } = options
+    if (error.response.status === 422) {
+      return Promise.resolve(error.response)
+    } else {
+      message.error(error.message)
+      return Promise.reject(error)
+    }
+  }
+}
+
 export default {
   request: [reqCommon], // 请求拦截
-  response: [resp401, resp403] // 响应拦截
+  response: [resp401, resp403, respCommon] // 响应拦截
 }

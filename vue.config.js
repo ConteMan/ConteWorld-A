@@ -1,8 +1,8 @@
-let path = require('path')
+const path = require('path')
 const webpack = require('webpack')
 const ThemeColorReplacer = require('webpack-theme-color-replacer')
-const {getThemeColors, modifyVars} = require('./src/utils/themeUtil')
-const {resolveCss} = require('./src/utils/theme-color-replacer-extend')
+const { getThemeColors, modifyVars } = require('./src/utils/themeUtil')
+const { resolveCss } = require('./src/utils/theme-color-replacer-extend')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
 const productionGzipExtensions = ['js', 'css']
@@ -49,11 +49,11 @@ module.exports = {
   pluginOptions: {
     'style-resources-loader': {
       preProcessor: 'less',
-      patterns: [path.resolve(__dirname, "./src/theme/theme.less")],
+      patterns: [path.resolve(__dirname, './src/theme/theme.less')]
     }
   },
   configureWebpack: config => {
-    config.entry.app = ["babel-polyfill", "whatwg-fetch", "./src/main.js"];
+    config.entry.app = ['babel-polyfill', 'whatwg-fetch', './src/main.js']
     config.performance = {
       hints: false
     }
@@ -87,7 +87,7 @@ module.exports = {
     if (isProd) {
       config.plugin('optimize-css')
         .tap(args => {
-            args[0].cssnanoOptions.preset[1].colormin = false
+          args[0].cssnanoOptions.preset[1].colormin = false
           return args
         })
     }
@@ -96,8 +96,8 @@ module.exports = {
       config.plugin('html')
         .tap(args => {
           args[0].cdn = assetsCDN
-        return args
-      })
+          return args
+        })
     }
   },
   css: {

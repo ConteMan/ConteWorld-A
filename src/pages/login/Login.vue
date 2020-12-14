@@ -2,40 +2,38 @@
   <common-layout>
     <div class="top">
       <div class="header">
-        <span class="title">{{systemName}}</span>
+        <span class="title">{{ systemName }}</span>
       </div>
       <div class="desc">ConteMan Can't Stop</div>
     </div>
     <div class="login">
-      <a-form @submit="onSubmit" :form="form">
+      <a-form :form="form" @submit="onSubmit">
         <div>
-            <a-alert type="error" :closable="true" v-show="error" :message="error" showIcon style="margin-bottom: 24px;" />
-            <a-form-item>
-              <a-input
-                autocomplete="autocomplete"
-                size="large"
-                placeholder="请输入用户名"
-                v-decorator="['name', {rules: [{ required: true, message: '请输入用户名', whitespace: true}]}]"
-              >
-                <a-icon slot="prefix" type="user" />
-              </a-input>
-            </a-form-item>
-            <a-form-item>
-              <a-input
-                size="large"
-                placeholder="请输入密码"
-                autocomplete="autocomplete"
-                type="password"
-                v-decorator="['password', {rules: [{ required: true, message: '请输入密码', whitespace: true}]}]"
-              >
-                <a-icon slot="prefix" type="lock" />
-              </a-input>
-            </a-form-item>
-          </div>
-        <div>
+          <a-alert v-show="error" type="error" :closable="true" :message="error" show-icon style="margin-bottom: 24px;" />
+          <a-form-item>
+            <a-input
+              v-decorator="['name', {rules: [{ required: true, message: '请输入用户名', whitespace: true}]}]"
+              autocomplete="autocomplete"
+              size="large"
+              placeholder="请输入用户名"
+            >
+              <a-icon slot="prefix" type="user" />
+            </a-input>
+          </a-form-item>
+          <a-form-item>
+            <a-input
+              v-decorator="['password', {rules: [{ required: true, message: '请输入密码', whitespace: true}]}]"
+              size="large"
+              placeholder="请输入密码"
+              autocomplete="autocomplete"
+              type="password"
+            >
+              <a-icon slot="prefix" type="lock" />
+            </a-input>
+          </a-form-item>
         </div>
         <a-form-item>
-          <a-button :loading="logging" style="width: 100%;margin-top: 24px" size="large" htmlType="submit" type="primary">登录</a-button>
+          <a-button :loading="logging" style="width: 100%;margin-top: 24px" size="large" html-type="submit" type="primary">登录</a-button>
         </a-form-item>
       </a-form>
     </div>
@@ -44,15 +42,17 @@
 
 <script>
 import CommonLayout from '@/layouts/CommonLayout'
-import {login, getRoutesConfig} from '@/services/modules/user'
-import {setAuthorization} from '@/utils/request'
-import {loadRoutes} from '@/utils/routerUtil'
-import {mapMutations} from 'vuex'
+import { login, getRoutesConfig } from '@/services/modules/user'
+import { setAuthorization } from '@/utils/request'
+import { loadRoutes } from '@/utils/routerUtil'
+import { mapMutations } from 'vuex'
 
 export default {
   name: 'Login',
-  components: {CommonLayout},
-  data () {
+  components: {
+    CommonLayout
+  },
+  data() {
     return {
       logging: false,
       error: '',
@@ -60,23 +60,25 @@ export default {
     }
   },
   computed: {
-    systemName () {
+    systemName() {
       return this.$store.state.setting.systemName
     }
   },
   methods: {
     ...mapMutations('account', ['setUser', 'setPermissions', 'setRoles']),
-    onSubmit (e) {
+    onSubmit(e) {
       e.preventDefault()
       this.form.validateFields((err) => {
         if (!err) {
           this.logging = true
           const name = this.form.getFieldValue('name')
           const password = this.form.getFieldValue('password')
-          login(name, password).then(this.afterLogin).catch(e => {
-            this.logging = false
-            console.log(e.message)
-          })
+          login(name, password)
+            .then(this.afterLogin)
+            .catch(e => {
+              this.logging = false
+              console.log(e.message)
+            })
         }
       })
     },
@@ -84,11 +86,14 @@ export default {
       this.logging = false
       const loginRes = res.data
       if (loginRes.code === 0) {
-        const {user, permissions, roles} = loginRes.data
+        const { user, permissions, roles } = loginRes.data
         this.setUser(user)
         this.setPermissions(permissions)
         this.setRoles(roles)
-        setAuthorization({token: loginRes.data.token, expireAt: new Date(loginRes.data.expireAt)})
+        setAuthorization({
+          token: loginRes.data.token,
+          expireAt: new Date(loginRes.data.expireAt)
+        })
         // 获取路由配置
         getRoutesConfig().then(result => {
           const routesConfig = result.data.data
@@ -105,6 +110,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+  @import "./src/theme/index";
   .common-layout{
     .top {
       text-align: center;

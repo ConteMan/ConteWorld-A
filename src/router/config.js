@@ -105,6 +105,11 @@ const options = {
               name: '枚举配置',
               component: () => import('@/pages/enum'),
             },
+            {
+              path: 'token',
+              name: 'Token',
+              component: () => import('@/pages/token'),
+            },
           ]
         },
       ]

@@ -4,7 +4,7 @@
       <div class="operator">
         <a-button type="primary" @click="showAdd">{{ $t('add') }}</a-button>
       </div>
-      <a-table rowKey="id" :data-source="items" :columns="columns" :bordered="true" :pagination="pagination" @change="handleTableChange" :scroll="{ x: 1000 }">
+      <a-table row-key="id" :data-source="items" :columns="columns" :bordered="true" :pagination="pagination" :scroll="{ x: 1000 }" @change="handleTableChange">
         <span slot="status" slot-scope="text">
           <a-tag :color="statuses[text].color">
             {{ statuses[text].str }}
@@ -57,7 +57,7 @@
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-model-item :label="$t('form.code')" prop="code">
-                <a-input :disabled="codeInputDisable" v-model="form.code"/>
+                <a-input v-model="form.code" :disabled="codeInputDisable" />
               </a-form-model-item>
             </a-col>
           </a-row>
@@ -66,13 +66,13 @@
               <a-form-model-item :label="$t('form.value_type')" prop="value_type">
                 <a-select v-model="form.value_type">
                   <a-select-option value="string">
-                    String
+                    STRING
                   </a-select-option>
                   <a-select-option value="json">
-                    Json
+                    JSON
                   </a-select-option>
                   <a-select-option value="number">
-                    Number
+                    NUMBER
                   </a-select-option>
                 </a-select>
               </a-form-model-item>
@@ -81,14 +81,14 @@
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-model-item :label="$t('form.value')" prop="value">
-                <a-textarea v-model="form.value" :rows="4"/>
+                <a-textarea v-model="form.value" :rows="4" />
               </a-form-model-item>
             </a-col>
           </a-row>
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-model-item :label="$t('form.des')" prop="des">
-                <a-textarea v-model="form.des" :rows="4"/>
+                <a-textarea v-model="form.des" :rows="4" />
               </a-form-model-item>
             </a-col>
           </a-row>
@@ -106,12 +106,12 @@
         </a-form-model>
         <div class="drawBottom">
           <a-space>
-          <a-button @click="resetForm">
-            {{ $t('reset') }}
-          </a-button>
-          <a-button type="primary" @click="submit" :loading="submitLoading">
-            {{ $t('submit') }}
-          </a-button>
+            <a-button @click="resetForm">
+              {{ $t('reset') }}
+            </a-button>
+            <a-button type="primary" :loading="submitLoading" @click="submit">
+              {{ $t('submit') }}
+            </a-button>
           </a-space>
         </div>
       </a-drawer>
@@ -120,10 +120,10 @@
 </template>
 
 <script>
-import { Config } from '@/services'
+import { SysConfig } from '@/services'
 
 export default {
-  name: "Config",
+  name: 'Config',
   i18n: require('./i18n'),
   data() {
     return {
@@ -230,58 +230,61 @@ export default {
       codeInputDisable: false,
     }
   },
+  mounted() {
+    this.initIndex()
+    this.getStatuses()
+  },
   methods: {
     handleTableChange(pagination) {
-      const pager = { ...this.pagination };
-      pager.current = pagination.current;
-      this.pagination = pager;
-      this.index({ page: pagination.current, per_page: pagination.pageSize });
+      const pager = { ...this.pagination }
+      pager.current = pagination.current
+      this.pagination = pager
+      this.index({ page: pagination.current, per_page: pagination.pageSize })
     },
     async index(params) {
-      const res = await Config.index(params);
-      this.items = res.data.data.items;
-      const pagination = { ...this.pagination };
-      pagination.total = res.data.data.total_count;
-      this.pagination = pagination;
+      const res = await SysConfig.index(params)
+      this.items = res.data.data.items
+      const pagination = { ...this.pagination }
+      pagination.total = res.data.data.total_count
+      this.pagination = pagination
     },
     // 初始化列表
     initIndex() {
-      const params = {page: this.page, per_page: this.per_page};
-      this.index(params);
-      const pagination = { ...this.pagination };
+      const params = { page: this.page, per_page: this.per_page }
+      this.index(params)
+      const pagination = { ...this.pagination }
       pagination.current = this.page
       this.pagination = pagination
     },
     // 获取状态列表
     async getStatuses() {
-      const res = await Config.statuses();
+      const res = await SysConfig.statuses()
       if (res.data.code === 0) {
-        this.statuses = res.data.data.items;
+        this.statuses = res.data.data.items
       }
     },
     // 显示添加
     showAdd() {
-      this.drawerVisible = true;
+      this.drawerVisible = true
       this.$nextTick(() => {
-        this.codeInputDisable = false;
-        this.form = this.formInit;
-        this.current = {};
-        this.$refs.drawerForm.resetFields();
+        this.codeInputDisable = false
+        this.form = this.formInit
+        this.current = {}
+        this.$refs.drawerForm.resetFields()
       })
     },
     // 显示编辑
     async showEdit(id) {
-      const res = await Config.edit(id);
-      if(res.data.code === 0){
-        let detail = res.data.data.res;
-        this.drawerVisible = true;
-        this.codeInputDisable = true;
+      const res = await SysConfig.edit(id)
+      if (res.data.code === 0) {
+        const detail = res.data.data.res
+        this.drawerVisible = true
+        this.codeInputDisable = true
         this.$nextTick(() => {
-          this.current = detail;
-          this.form = detail;
-          this.$refs.drawerForm.resetFields();
+          this.current = detail
+          this.form = detail
+          this.$refs.drawerForm.resetFields()
         })
-
       } else {
         this.$message.error(res.data.msg ? res.data.msg : this.$t('result.editError'))
       }
@@ -290,53 +293,50 @@ export default {
     async submit() {
       this.$refs.drawerForm.validate(async valid => {
         if (valid) {
-          this.submitLoading = true;
-          let res = {};
+          this.submitLoading = true
+          let res = {}
           if (this.$emptyObj(this.current)) {
-            res = await Config.create(this.form);
+            res = await SysConfig.create(this.form)
           } else {
-            res = await Config.update(this.current.id, this.form);
+            res = await SysConfig.update(this.current.id, this.form)
           }
-          this.submitLoading = false;
-          if(res.data.code === 0){
+          this.submitLoading = false
+          if (res.data.code === 0) {
             this.$message.success(this.$t('result.success'))
-            this.drawerVisible = false;
-            this.initIndex();
+            this.drawerVisible = false
+            this.initIndex()
           } else {
-            this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'));
+            this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'))
           }
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     // 删除
     async destroy(id) {
-      const res = await Config.destroy(id);
-      if(res.data.code === 0){
-        this.$message.success(this.$t('result.success'));
-        this.initIndex();
+      const res = await SysConfig.destroy(id)
+      if (res.data.code === 0) {
+        this.$message.success(this.$t('result.success'))
+        this.initIndex()
       } else {
-        this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'));
+        this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'))
       }
     },
     // 重置表格
     resetForm() {
-      this.$refs.drawerForm.resetFields();
+      this.$refs.drawerForm.resetFields()
     },
     // 关闭抽屉
     drawerClose() {
-      this.drawerVisible = false;
+      this.drawerVisible = false
     }
-  },
-  mounted() {
-    this.initIndex();
-    this.getStatuses();
   },
 }
 </script>
 
 <style lang="less" scoped>
+@import "index";
 .operator {
   margin-bottom: 15px;
 }

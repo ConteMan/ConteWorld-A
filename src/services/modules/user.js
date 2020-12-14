@@ -1,5 +1,5 @@
-import {BASE_URL, LOGIN, ROUTES} from '@/services/api'
-import {request, METHOD, removeAuthorization} from '@/utils/request'
+import { BASE_URL } from '@/services/api'
+import { request, METHOD, removeAuthorization } from '@/utils/request'
 import store from '@/store'
 
 /**
@@ -9,14 +9,16 @@ import store from '@/store'
  * @returns {Promise<AxiosResponse<T>>}
  */
 export async function login(name, password) {
-  return request(LOGIN, METHOD.POST, {
+  return request(BASE_URL + '/login', METHOD.POST, {
     name: name,
     password: password
   })
 }
 
 export async function getRoutesConfig() {
-  return request(ROUTES, METHOD.GET)
+  const user = store.getters['account/user']
+  const id = user.id
+  return request(BASE_URL + '/users/' + id + '/routes', METHOD.GET)
 }
 
 /**
@@ -33,7 +35,7 @@ export function logout() {
  * 修改密码
  */
 export async function changePassword(password) {
-  const user = store.getters["account/user"]
+  const user = store.getters['account/user']
   const id = user.id
   return request(BASE_URL + '/users/' + id + '/password', METHOD.POST, {
     password: password

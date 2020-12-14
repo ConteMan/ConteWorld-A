@@ -1,7 +1,7 @@
 import { BASE_URL } from '@/services/api'
 import { request, METHOD } from '@/utils/request'
 
-const Config = {
+const SysConfig = {
   index(params) {
     return request(BASE_URL + '/sys_configs', METHOD.GET, {
       page: params.page,
@@ -25,4 +25,4 @@ const Config = {
   }
 }
 
-export default Config
+export default SysConfig

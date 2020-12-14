@@ -1,22 +1,22 @@
 <template>
   <a-layout :class="['admin-layout', 'beauty-scroll']">
     <drawer v-if="isMobile" v-model="drawerOpen">
-      <side-menu :theme="theme.mode" :menuData="menuData" :collapsed="false" :collapsible="false" @menuSelect="onMenuSelect"/>
+      <side-menu :theme="theme.mode" :menu-data="menuData" :collapsed="false" :collapsible="false" @menuSelect="onMenuSelect" />
     </drawer>
-    <side-menu :class="[fixedSideBar ? 'fixed-side' : '']" :theme="theme.mode" v-else-if="layout === 'side' || layout === 'mix'" :menuData="sideMenuData" :collapsed="collapsed" :collapsible="true" />
-    <div v-if="fixedSideBar && !isMobile" :style="`width: ${sideMenuWidth}; min-width: ${sideMenuWidth};max-width: ${sideMenuWidth};`" class="virtual-side"></div>
+    <side-menu v-else-if="layout === 'side' || layout === 'mix'" :class="[fixedSideBar ? 'fixed-side' : '']" :theme="theme.mode" :menu-data="sideMenuData" :collapsed="collapsed" :collapsible="true" />
+    <div v-if="fixedSideBar && !isMobile" :style="`width: ${sideMenuWidth}; min-width: ${sideMenuWidth};max-width: ${sideMenuWidth};`" class="virtual-side" />
     <drawer v-if="!hideSetting" v-model="showSetting" placement="right">
-      <div class="setting" slot="handler">
-        <a-icon :type="showSetting ? 'close' : 'setting'"/>
+      <div slot="handler" class="setting">
+        <a-icon :type="showSetting ? 'close' : 'setting'" />
       </div>
       <setting />
     </drawer>
     <a-layout class="admin-layout-main beauty-scroll">
-      <admin-header :class="[{'fixed-tabs': fixedTabs, 'fixed-header': fixedHeader, 'multi-page': multiPage}]" :style="headerStyle" :menuData="headMenuData" :collapsed="collapsed" @toggleCollapse="toggleCollapse"/>
-      <a-layout-header :class="['virtual-header', {'fixed-tabs' : fixedTabs, 'fixed-header': fixedHeader, 'multi-page': multiPage}]" v-show="fixedHeader"></a-layout-header>
+      <admin-header :class="[{'fixed-tabs': fixedTabs, 'fixed-header': fixedHeader, 'multi-page': multiPage}]" :style="headerStyle" :menu-data="headMenuData" :collapsed="collapsed" @toggleCollapse="toggleCollapse" />
+      <a-layout-header v-show="fixedHeader" :class="['virtual-header', {'fixed-tabs' : fixedTabs, 'fixed-header': fixedHeader, 'multi-page': multiPage}]" />
       <a-layout-content class="admin-layout-content">
         <div :style="`min-height: ${minHeight}px; position: relative`">
-          <slot></slot>
+          <slot />
         </div>
       </a-layout-content>
       <a-layout-footer style="padding: 0px">
@@ -32,37 +32,24 @@ import PageFooter from './footer/PageFooter'
 import Drawer from '../components/tool/Drawer'
 import SideMenu from '../components/menu/SideMenu'
 import Setting from '../components/setting/Setting'
-import {mapState, mapMutations, mapGetters} from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 
 const minHeight = window.innerHeight - 64 - 24 - 122
 
 export default {
   name: 'AdminLayout',
-  components: {Setting, SideMenu, Drawer, PageFooter, AdminHeader},
-  data () {
-    return {
-      minHeight: minHeight,
-      collapsed: false,
-      showSetting: false,
-      drawerOpen: false
-    }
-  },
+  components: { Setting, SideMenu, Drawer, PageFooter, AdminHeader },
   provide() {
     return {
       adminLayout: this
     }
   },
-  watch: {
-    $route(val) {
-      this.setActivated(val)
-    },
-    layout() {
-      this.setActivated(this.$route)
-    },
-    isMobile(val) {
-      if(!val) {
-        this.drawerOpen = false
-      }
+  data() {
+    return {
+      minHeight: minHeight,
+      collapsed: false,
+      showSetting: false,
+      drawerOpen: false
     }
   },
   computed: {
@@ -73,38 +60,29 @@ export default {
       return this.collapsed ? '80px' : '256px'
     },
     headerStyle() {
-      let width = (this.fixedHeader && this.layout !== 'head' && !this.isMobile) ? `calc(100% - ${this.sideMenuWidth})` : '100%'
-      let position = this.fixedHeader ? 'fixed' : 'static'
+      const width = (this.fixedHeader && this.layout !== 'head' && !this.isMobile) ? `calc(100% - ${this.sideMenuWidth})` : '100%'
+      const position = this.fixedHeader ? 'fixed' : 'static'
       return `width: ${width}; position: ${position};`
     },
     headMenuData() {
-      const {layout, menuData, firstMenu} = this
+      const { layout, menuData, firstMenu } = this
       return layout === 'mix' ? firstMenu : menuData
     },
     sideMenuData() {
-      const {layout, menuData, subMenu} = this
+      const { layout, menuData, subMenu } = this
       return layout === 'mix' ? subMenu : menuData
     }
   },
-  methods: {
-    ...mapMutations('setting', ['correctPageMinHeight', 'setActivatedFirst']),
-    toggleCollapse () {
-      this.collapsed = !this.collapsed
+  watch: {
+    $route(val) {
+      this.setActivated(val)
     },
-    onMenuSelect () {
-      this.toggleCollapse()
+    layout() {
+      this.setActivated(this.$route)
     },
-    setActivated(route) {
-      if (this.layout === 'mix') {
-        let matched = route.matched
-        matched = matched.slice(0, matched.length - 1)
-        const {firstMenu} = this
-        for (let menu of firstMenu) {
-          if (matched.findIndex(item => item.path === menu.fullPath) !== -1) {
-            this.setActivatedFirst(menu.fullPath)
-            break
-          }
-        }
+    isMobile(val) {
+      if (!val) {
+        this.drawerOpen = false
       }
     }
   },
@@ -114,6 +92,28 @@ export default {
   },
   beforeDestroy() {
     this.correctPageMinHeight(-minHeight + 1)
+  },
+  methods: {
+    ...mapMutations('setting', ['correctPageMinHeight', 'setActivatedFirst']),
+    toggleCollapse() {
+      this.collapsed = !this.collapsed
+    },
+    onMenuSelect() {
+      this.toggleCollapse()
+    },
+    setActivated(route) {
+      if (this.layout === 'mix') {
+        let matched = route.matched
+        matched = matched.slice(0, matched.length - 1)
+        const { firstMenu } = this
+        for (const menu of firstMenu) {
+          if (matched.findIndex(item => item.path === menu.fullPath) !== -1) {
+            this.setActivatedFirst(menu.fullPath)
+            break
+          }
+        }
+      }
+    }
   }
 }
 </script>
