@@ -14,8 +14,8 @@
         @change="handleTableChange"
       >
         <span slot="status" slot-scope="text">
-          <a-tag :color="statuses[text].color">
-            {{ statuses[text].str }}
+          <a-tag :color="text.color">
+            {{ text.value }}
           </a-tag>
         </span>
         <span slot="date" slot-scope="text">
@@ -104,8 +104,8 @@
             <a-col :span="24">
               <a-form-model-item :label="$t('form.status')" prop="status">
                 <a-radio-group v-model="form.status">
-                  <a-radio v-for="item in statuses" :key="item.id" :value="item.id">
-                    {{ item.str }}
+                  <a-radio v-for="item in statuses" :key="item.key" :value="item.key">
+                    {{ item.value }}
                   </a-radio>
                 </a-radio-group>
               </a-form-model-item>
@@ -183,7 +183,7 @@ export default {
         },
         {
           title: this.$t('status'),
-          dataIndex: 'status',
+          dataIndex: 'statusObj',
           width: 100,
           scopedSlots: { customRender: 'status' },
         },
@@ -252,6 +252,7 @@ export default {
     async index(params) {
       const res = await SysConfig.index(params)
       this.items = res.data.data.items
+      console.log('------', this.items)
       const pagination = { ...this.pagination }
       pagination.total = res.data.data.total_count
       this.pagination = pagination

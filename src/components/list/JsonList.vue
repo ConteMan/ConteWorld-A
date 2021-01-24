@@ -23,7 +23,7 @@ export default {
   props: {
     data: {
       type: [Object, Array],
-      defaultt: () => ({})
+      default: () => ({})
     },
     depth: {
       type: Number,

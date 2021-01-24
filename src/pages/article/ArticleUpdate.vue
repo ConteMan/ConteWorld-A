@@ -28,7 +28,7 @@
       <div class="item-max-width">
         <a-form-model-item label="状态">
           <a-select dropdown-class-name="item-min-width" :value="form.status" @change="statusChange">
-            <a-select-option v-for="item in statuses" :key="item.id" :value="item.id">{{ item.str }}</a-select-option>
+            <a-select-option v-for="item in statuses" :key="item.key" :value="item.key">{{ item.value }}</a-select-option>
           </a-select>
         </a-form-model-item>
       </div>

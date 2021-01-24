@@ -17,7 +17,7 @@
       >
         <span slot="status" slot-scope="text">
           <a-tag :color="statuses[text].color">
-            {{ statuses[text].str }}
+            {{ statuses[text].value }}
           </a-tag>
         </span>
         <span slot="date" slot-scope="text">
@@ -124,8 +124,8 @@
             <a-col :span="24">
               <a-form-model-item :label="$t('form.status')" prop="status">
                 <a-radio-group v-model="form.status">
-                  <a-radio v-for="item in statuses" :key="item.id" :value="item.id">
-                    {{ item.str }}
+                  <a-radio v-for="item in statuses" :key="item.key" :value="item.key">
+                    {{ item.value }}
                   </a-radio>
                 </a-radio-group>
               </a-form-model-item>

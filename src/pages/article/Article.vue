@@ -31,7 +31,7 @@
         </div>
         <span slot="status" slot-scope="{text}">
           <a-tag :color="text.color">
-            {{ text.str }}
+            {{ text.value }}
           </a-tag>
         </span>
         <span slot="tag" slot-scope="{text}">
@@ -59,7 +59,7 @@
         <a-form-model>
           <a-form-model-item>
             <a-select :value="current.status" @change="statusChange">
-              <a-select-option v-for="item in statuses" :key="item.id" :value="item.id">{{ item.str }}</a-select-option>
+              <a-select-option v-for="item in statuses" :key="item.key" :value="item.key">{{ item.value }}</a-select-option>
             </a-select>
           </a-form-model-item>
         </a-form-model>
