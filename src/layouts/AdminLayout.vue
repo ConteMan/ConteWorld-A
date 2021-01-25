@@ -184,7 +184,8 @@ export default {
   .admin-layout-content {
     padding: 24px 24px 0;
     overflow-x: hidden;
-    min-height: calc(100vh - 93px);
+    // min-height: calc(100vh - 93px);
+    min-height: calc(100vh - 64px); // 无底部的样式
   }
 
   .setting {

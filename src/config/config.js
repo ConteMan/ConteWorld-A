@@ -7,7 +7,7 @@ module.exports = {
     warning: '#faad14', // 警告色
     error: '#f5222d', // 错误色
   },
-  multiPage: true,
+  multiPage: false,
   animate: {
     disabled: false,
     name: 'slide',

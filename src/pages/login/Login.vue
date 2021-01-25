@@ -56,7 +56,7 @@
 
 <script>
 import CommonLayout from '@/layouts/CommonLayout'
-import { login, getRoutesConfig } from '@/services/modules/user'
+import { User } from '@/services'
 import { setAuthorization } from '@/utils/request'
 import { loadRoutes } from '@/utils/routerUtil'
 import { mapMutations } from 'vuex'
@@ -87,7 +87,7 @@ export default {
           this.logging = true
           const name = this.form.getFieldValue('name')
           const password = this.form.getFieldValue('password')
-          login(name, password)
+          User.login(name, password)
             .then(this.afterLogin)
             .catch(e => {
               this.logging = false
@@ -109,7 +109,7 @@ export default {
           expireAt: new Date(loginRes.data.expireAt)
         })
         // 获取路由配置
-        getRoutesConfig().then(result => {
+        User.getRoutesConfig().then(result => {
           const routesConfig = result.data.data
           loadRoutes(routesConfig)
           this.$router.push('/dashboard')

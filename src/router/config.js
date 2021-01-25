@@ -35,6 +35,14 @@ const options = {
           component: () => import('@/pages/dashboard')
         },
         {
+          path: 'worldline',
+          name: '世界线',
+          meta: {
+            icon: 'dashboard'
+          },
+          component: () => import('@/pages/worldline')
+        },
+        {
           path: 'word',
           name: '文字',
           meta: {

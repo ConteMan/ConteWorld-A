@@ -1,5 +1,5 @@
 <template>
-  <div class="footer">
+  <div v-show="copyright && linkList" class="footer">
     <div class="links">
       <a
         v-for="(item, index) in linkList"
@@ -22,6 +22,7 @@
 <script>
 export default {
   name: 'PageFooter',
+  // eslint-disable-next-line vue/require-prop-types
   props: ['copyright', 'linkList']
 }
 </script>

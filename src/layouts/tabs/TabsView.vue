@@ -168,7 +168,7 @@ export default {
       this.clearCaches = clearPages.map(item => item.cachedKey)
       this.pageList = this.pageList.filter(item => !clearPages.includes(item))
       // 判断跳转
-      if (this.activePage != pageKey) {
+      if (this.activePage !== pageKey) {
         this.activePage = pageKey
         this.$router.push(this.activePage)
       }

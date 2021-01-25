@@ -29,7 +29,7 @@ function formatConfig(obj, dep) {
       } else if (typeof item === 'string') {
         format = `'${item}',`
       }
-      if (index == obj.length - 1) {
+      if (index === obj.length - 1) {
         format = format.substring(0, format.length - 1)
       } else {
         arrayLastIsObj = false
@@ -49,7 +49,7 @@ function formatConfig(obj, dep) {
       } else if (typeof val === 'string') {
         format = `${LN}${indent}${key}: '${val}',`
       }
-      if (index == keys.length - 1) {
+      if (index === keys.length - 1) {
         format = format.substring(0, format.length - 1)
       }
       return format

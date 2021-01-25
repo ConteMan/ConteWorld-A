@@ -54,23 +54,34 @@ export default {
   },
   inject: ['adminLayout'],
   props: {
-    pageList: Array,
-    active: String,
-    fixed: Boolean
+    pageList: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
+    active: {
+      type: String,
+      default: '',
+    },
+    fixed: {
+      type: Boolean,
+      default: true,
+    }
   },
   data() {
     return {
       affixed: false,
     }
   },
-  created() {
-    this.affixed = this.fixedTabs
-  },
   computed: {
     ...mapState('setting', ['layout', 'pageWidth', 'fixedHeader', 'fixedTabs']),
     lockTitle() {
       return this.$t(this.fixedTabs ? 'unlock' : 'lock')
     }
+  },
+  created() {
+    this.affixed = this.fixedTabs
   },
   methods: {
     ...mapMutations('setting', ['setFixedTabs']),

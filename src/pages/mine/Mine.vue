@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { changePassword } from '@/services'
+import { User } from '@/services'
 
 export default {
   name: 'Mine',
@@ -56,7 +56,7 @@ export default {
     changePassword() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          changePassword(this.form.pass).then(
+          User.changePassword(this.form.pass).then(
             res => this.afterChange(res)
           )
         } else {

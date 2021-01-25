@@ -20,7 +20,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { logout } from '@/services/modules/user'
+import { User } from '@/services'
 
 export default {
   name: 'HeaderAvatar',
@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     logout() {
-      logout()
+      User.logout()
       this.$router.push('/login')
     }
   }

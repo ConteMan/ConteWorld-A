@@ -32,7 +32,7 @@ function initI18n(locale, fallback) {
 function generateI18n(lang, routes, valueKey) {
   routes.forEach(route => {
     const keys = getI18nKey(route.fullPath).split('.')
-    const value = valueKey === 'path' ? route[valueKey].split('/').filter(item => !item.startsWith(':') && item != '').join('.') : route[valueKey]
+    const value = valueKey === 'path' ? route[valueKey].split('/').filter(item => !item.startsWith(':') && item !== '').join('.') : route[valueKey]
     lang.assignProps(keys, value)
     if (route.children) {
       generateI18n(lang, route.children, valueKey)

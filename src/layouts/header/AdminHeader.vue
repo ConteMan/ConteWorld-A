@@ -44,6 +44,7 @@ import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'AdminHeader',
   components: { IMenu, HeaderAvatar },
+  // eslint-disable-next-line vue/require-prop-types
   props: ['collapsed', 'menuData'],
   data() {
     return {
