@@ -51,11 +51,6 @@ const options = {
           component: PageView,
           children: [
             {
-              path: '/one',
-              name: '一个',
-              component: () => import('@/pages/one'),
-            },
-            {
               path: '/article',
               name: '文章',
               component: () => import('@/pages/article'),
@@ -77,6 +72,21 @@ const options = {
                 selectPath: '/article',
               },
               component: () => import('@/pages/article/ArticleUpdate'),
+            },
+          ]
+        },
+        {
+          path: 'database',
+          name: '数据仓库',
+          meta: {
+            icon: 'database'
+          },
+          component: PageView,
+          children: [
+            {
+              path: '/one',
+              name: '一个',
+              component: () => import('@/pages/one'),
             },
           ]
         },
