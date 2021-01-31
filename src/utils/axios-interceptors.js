@@ -1,38 +1,40 @@
 import Cookie from 'js-cookie'
+import { removeAuthorization } from '@/utils/request.js'
 // 401拦截
 const resp401 = {
   /**
-   * 响应数据之前做点什么
+   * 2XX, 响应数据之前做点什么
    * @param response 响应对象
    * @param options 应用配置 包含: {router, i18n, store, message}
    * @returns {*}
    */
   onFulfilled(response, options) {
-    const { message, router } = options
-    if (response.status === 401) {
-      message.error('无此接口权限')
-      router.push({ path: '/login' })
-    }
+    // const { message, router } = options
     return response
   },
   /**
-   * 响应出错时执行
+   * 非 2XX，即响应出错时执行
    * @param error 错误对象
    * @param options 应用配置 包含: {router, i18n, store, message}
    * @returns {Promise<never>}
    */
-  // onRejected(error, options) {
-  //   const {message} = options
-  //   message.error(error.message)
-  //   return Promise.reject(error)
-  // }
+  onRejected(error, options) {
+    const { message, router } = options
+    const { response } = error
+    if (response.status === 401) {
+      message.error('Unauthorized')
+      removeAuthorization()
+      router.push({ path: '/login' })
+    }
+    return Promise.reject(error)
+  }
 }
 
 const resp403 = {
   onFulfilled(response, options) {
     const { message } = options
     if (response.status === 403) {
-      message.error(`请求被拒绝`)
+      message.error('Forbidden')
     }
     return response
   }
@@ -49,7 +51,7 @@ const reqCommon = {
     const { message, router } = options
     const { url, xsrfCookieName } = config
     if (url.indexOf('login') === -1 && xsrfCookieName && !Cookie.get(xsrfCookieName)) {
-      message.warning('认证 token 已过期，请重新登录')
+      message.warning('Auth Expired')
       router.push({ path: '/login' })
     }
     return config
