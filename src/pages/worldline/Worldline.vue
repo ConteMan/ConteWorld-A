@@ -23,6 +23,20 @@
           <template v-for="item in items">
             <div :key="item.slug" class="list-item">
               <div v-if="item.platform_type === 'yuque_note'" v-html="item.content" />
+              <div v-if="item.platform_type === 'douban_movie'">
+                {{ item.content }}
+              </div>
+              <div class="info">
+                <span class="time">
+                  <template v-if="item.platform === 'douban'">
+                    {{ dayjs(item.platform_created_at).format("YYYY-MM-DD") }}
+                  </template>
+                  <template v-else>
+                    {{ dayjs(item.platform_created_at).format("YYYY-MM-DD HH:mm:ss") }}
+                  </template>
+                </span>
+                <span class="platform-type">{{ item.platform_type_des.value }}</span>
+              </div>
             </div>
           </template>
         </template>
@@ -33,6 +47,7 @@
 
 <script>
 import _ from 'lodash'
+import dayjs from 'dayjs'
 import infiniteScroll from 'vue-infinite-scroll'
 import { Worldline } from '@/services'
 
@@ -50,6 +65,8 @@ export default {
       limit: 20,
       busy: false,
       total: 0,
+
+      dayjs,
 
       platformTypes: [
         {
