@@ -1,5 +1,5 @@
 <template>
-  <a-card class="common-table">
+  <a-card class="common-table" :bordered="false">
     <div class="common-table-container">
       <div class="operator">
         <a-button type="primary" :loading="syncLoading" @click="sync">同步</a-button>

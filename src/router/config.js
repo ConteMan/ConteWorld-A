@@ -38,7 +38,7 @@ const options = {
           path: 'worldline',
           name: '世界线',
           meta: {
-            icon: 'dashboard'
+            icon: 'compass'
           },
           component: () => import('@/pages/worldline')
         },

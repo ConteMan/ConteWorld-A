@@ -1,14 +1,10 @@
-@border-grey: rgba(206, 206, 206, 0.4);
-@font-grey: rgba(206, 206, 206, 0.6);
-
 .worldline-container {
   margin: -24px;
-  padding: 0 24px;
+  padding: 0;
   height: calc(100vh - 64px);
   background-color: white;
   .worldline-action-bar {
-    border: 1px solid @border-grey;
-    border-top: none;
+    border-bottom: @conte-border;
     padding: 24px;
     display: flex;
   }
@@ -22,16 +18,14 @@
     .list-content {
       background: white;
       .list-item {
-        border-bottom: 1px solid @border-grey;
-        border-left: 1px solid @border-grey;
-        border-right: 1px solid @border-grey;
+        border-bottom: @conte-border;
         padding: 12px;
         &:hover {
-          background-color: @border-grey;
+          background-color: @conte-border-grey;
         }
         .info {
           text-align: left;
-          color: @font-grey;
+          color: @conte-font-grey;
           font-size: 12px;
           padding: 8px 0 0 0;
           .time {

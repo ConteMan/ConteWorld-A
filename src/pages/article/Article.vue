@@ -1,5 +1,5 @@
 <template>
-  <a-card>
+  <a-card :bordered="false">
     <div>
       <advance-table
         row-key="id"

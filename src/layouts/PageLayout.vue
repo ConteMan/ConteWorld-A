@@ -43,31 +43,6 @@ export default {
       pageHeaderHeight: 0,
     }
   },
-  watch: {
-    $route() {
-      this.page = this.$route.meta.page
-    }
-  },
-  updated() {
-    if (!this._inactive) {
-      this.updatePageHeight()
-    }
-  },
-  activated() {
-    this.updatePageHeight()
-  },
-  deactivated() {
-    this.updatePageHeight(0)
-  },
-  mounted() {
-    this.updatePageHeight()
-  },
-  created() {
-    this.page = this.$route.meta.page
-  },
-  beforeDestroy() {
-    this.updatePageHeight(0)
-  },
   computed: {
     ...mapState('setting', ['layout', 'multiPage', 'pageMinHeight', 'pageWidth']),
     pageTitle() {
@@ -94,6 +69,31 @@ export default {
     marginCorrect() {
       return this.multiPage ? 24 : 0
     }
+  },
+  watch: {
+    $route() {
+      this.page = this.$route.meta.page
+    }
+  },
+  updated() {
+    if (!this._inactive) {
+      this.updatePageHeight()
+    }
+  },
+  activated() {
+    this.updatePageHeight()
+  },
+  deactivated() {
+    this.updatePageHeight(0)
+  },
+  mounted() {
+    this.updatePageHeight()
+  },
+  created() {
+    this.page = this.$route.meta.page
+  },
+  beforeDestroy() {
+    this.updatePageHeight(0)
   },
   methods: {
     ...mapMutations('setting', ['correctPageMinHeight']),
@@ -140,7 +140,8 @@ export default {
 
 .page-content {
   position: relative;
-  padding: 24px 0 0;
+  padding: 0;
+  margin: 0 -24px;
 
   &.side {
   }

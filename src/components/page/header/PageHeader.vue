@@ -8,7 +8,7 @@
           </a-breadcrumb-item>
         </a-breadcrumb>
       </div>
-      <div class="detail">
+      <div v-if="(showPageTitle && title) || this.$slots.content || this.$slots.extra" class="detail">
         <div class="main">
           <div class="row">
             <h1 v-if="showPageTitle && title" class="title">{{ title }}</h1>

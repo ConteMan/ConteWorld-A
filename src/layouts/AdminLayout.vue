@@ -22,7 +22,7 @@
       :style="`width: ${sideMenuWidth}; min-width: ${sideMenuWidth};max-width: ${sideMenuWidth};`"
       class="virtual-side"
     />
-    <drawer v-if="!hideSetting" v-model="showSetting" placement="right">
+    <drawer v-if="!hideSetting" v-model="showSetting" class="hover-mode" placement="right">
       <div slot="handler" class="setting">
         <a-icon :type="showSetting ? 'close' : 'setting'" />
       </div>
@@ -147,6 +147,7 @@ export default {
 <style lang="less" scoped>
 .admin-layout {
   .side-menu {
+    border-right: @conte-border;
     &.fixed-side {
       position: fixed;
       height: 100vh;

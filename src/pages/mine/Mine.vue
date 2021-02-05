@@ -1,5 +1,5 @@
 <template>
-  <a-card class="form-container">
+  <a-card class="form-container" :bordered="false">
     <a-form-model ref="form" layout="vertical" :model="form" :rules="rules">
       <a-form-model-item has-feedback label="密码" prop="pass">
         <a-input-password v-model="form.pass" placeholder="请输入密码" autocomplete="off" />

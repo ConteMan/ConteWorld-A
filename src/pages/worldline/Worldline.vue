@@ -1,5 +1,5 @@
 <template>
-  <div class="worldline-container">
+  <div class="worldline-container" :style="{ 'height': worldlineContainerHeight }">
     <div class="worldline-action-bar">
       <div class="platform-type">
         <a-space>
@@ -11,13 +11,15 @@
         </a-space>
       </div>
     </div>
-    <div class="list-container">
+    <div class="list-container" :style="{ 'height': listContainerHeight }">
       <div
         v-infinite-scroll="loadMore"
         class="list-content"
+        infinite-scroll-delay="500"
         infinite-scroll-disabled="busy"
         infinite-scroll-distance="200"
         infinite-scroll-immediate-check="true"
+        :style="{ 'height': listContainerHeight }"
       >
         <template v-if="items.length">
           <template v-for="item in items">
@@ -74,11 +76,26 @@ export default {
           value: '全部',
         }
       ],
+      pageHeight: document.body.clientHeight
+    }
+  },
+  computed: {
+    worldlineContainerHeight() {
+      return (this.pageHeight - 64) + 'px'
+    },
+    listContainerHeight() {
+      return (this.pageHeight - 137) + 'px'
     }
   },
   created() {
     this.index()
     this.getPlatformTypes()
+    const that = this
+    window.onresize = () => {
+      return (() => {
+        that.pageHeight = document.body.clientHeight
+      })()
+    }
   },
   methods: {
     init() {

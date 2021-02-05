@@ -160,4 +160,27 @@ export default {
     }
   }
 }
+
+.hover-mode {
+  .handler-container {
+    &.close {
+      &.left {
+        right: -8px;
+      }
+      &.right {
+        left: -8px;
+      }
+    }
+    &.close {
+      &:hover {
+        &.left {
+          right: -40px;
+        }
+        &.right {
+          left: -40px;
+        }
+      }
+    }
+  }
+}
 </style>

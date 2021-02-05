@@ -1,5 +1,5 @@
 <template>
-  <a-card>
+  <a-card :bordered="false">
     <div>
       <div class="operator">
         <a-button type="primary" @click="showAdd">{{ $t('add') }}</a-button>
