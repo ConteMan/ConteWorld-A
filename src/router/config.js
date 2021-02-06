@@ -34,6 +34,34 @@ const options = {
           },
           component: () => import('@/pages/dashboard')
         },
+        // 文章模块
+        {
+          path: '/article',
+          name: '文章',
+          meta: {
+            icon: 'book'
+          },
+          component: () => import('@/pages/article'),
+        },
+        {
+          path: '/article/create',
+          name: '创建文章',
+          meta: {
+            invisible: true,
+            selectPath: '/article',
+          },
+          component: () => import('@/pages/article/ArticleCreate'),
+        },
+        {
+          path: '/article/update',
+          name: '更新文章',
+          meta: {
+            invisible: true,
+            selectPath: '/article',
+          },
+          component: () => import('@/pages/article/ArticleUpdate'),
+        },
+        // 世界线
         {
           path: 'worldline',
           name: '世界线',
@@ -41,39 +69,6 @@ const options = {
             icon: 'compass'
           },
           component: () => import('@/pages/worldline')
-        },
-        {
-          path: 'word',
-          name: '文字',
-          meta: {
-            icon: 'book'
-          },
-          component: PageView,
-          children: [
-            {
-              path: '/article',
-              name: '文章',
-              component: () => import('@/pages/article'),
-            },
-            {
-              path: '/article/create',
-              name: '创建文章',
-              meta: {
-                invisible: true,
-                selectPath: '/article',
-              },
-              component: () => import('@/pages/article/ArticleCreate'),
-            },
-            {
-              path: '/article/update',
-              name: '更新文章',
-              meta: {
-                invisible: true,
-                selectPath: '/article',
-              },
-              component: () => import('@/pages/article/ArticleUpdate'),
-            },
-          ]
         },
         {
           path: 'database',

@@ -1,82 +1,88 @@
 <template>
-  <a-card :bordered="false">
-    <div>
-      <advance-table
-        row-key="id"
-        :loading="loading"
-        :data-source="items"
-        :columns="columns"
-        :bordered="true"
-        :scroll="{ x: 1000 }"
-        :format-conditions="true"
-        :pagination="{
-          current: page,
-          pageSize: per_page,
-          total: total,
-          showSizeChanger: true,
-          showLessItems: true,
-          showQuickJumper: true,
-          showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，总计 ${total} 条`,
-          onChange: onPageChange,
-          onShowSizeChange: onSizeChange,
-        }"
-        @search="onSearch"
-        @refresh="onRefresh"
-        @reset="onReset"
-      >
-        <div slot="title">
-          <a-button class="table-title-btn" type="primary" @click="$router.push({ path: '/article/create' })">
-            {{ $t('create') }}
-          </a-button>
+  <page-view-slot>
+    <template #router-view>
+      <a-card :bordered="false">
+        <div>
+          <advance-table
+            row-key="id"
+            :loading="loading"
+            :data-source="items"
+            :columns="columns"
+            :bordered="true"
+            :scroll="{ x: 1000 }"
+            :format-conditions="true"
+            :pagination="{
+              current: page,
+              pageSize: per_page,
+              total: total,
+              showSizeChanger: true,
+              showLessItems: true,
+              showQuickJumper: true,
+              showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，总计 ${total} 条`,
+              onChange: onPageChange,
+              onShowSizeChange: onSizeChange,
+            }"
+            @search="onSearch"
+            @refresh="onRefresh"
+            @reset="onReset"
+          >
+            <div slot="title">
+              <a-button class="table-title-btn" type="primary" @click="$router.push({ path: '/article/create' })">
+                {{ $t('create') }}
+              </a-button>
+            </div>
+            <span slot="status" slot-scope="{text}">
+              <a-tag :color="text.color">
+                {{ text.value }}
+              </a-tag>
+            </span>
+            <span slot="tag" slot-scope="{text}">
+              <a-tag v-for="item in text" :key="item" color="blue">
+                {{ item }}
+              </a-tag>
+            </span>
+            <span slot="date" slot-scope="{text}">
+              {{ text }}
+            </span>
+            <span slot="action" slot-scope="{record}">
+              <a @click="statusModalClick(record.id)">{{ $t('status') }}</a>
+              <a-divider type="vertical" />
+              <a @click="turnUpdate(record.id)">{{ $t('edit') }}</a>
+            </span>
+          </advance-table>
+
+          <a-modal
+            :title="$t('status')"
+            :visible="statusModalVisible"
+            :confirm-loading="statusLoading"
+            @ok="statusOK"
+            @cancel="statusCancel"
+          >
+            <a-form-model>
+              <a-form-model-item>
+                <a-select :value="current.status" @change="statusChange">
+                  <a-select-option v-for="item in statuses" :key="item.key" :value="item.key">{{ item.value }}</a-select-option>
+                </a-select>
+              </a-form-model-item>
+            </a-form-model>
+          </a-modal>
+
         </div>
-        <span slot="status" slot-scope="{text}">
-          <a-tag :color="text.color">
-            {{ text.value }}
-          </a-tag>
-        </span>
-        <span slot="tag" slot-scope="{text}">
-          <a-tag v-for="item in text" :key="item" color="blue">
-            {{ item }}
-          </a-tag>
-        </span>
-        <span slot="date" slot-scope="{text}">
-          {{ text }}
-        </span>
-        <span slot="action" slot-scope="{record}">
-          <a @click="statusModalClick(record.id)">{{ $t('status') }}</a>
-          <a-divider type="vertical" />
-          <a @click="turnUpdate(record.id)">{{ $t('edit') }}</a>
-        </span>
-      </advance-table>
-
-      <a-modal
-        :title="$t('status')"
-        :visible="statusModalVisible"
-        :confirm-loading="statusLoading"
-        @ok="statusOK"
-        @cancel="statusCancel"
-      >
-        <a-form-model>
-          <a-form-model-item>
-            <a-select :value="current.status" @change="statusChange">
-              <a-select-option v-for="item in statuses" :key="item.key" :value="item.key">{{ item.value }}</a-select-option>
-            </a-select>
-          </a-form-model-item>
-        </a-form-model>
-      </a-modal>
-
-    </div>
-  </a-card>
+      </a-card>
+    </template>
+  </page-view-slot>
 </template>
 
 <script>
+import PageViewSlot from '@/layouts/PageViewSlot'
 import AdvanceTable from '@/components/table/advance/AdvanceTable'
 import { Article } from '@/services'
 
 export default {
   name: 'Article',
   components: {
-    AdvanceTable,
+    PageViewSlot,
+    AdvanceTable
   },
   i18n: require('./i18n'),
   data() {

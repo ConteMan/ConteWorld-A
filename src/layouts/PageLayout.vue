@@ -36,7 +36,30 @@ import { getI18nKey } from '@/utils/routerUtil'
 export default {
   name: 'PageLayout',
   components: { PageHeader },
-  props: ['desc', 'logo', 'title', 'avatar', 'linkList', 'extraImage'],
+  props: {
+    desc: {
+      type: String,
+      default: '',
+    },
+    logo: {
+      type: String,
+      default: '',
+    },
+    title: {
+      type: String,
+      default: '',
+    },
+    linkList: {
+      type: Array,
+      default: function() {
+        return []
+      },
+    },
+    avatar: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
       page: {},

@@ -1,52 +1,57 @@
 <template>
-  <a-card>
-    <a-form-model
-      :model="form"
-      :rules="rules"
-      layout="vertical"
-    >
-      <a-form-model-item label="标题" prop="title">
-        <a-input v-model="form.title" />
-      </a-form-model-item>
-      <a-form-model-item label="标签" prop="tags">
-        <a-select mode="tags" :default-value="form.tags" @change="tagChange">
-          <a-select-option v-for="item in tags" :key="item" :value="item">{{ item }}</a-select-option>
-        </a-select>
-      </a-form-model-item>
-      <a-form-model-item label="内容">
-        <mavon-editor v-model="form.content" class="mk-container" v-bind="markdownOption" style="height: 100%" />
-      </a-form-model-item>
-      <a-form-model-item label="信息时间" prop="info_at">
-        <a-date-picker
-          show-time
-          value-format="YYYY-MM-DD HH:mm:ss"
-          :value="form.info_at"
-          @change="infoAtChange"
-          @ok="infoAtChange"
-        />
-      </a-form-model-item>
-      <div class="item-max-width">
-        <a-form-model-item label="状态">
-          <a-select :default-value="form.status" @change="statusChange">
-            <a-select-option v-for="item in statuses" :key="item.key" :value="item.key">{{ item.value }}</a-select-option>
-          </a-select>
-        </a-form-model-item>
-      </div>
-      <a-form-model-item>
-        <a-space>
-          <a-button type="primary" @click="create">
-            创建
-          </a-button>
-          <a-button @click="$router.push({ path: 'index' })">
-            取消
-          </a-button>
-        </a-space>
-      </a-form-model-item>
-    </a-form-model>
-  </a-card>
+  <page-view-slot>
+    <template #router-view>
+      <a-card :bordered="false">
+        <a-form-model
+          :model="form"
+          :rules="rules"
+          layout="vertical"
+        >
+          <a-form-model-item label="标题" prop="title">
+            <a-input v-model="form.title" />
+          </a-form-model-item>
+          <a-form-model-item label="标签" prop="tags">
+            <a-select mode="tags" :default-value="form.tags" @change="tagChange">
+              <a-select-option v-for="item in tags" :key="item" :value="item">{{ item }}</a-select-option>
+            </a-select>
+          </a-form-model-item>
+          <a-form-model-item label="内容">
+            <mavon-editor v-model="form.content" class="mk-container" v-bind="markdownOption" style="height: 100%" />
+          </a-form-model-item>
+          <a-form-model-item label="信息时间" prop="info_at">
+            <a-date-picker
+              show-time
+              value-format="YYYY-MM-DD HH:mm:ss"
+              :value="form.info_at"
+              @change="infoAtChange"
+              @ok="infoAtChange"
+            />
+          </a-form-model-item>
+          <div class="item-max-width">
+            <a-form-model-item label="状态">
+              <a-select :default-value="form.status" @change="statusChange">
+                <a-select-option v-for="item in statuses" :key="item.key" :value="item.key">{{ item.value }}</a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </div>
+          <a-form-model-item>
+            <a-space>
+              <a-button type="primary" @click="create">
+                创建
+              </a-button>
+              <a-button @click="$router.push({ path: '/article' })">
+                取消
+              </a-button>
+            </a-space>
+          </a-form-model-item>
+        </a-form-model>
+      </a-card>
+    </template>
+  </page-view-slot>
 </template>
 
 <script>
+import PageViewSlot from '@/layouts/PageViewSlot'
 import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import { Article } from '@/services'
@@ -54,6 +59,7 @@ import { Article } from '@/services'
 export default {
   name: 'Add',
   components: {
+    PageViewSlot,
     mavonEditor,
   },
   data() {
