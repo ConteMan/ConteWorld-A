@@ -6,6 +6,7 @@ import SysConfig from '@/services/modules/sysConfig'
 import SysEnum from '@/services/modules/sysEnum'
 import Token from '@/services/modules/token'
 import Worldline from '@/services/modules/worldline'
+import Movie from '@/services/modules/movie'
 
 export {
   User,
@@ -16,4 +17,5 @@ export {
   SysEnum,
   Token,
   Worldline,
+  Movie,
 }

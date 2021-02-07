@@ -61,6 +61,15 @@ const options = {
           },
           component: () => import('@/pages/article/ArticleUpdate'),
         },
+        // 电影
+        {
+          path: 'movie',
+          name: '电影',
+          meta: {
+            icon: 'video-camera'
+          },
+          component: () => import('@/pages/movie')
+        },
         // 世界线
         {
           path: 'worldline',
