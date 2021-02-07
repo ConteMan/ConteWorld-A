@@ -31,6 +31,9 @@
                 {{ $t('create') }}
               </a-button>
             </div>
+            <span slot="platform" slot-scope="{text}">
+              {{ text.value }}
+            </span>
             <span slot="status" slot-scope="{text}">
               <a-tag :color="text.color">
                 {{ text.value }}
@@ -101,8 +104,9 @@ export default {
         },
         {
           title: this.$t('form.platform'),
-          dataIndex: 'platform',
-          width: 100,
+          dataIndex: 'platformObj',
+          width: 80,
+          scopedSlots: { customRender: 'platform' },
         },
         {
           title: this.$t('form.title'),
@@ -121,18 +125,6 @@ export default {
         {
           title: this.$t('form.info_at'),
           dataIndex: 'info_at',
-          width: 200,
-          scopedSlots: { customRender: 'date' },
-        },
-        {
-          title: this.$t('form.published_at'),
-          dataIndex: 'published_at',
-          width: 200,
-          scopedSlots: { customRender: 'date' },
-        },
-        {
-          title: this.$t('updated_at'),
-          dataIndex: 'updated_at',
           width: 200,
           scopedSlots: { customRender: 'date' },
         },
