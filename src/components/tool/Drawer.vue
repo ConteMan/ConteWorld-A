@@ -9,6 +9,7 @@
         v-if="showHandler"
         ref="handler"
         :class="['handler-container', placement, visible ? 'open' : 'close']"
+        :style="handlerStyle"
         @click="toggle"
       >
         <slot v-if="$slots.handler" name="handler" />
@@ -42,6 +43,15 @@ export default {
       type: Boolean,
       required: false,
       default: true
+    },
+    handlerStyle: {
+      type: Object,
+      required: false,
+      default: function() {
+        return {
+          top: '200px',
+        }
+      }
     }
   },
   data() {
@@ -132,7 +142,6 @@ export default {
   text-align: center;
   transition: all 0.5s;
   cursor: pointer;
-  top: 200px;
   z-index: 100;
 
   .handler {

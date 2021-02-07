@@ -1,6 +1,11 @@
 <template>
   <a-layout :class="['admin-layout', 'beauty-scroll']">
-    <drawer v-if="isMobile" v-model="drawerOpen">
+    <drawer
+      v-if="isMobile"
+      :visible="mobileMenuStatus"
+      :show-handler="false"
+      @change="setMobileMenuStatus(false)"
+    >
       <side-menu
         :theme="theme.mode"
         :menu-data="menuData"
@@ -22,10 +27,14 @@
       :style="`width: ${sideMenuWidth}; min-width: ${sideMenuWidth};max-width: ${sideMenuWidth};`"
       class="virtual-side"
     />
-    <drawer v-if="!hideSetting" v-model="showSetting" class="hover-mode" placement="right">
-      <div slot="handler" class="setting">
-        <a-icon :type="showSetting ? 'close' : 'setting'" />
-      </div>
+    <drawer
+      v-if="!hideSetting"
+      :visible="settingStatus"
+      :show-handler="false"
+      class="hover-mode"
+      placement="right"
+      @change="setSettingStatus(false)"
+    >
       <setting />
     </drawer>
     <a-layout class="admin-layout-main beauty-scroll">
@@ -79,8 +88,21 @@ export default {
     }
   },
   computed: {
-    ...mapState('setting', ['isMobile', 'theme', 'layout', 'footerLinks', 'copyright', 'fixedHeader', 'fixedSideBar',
-      'fixedTabs', 'hideSetting', 'multiPage']),
+    ...mapState('setting',
+      [
+        'isMobile',
+        'theme',
+        'layout',
+        'footerLinks',
+        'copyright',
+        'fixedHeader',
+        'fixedSideBar',
+        'fixedTabs',
+        'hideSetting',
+        'multiPage',
+        'settingStatus',
+        'mobileMenuStatus'
+      ]),
     ...mapGetters('setting', ['firstMenu', 'subMenu', 'menuData']),
     sideMenuWidth() {
       return this.collapsed ? '80px' : '256px'
@@ -108,7 +130,7 @@ export default {
     },
     isMobile(val) {
       if (!val) {
-        this.drawerOpen = false
+        this.setMobileMenuStatus(false)
       }
     }
   },
@@ -120,7 +142,7 @@ export default {
     this.correctPageMinHeight(-minHeight + 1)
   },
   methods: {
-    ...mapMutations('setting', ['correctPageMinHeight', 'setActivatedFirst']),
+    ...mapMutations('setting', ['correctPageMinHeight', 'setActivatedFirst', 'setSettingStatus', 'setMobileMenuStatus']),
     toggleCollapse() {
       this.collapsed = !this.collapsed
     },

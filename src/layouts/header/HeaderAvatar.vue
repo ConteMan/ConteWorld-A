@@ -9,6 +9,10 @@
         <a-icon type="user" />
         <span>修改密码</span>
       </a-menu-item>
+      <a-menu-item @click="setSettingStatus(true)">
+        <a-icon type="setting" />
+        <span>主题配置</span>
+      </a-menu-item>
       <a-menu-divider />
       <a-menu-item @click="logout">
         <a-icon style="margin-right: 8px;" type="poweroff" />
@@ -19,7 +23,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import { User } from '@/services'
 
 export default {
@@ -28,6 +32,7 @@ export default {
     ...mapGetters('account', ['user']),
   },
   methods: {
+    ...mapMutations('setting', ['setSettingStatus']),
     logout() {
       User.logout()
       this.$router.push('/login')

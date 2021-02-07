@@ -1,6 +1,13 @@
 <template>
   <a-layout-header :class="[headerTheme, 'admin-header']">
     <div :class="['admin-header-wide', layout, pageWidth]">
+      <a-icon
+        v-if="isMobile"
+        class="mobile-trigger"
+        :type="!mobileMenuStatus ? 'menu-unfold' : 'menu-fold'"
+        @click="setMobileMenuStatus(true)"
+      />
+      <a-divider v-if="isMobile" type="vertical" />
       <router-link
         v-if="isMobile || layout === 'head'"
         to="/dashboard"
@@ -9,7 +16,6 @@
         <img width="32" src="@/assets/img/logo.png">
         <h1 v-if="!isMobile">{{ systemName }}</h1>
       </router-link>
-      <a-divider v-if="isMobile" type="vertical" />
       <a-icon
         v-if="layout !== 'head' && !isMobile"
         class="trigger"
@@ -57,7 +63,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('setting', ['theme', 'isMobile', 'layout', 'systemName', 'lang', 'pageWidth']),
+    ...mapState('setting', ['theme', 'isMobile', 'layout', 'systemName', 'lang', 'pageWidth', 'mobileMenuStatus']),
     headerTheme() {
       if (this.layout === 'side' && this.theme.mode === 'dark' && !this.isMobile) {
         return 'light'
@@ -76,6 +82,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('setting', ['setMobileMenuStatus']),
     toggleCollapse() {
       this.$emit('toggleCollapse')
     },

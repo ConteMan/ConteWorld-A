@@ -10,6 +10,8 @@ export default {
   namespaced: true,
   state: {
     isMobile: false,
+    settingStatus: false, // setting 状态，true 展示，false 收起
+    mobileMenuStatus: false, // 移动端界面菜单状态，true 展示，false 收起
     animates: ADMIN.animates,
     palettes: ADMIN.palettes,
     pageMinHeight: 0,
@@ -94,6 +96,12 @@ export default {
     },
     setFixedTabs(state, fixedTabs) {
       state.fixedTabs = fixedTabs
+    },
+    setSettingStatus(state, status) {
+      state.settingStatus = status
+    },
+    setMobileMenuStatus(state, status) {
+      state.mobileMenuStatus = status
     }
   }
 }
