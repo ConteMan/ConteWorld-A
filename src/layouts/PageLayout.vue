@@ -12,7 +12,7 @@
       <slot slot="content" name="headerContent" />
       <div v-if="!this.$slots.headerContent && desc" slot="content">
         <p>{{ desc }}</p>
-        <div v-if="this.linkList" class="link">
+        <div v-if="linkList" class="link">
           <template v-for="(link, index) in linkList">
             <a :key="index" :href="link.href">
               <a-icon :type="link.icon" />
