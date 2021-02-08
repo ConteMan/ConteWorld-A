@@ -1,5 +1,9 @@
 <template>
-  <page-layout :desc="desc" :link-list="linkList">
+  <page-layout
+    :desc="desc"
+    :link-list="linkList"
+    :show-header="showHeader"
+  >
     <div v-if="extraImage && !isMobile" slot="extra" class="extraImg">
       <img :src="extraImage">
     </div>
@@ -17,6 +21,12 @@ import { mapState } from 'vuex'
 export default {
   name: 'PageView',
   components: { PageToggleTransition, PageLayout },
+  props: {
+    showHeader: {
+      type: Boolean,
+      default: true,
+    },
+  },
   data() {
     return {
       page: {
@@ -38,12 +48,6 @@ export default {
       return this.page.extraImage
     }
   },
-  // mounted() {
-  //   this.page = this.$refs.page
-  // },
-  // updated() {
-  //   this.page = this.$refs.page
-  // }
 }
 </script>
 

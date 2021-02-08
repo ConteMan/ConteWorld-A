@@ -89,7 +89,11 @@ const redirectGuard = (to, from, next, options) => {
  * @param form
  * @param options
  */
-const progressDone = () => {
+const progressDone = (to, from, options) => {
+  const { store } = options
+  if (store.state.setting.isMobile) {
+    store.commit('setting/setMobileMenuStatus', false)
+  }
   // finish progress bar
   NProgress.done()
 }

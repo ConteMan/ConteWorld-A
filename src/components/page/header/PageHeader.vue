@@ -41,19 +41,25 @@ export default {
   props: {
     title: {
       type: [String, Boolean],
-      required: false
+      required: false,
+      default: '',
     },
     breadcrumb: {
       type: Array,
-      required: false
+      required: false,
+      default: function() {
+        return []
+      },
     },
     logo: {
       type: String,
-      required: false
+      required: false,
+      default: '',
     },
     avatar: {
       type: String,
-      required: false
+      required: false,
+      default: '',
     },
   },
   computed: {

@@ -1,20 +1,40 @@
 <template>
-  <page-view-slot>
+  <page-view-slot
+    class="no-page-header"
+    :show-header="false"
+  >
     <template #router-view>
       <div class="movie-container" :style="{ 'height': worldlineContainerHeight }">
         <div class="bar">
           <div class="type">
             <template v-if="types.length > 0">
               <template v-for="item in types">
-                <div :key="item.key" class="type-item" :class="{ 'active': item.key===type }" @click="changeType(item.key)">{{ item.value }}</div>
+                <div
+                  :key="item.key"
+                  class="item"
+                  :class="{ 'active': item.key===type && showType === 'list' }"
+                  @click="changeType(item.key)"
+                >
+                  {{ item.value }}
+                </div>
               </template>
             </template>
+          </div>
+          <div class="action">
+            <div
+              class="item"
+              :class="{ 'active': showType === 'action' }"
+              @click="changeShowType()"
+            >
+              统计
+            </div>
           </div>
         </div>
         <div class="list-container" :style="{ 'height': listContainerHeight }">
           <div
+            v-if="showType==='list'"
             v-infinite-scroll="loadMore"
-            class="list-content beauty-scroll"
+            class="list-content"
             infinite-scroll-delay="1000"
             infinite-scroll-disabled="busy"
             infinite-scroll-distance="200"
@@ -43,6 +63,7 @@
               </template>
             </template>
           </div>
+          <div v-else class="action-content" />
         </div>
       </div>
     </template>
@@ -82,15 +103,16 @@ export default {
           value: '全部',
         }
       ],
-      pageHeight: document.body.clientHeight
+      pageHeight: document.body.clientHeight,
+      showType: 'list',
     }
   },
   computed: {
     worldlineContainerHeight() {
-      return (this.pageHeight - 118) + 'px'
+      return (this.pageHeight - 64) + 'px'
     },
     listContainerHeight() {
-      return (this.pageHeight - 118) + 'px'
+      return (this.pageHeight - 64) + 'px'
     }
   },
   created() {
@@ -135,9 +157,13 @@ export default {
       }
     },
     changeType(type) {
+      this.changeShowType('list')
       this.type = type
       this.init()
       this.index()
+    },
+    changeShowType(type = 'action') {
+      this.showType = type
     }
   }
 }

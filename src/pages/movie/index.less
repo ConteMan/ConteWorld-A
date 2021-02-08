@@ -1,5 +1,4 @@
 .movie-container {
-  border-top: @conte-border;
   margin: 0;
   padding: 0;
   background-color: white;
@@ -8,15 +7,20 @@
   .bar {
     border-right: @conte-border;
     display: flex;
-    width: 100px;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 80px;
+    max-width: 80px;
+    min-width: 80px;
     text-align: center;
     padding: 24px 0;
-    .type {
+    .type, .action {
       width: 100%;
-      .type-item {
+      .item {
         text-align: center;
         width: 100%;
         padding: 24px 0;
+        word-break: keep-all;
         &.active {
           color: red;
         }
@@ -26,14 +30,19 @@
         }
       }
     }
+    .action {
+      flex-grow: 1;
+      display: flex;
+      align-items: flex-end;
+    }
   }
   .list-container{
     flex-grow: 1;
-    overflow-y: auto;
-    scroll-behavior: smooth;
     .list-content {
-      background: white;
       overflow-y: auto;
+      &::-webkit-scrollbar {
+        display: none;
+      }
       .list-item {
         border-bottom: @conte-border;
         padding: 12px;

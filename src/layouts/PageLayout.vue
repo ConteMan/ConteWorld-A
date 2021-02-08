@@ -1,6 +1,7 @@
 <template>
   <div class="page-layout">
     <page-header
+      v-show="showHeader"
       ref="pageHeader"
       :style="`margin-top: ${multiPage ? 0 : -24}px`"
       :breadcrumb="breadcrumb"
@@ -37,6 +38,10 @@ export default {
   name: 'PageLayout',
   components: { PageHeader },
   props: {
+    showHeader: {
+      type: Boolean,
+      default: true,
+    },
     desc: {
       type: String,
       default: '',
@@ -59,6 +64,10 @@ export default {
       type: String,
       default: '',
     },
+    showBreadcrumb: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -77,6 +86,9 @@ export default {
       return this.$t(getI18nKey(route.matched[route.matched.length - 1].path))
     },
     breadcrumb() {
+      if (!this.showHeader || !this.showBreadcrumb) {
+        return []
+      }
       const page = this.page
       const breadcrumb = page && page.breadcrumb
       if (breadcrumb) {
