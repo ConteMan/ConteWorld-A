@@ -32,13 +32,13 @@
         </div>
         <div class="list-container" :style="{ 'height': listContainerHeight }">
           <div
-            v-if="showType==='list'"
+            v-show="showType === 'list'"
             v-infinite-scroll="loadMore"
             class="list-content"
             infinite-scroll-delay="1000"
             infinite-scroll-disabled="busy"
-            infinite-scroll-distance="200"
-            infinite-scroll-immediate-check="false"
+            infinite-scroll-distance="50"
+            infinite-scroll-immediate-check="true"
             :style="{ 'height': listContainerHeight }"
           >
             <template v-if="items.length">
@@ -63,7 +63,7 @@
               </template>
             </template>
           </div>
-          <div v-else class="action-content" />
+          <div v-show="showType === 'action'" class="action-content" />
         </div>
       </div>
     </template>
@@ -146,7 +146,6 @@ export default {
       }
     },
     loadMore() {
-      console.log('lodeMore', this.offset)
       this.offset += this.limit
       this.index()
     },
@@ -158,6 +157,9 @@ export default {
     },
     changeType(type) {
       this.changeShowType('list')
+      if (type === this.type) {
+        return true
+      }
       this.type = type
       this.init()
       this.index()
