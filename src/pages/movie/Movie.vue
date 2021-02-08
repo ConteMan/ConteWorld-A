@@ -26,7 +26,7 @@
               :class="{ 'active': showType === 'action' }"
               @click="changeShowType()"
             >
-              统计
+              More
             </div>
           </div>
         </div>
@@ -63,7 +63,25 @@
               </template>
             </template>
           </div>
-          <div v-show="showType === 'action'" class="action-content" />
+          <div
+            v-show="showType === 'action'"
+            class="action-content"
+          >
+            <div class="action-item">
+              <div class="left">
+                同步数据
+              </div>
+              <div class="right">
+                <a-button
+                  size="small"
+                  :loading="syncLoading"
+                  @click="sync()"
+                >
+                  确定
+                </a-button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </template>
@@ -105,6 +123,8 @@ export default {
       ],
       pageHeight: document.body.clientHeight,
       showType: 'list',
+
+      syncLoading: false,
     }
   },
   computed: {
@@ -166,6 +186,16 @@ export default {
     },
     changeShowType(type = 'action') {
       this.showType = type
+    },
+    async sync() {
+      this.syncLoading = true
+      const res = await Movie.sync()
+      this.syncLoading = false
+      if (res.data.code === 0) {
+        this.$message.success('搞定！（' + res.data.data.totalCount + '）')
+      } else {
+        this.$message.error('有点问题！')
+      }
     }
   }
 }

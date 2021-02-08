@@ -63,5 +63,26 @@
         }
       }
     }
+    .action-content {
+      display: flex;
+      flex-direction: column;
+      .action-item {
+        border-bottom: @conte-border;
+        padding: 12px 24px;
+        width: 100%;
+        display: inline-flex;
+        &:hover {
+          background-color: @conte-border-grey;
+        }
+        .left {
+          flex-grow: 1;
+          margin: auto;
+        }
+        .right {
+          flex-grow: 1;
+          text-align: right;
+        }
+      }
+    }
   }
 }
