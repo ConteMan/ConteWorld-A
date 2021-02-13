@@ -61,10 +61,19 @@ const options = {
           },
           component: () => import('@/pages/article/ArticleUpdate'),
         },
+        // 说说
+        {
+          path: 'talk',
+          name: '说说',
+          meta: {
+            icon: 'message'
+          },
+          component: () => import('@/pages/talk')
+        },
         // 电影
         {
           path: 'movie',
-          name: '电影',
+          name: '影视',
           meta: {
             icon: 'video-camera'
           },

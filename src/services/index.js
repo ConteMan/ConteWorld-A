@@ -7,6 +7,7 @@ import SysEnum from '@/services/modules/sysEnum'
 import Token from '@/services/modules/token'
 import Worldline from '@/services/modules/worldline'
 import Movie from '@/services/modules/movie'
+import Talk from '@/services/modules/talk'
 
 export {
   User,
@@ -18,4 +19,5 @@ export {
   Token,
   Worldline,
   Movie,
+  Talk,
 }

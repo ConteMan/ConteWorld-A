@@ -1,0 +1,104 @@
+.talk-container {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  .bar {
+    border-bottom: @conte-border;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    .type {
+      width: 100%;
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      .item {
+        height: 50px;
+        text-align: center;
+        padding: 0 24px;
+        word-break: keep-all;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        &.active {
+          color: red;
+        }
+        &:hover {
+          cursor: pointer;
+          background: @conte-border-grey;
+        }
+      }
+      .talk-type {
+        margin-left: 12px;
+        height: 100%;
+        /deep/ .ant-select-selection--single {
+          height: 50px;
+          border: none;
+          border-bottom: @conte-border;
+          .ant-select-selection__rendered {
+            line-height: 50px;
+          }
+        }
+      }
+    }
+  }
+  .list-container{
+    flex-grow: 1;
+    .list-content {
+      overflow-y: auto;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      .list-item {
+        border-bottom: @conte-border;
+        padding: 12px;
+        &:hover {
+          background-color: @conte-border-grey;
+        }
+        .info {
+          text-align: left;
+          color: @conte-font-grey;
+          font-size: 12px;
+          padding: 8px 0 0 0;
+          .time {
+            margin-right: 8px;
+          }
+        }
+        .item-pic {
+          width: 100%;
+        }
+      }
+    }
+    .action-content {
+      display: flex;
+      flex-direction: column;
+      .action-item {
+        border-bottom: @conte-border;
+        padding: 12px 24px;
+        width: 100%;
+        display: inline-flex;
+        &:hover {
+          background-color: @conte-border-grey;
+        }
+        .left {
+          flex-grow: 1;
+          margin: auto;
+        }
+        .right {
+          flex-grow: 1;
+          text-align: right;
+        }
+      }
+    }
+  }
+}
+.talk-textarea {
+  width: 100%;
+}

@@ -25,7 +25,7 @@
           <template v-for="item in items">
             <div :key="item.slug" class="list-item">
               <div v-if="item.platform_type === 'yuque_note'" v-html="item.content" />
-              <div v-if="item.platform_type === 'douban_movie'">
+              <div v-if="[ 'douban_movie', 'conteworld_talk'].includes(item.platform_type)">
                 {{ item.content }}
               </div>
               <div class="info">
