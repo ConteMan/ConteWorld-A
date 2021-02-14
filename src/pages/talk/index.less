@@ -1,8 +1,6 @@
 @import "../../theme/default/public.less";
 
 .talk-container {
-  margin: 0;
-  margin-top: -24px;
   padding: 0;
   background-color: white;
   display: flex;
@@ -60,8 +58,10 @@
         display: none;
       }
       .list-item {
+        width: 100%;
         border-bottom: @conte-border;
         padding: 12px;
+        overflow-x: hidden;
         &:hover {
           background-color: @conte-border-grey;
         }

@@ -11,7 +11,12 @@
             <a-space>
               <template v-for="item in platformTypes">
                 <template v-if="platformTypes.length > 0">
-                  <a-button :key="item.key" class="platform-type-btn" :type="item.key === platformType ? 'primary' : ''" size="small" @click="changePlatformType(item.key)">{{ item.value }} <template v-if="item.key === platformType">/ {{ total }}</template></a-button>
+                  <a-button :key="item.key" class="platform-type-btn" :type="item.key === platformType ? 'primary' : 'link'" size="small" @click="changePlatformType(item.key)">
+                    {{ item.value }}
+                    <template v-if="item.key === platformType && total !== 0">
+                      / {{ total }}
+                    </template>
+                  </a-button>
                 </template>
               </template>
             </a-space>
@@ -21,12 +26,12 @@
         <div class="list-container" :style="{ 'height': listContainerHeight }">
           <div
             v-infinite-scroll="loadMore"
-            class="list-content"
             infinite-scroll-delay="1000"
             infinite-scroll-disabled="busy"
             infinite-scroll-distance="10"
             infinite-scroll-immediate-check="true"
             :style="{ 'height': listContainerHeight }"
+            class="list-content"
           >
             <template v-for="item in items">
               <div :key="item.slug" class="list-item">
@@ -90,7 +95,7 @@ export default {
           value: '全部',
         }
       ],
-      pageHeight: document.body.clientHeight
+      pageHeight: window.innerHeight
     }
   },
   computed: {
@@ -98,7 +103,7 @@ export default {
       return (this.pageHeight - 64) + 'px'
     },
     listContainerHeight() {
-      return (this.pageHeight - 64 - 73 - 1) + 'px'
+      return (this.pageHeight - 64 - 50 - 1) + 'px'
     }
   },
   created() {
@@ -107,7 +112,7 @@ export default {
     const that = this
     window.onresize = () => {
       return (() => {
-        that.pageHeight = document.body.clientHeight
+        that.pageHeight = window.innerHeight
       })()
     }
   },
@@ -116,6 +121,7 @@ export default {
       this.items = []
       this.offset = 0
       this.busy = false
+      this.total = 0
     },
     async index() {
       const { offset, limit, platformType } = this

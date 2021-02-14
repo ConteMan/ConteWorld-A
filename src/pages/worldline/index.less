@@ -1,19 +1,36 @@
 .worldline-container {
-  margin: -24px 0;
   padding: 0;
   background-color: white;
+  display: flex;
+  flex-direction: column;
   .worldline-action-bar {
     border-bottom: @conte-border;
-    padding: 24px;
+    overflow-x: auto;
     display: flex;
-    overflow-x: scroll;
+    flex-direction: row;
+    align-items: center;
+    height: 50px;
+    background: @conte-border-grey;
+    .platform-type {
+      .platform-type-btn {
+        &:first-of-type {
+          margin-left: 12px;
+        }
+        &:last-of-type {
+          margin-right: 12px;
+        }
+      }
+    }
   }
   .list-container{
-    overflow-y: auto;
-    scroll-behavior: smooth;
+    flex-grow: 1;
     .list-content {
-      background: white;
+      overflow-y: auto;
+      &::-webkit-scrollbar {
+        display: none;
+      }
       .list-item {
+        width: 100%;
         border-bottom: @conte-border;
         padding: 12px;
         overflow-x: hidden;

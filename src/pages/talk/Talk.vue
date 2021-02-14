@@ -171,7 +171,7 @@ export default {
           value: '全部',
         }
       ],
-      pageHeight: document.body.clientHeight,
+      pageHeight: window.innerHeight,
       showType: 'list',
 
       syncLoading: false,
@@ -199,7 +199,7 @@ export default {
     const that = this
     window.onresize = () => {
       return (() => {
-        that.pageHeight = document.body.clientHeight
+        that.pageHeight = window.innerHeight
       })()
     }
   },
