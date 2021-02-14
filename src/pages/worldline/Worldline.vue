@@ -1,56 +1,67 @@
 <template>
-  <div class="worldline-container" :style="{ 'height': worldlineContainerHeight }">
-    <div class="worldline-action-bar">
-      <div class="platform-type">
-        <a-space>
-          <template v-for="item in platformTypes">
-            <template v-if="platformTypes.length > 0">
-              <a-button :key="item.key" class="platform-type-btn" :type="item.key === platformType ? 'primary' : ''" size="small" @click="changePlatformType(item.key)">{{ item.value }} <template v-if="item.key === platformType">/ {{ total }}</template></a-button>
+  <page-view-slot
+    class="no-page-header"
+    :show-header="false"
+  >
+    <template #router-view>
+      <div class="worldline-container" :style="{ 'height': worldlineContainerHeight }">
+
+        <div class="worldline-action-bar beauty-scroll">
+          <div class="platform-type">
+            <a-space>
+              <template v-for="item in platformTypes">
+                <template v-if="platformTypes.length > 0">
+                  <a-button :key="item.key" class="platform-type-btn" :type="item.key === platformType ? 'primary' : ''" size="small" @click="changePlatformType(item.key)">{{ item.value }} <template v-if="item.key === platformType">/ {{ total }}</template></a-button>
+                </template>
+              </template>
+            </a-space>
+          </div>
+        </div>
+
+        <div class="list-container" :style="{ 'height': listContainerHeight }">
+          <div
+            v-infinite-scroll="loadMore"
+            class="list-content"
+            infinite-scroll-delay="1000"
+            infinite-scroll-disabled="busy"
+            infinite-scroll-distance="10"
+            infinite-scroll-immediate-check="true"
+            :style="{ 'height': listContainerHeight }"
+          >
+            <template v-for="item in items">
+              <div :key="item.slug" class="list-item">
+                <div v-if="item.platform_type === 'yuque_note'">
+                  {{ item.content }}
+                </div>
+                <div v-if="[ 'douban_movie', 'conteworld_talk'].includes(item.platform_type)">
+                  {{ item.content }}
+                </div>
+                <div class="info">
+                  <span class="time">
+                    <template v-if="item.platform === 'douban'">
+                      {{ dayjs(item.platform_created_at).format("YYYY-MM-DD") }}
+                    </template>
+                    <template v-else>
+                      {{ dayjs(item.platform_created_at).format("YYYY-MM-DD HH:mm:ss") }}
+                    </template>
+                  </span>
+                  <span class="platform-type">{{ item.platform_type_des.value }}</span>
+                </div>
+              </div>
             </template>
-          </template>
-        </a-space>
+          </div>
+        </div>
+
       </div>
-    </div>
-    <div class="list-container" :style="{ 'height': listContainerHeight }">
-      <div
-        v-infinite-scroll="loadMore"
-        class="list-content"
-        infinite-scroll-delay="500"
-        infinite-scroll-disabled="busy"
-        infinite-scroll-distance="200"
-        infinite-scroll-immediate-check="true"
-        :style="{ 'height': listContainerHeight }"
-      >
-        <template v-if="items.length">
-          <template v-for="item in items">
-            <div :key="item.slug" class="list-item">
-              <div v-if="item.platform_type === 'yuque_note'" v-html="item.content" />
-              <div v-if="[ 'douban_movie', 'conteworld_talk'].includes(item.platform_type)">
-                {{ item.content }}
-              </div>
-              <div class="info">
-                <span class="time">
-                  <template v-if="item.platform === 'douban'">
-                    {{ dayjs(item.platform_created_at).format("YYYY-MM-DD") }}
-                  </template>
-                  <template v-else>
-                    {{ dayjs(item.platform_created_at).format("YYYY-MM-DD HH:mm:ss") }}
-                  </template>
-                </span>
-                <span class="platform-type">{{ item.platform_type_des.value }}</span>
-              </div>
-            </div>
-          </template>
-        </template>
-      </div>
-    </div>
-  </div>
+    </template>
+  </page-view-slot>
 </template>
 
 <script>
 import _ from 'lodash'
 import dayjs from 'dayjs'
 import infiniteScroll from 'vue-infinite-scroll'
+import PageViewSlot from '@/layouts/PageViewSlot'
 import { Worldline } from '@/services'
 
 export default {
@@ -58,6 +69,9 @@ export default {
   i18n: require('./i18n'),
   directives: {
     infiniteScroll,
+  },
+  components: {
+    PageViewSlot,
   },
   data() {
     return {
@@ -84,7 +98,7 @@ export default {
       return (this.pageHeight - 64) + 'px'
     },
     listContainerHeight() {
-      return (this.pageHeight - 137) + 'px'
+      return (this.pageHeight - 64 - 73 - 1) + 'px'
     }
   },
   created() {

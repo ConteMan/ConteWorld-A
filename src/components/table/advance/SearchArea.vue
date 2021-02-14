@@ -168,7 +168,6 @@ export default {
     this.columns.forEach(item => {
       this.$set(item, 'search', { ...item.search, visible: false, value: undefined, format: this.getFormat(item) })
     })
-    console.log(this.columns)
   },
   methods: {
     onCloseClick(e, col) {

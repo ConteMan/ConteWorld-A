@@ -1,25 +1,22 @@
 .worldline-container {
-  margin: -24px;
+  margin: -24px 0;
   padding: 0;
-  height: calc(100vh - 64px);
   background-color: white;
   .worldline-action-bar {
     border-bottom: @conte-border;
     padding: 24px;
     display: flex;
+    overflow-x: scroll;
   }
   .list-container{
-    height: calc(100vh - 137px);
     overflow-y: auto;
     scroll-behavior: smooth;
-    &::-webkit-scrollbar {
-      display: none;
-    }
     .list-content {
       background: white;
       .list-item {
         border-bottom: @conte-border;
         padding: 12px;
+        overflow-x: hidden;
         &:hover {
           background-color: @conte-border-grey;
         }

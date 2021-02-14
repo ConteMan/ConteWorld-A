@@ -41,33 +41,30 @@
           <div
             v-show="showType === 'list'"
             v-infinite-scroll="loadMore"
-            class="list-content"
             infinite-scroll-delay="1000"
             infinite-scroll-disabled="busy"
             infinite-scroll-distance="50"
             infinite-scroll-immediate-check="true"
             :style="{ 'height': listContainerHeight }"
+            class="list-content"
           >
-            <template v-if="items.length">
-              <template v-for="item in items">
-                <div :key="item.id" class="list-item">
-                  <div v-if="item.platform_type === 'yuque_note'" v-html="item.content" />
-                  <div v-if="item.platform_type === 'conteworld_talk'">
-                    {{ item.content }}
-                  </div>
-                  <div class="info">
-                    <span class="time">
-                      <template v-if="item.platform === 'douban'">
-                        {{ dayjs(item.platform_created_at).format("YYYY-MM-DD") }}
-                      </template>
-                      <template v-else>
-                        {{ dayjs(item.platform_created_at).format("YYYY-MM-DD HH:mm:ss") }}
-                      </template>
-                    </span>
-                    <span class="platform-type">{{ item.platform_type_des.value }}</span>
-                  </div>
+            <template v-for="(item, i) in items">
+              <div :key="i" class="list-item">
+                <div v-if="item.platform_type === 'yuque_note'">
+                  {{ item.content }}
                 </div>
-              </template>
+                <div v-if="item.platform_type === 'conteworld_talk'">
+                  {{ item.content }}
+                </div>
+                <div class="info">
+                  <span class="time">
+                    {{ dayjs(item.platform_created_at).format("YYYY-MM-DD HH:mm:ss") }}
+                  </span>
+                  <span class="platform-type">
+                    {{ item.platform_type_des.value }}
+                  </span>
+                </div>
+              </div>
             </template>
           </div>
           <div
