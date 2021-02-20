@@ -15,13 +15,16 @@
         :default-expand-all-rows="true"
         @change="handleTableChange"
       >
+        <span slot="name" slot-scope="text, record">
+          {{ nameFormat(record) }}
+        </span>
+        <span slot="common" slot-scope="text">
+          {{ text || '-' }}
+        </span>
         <span slot="status" slot-scope="text">
           <a-tag :color="statuses[text].color">
             {{ statuses[text].value }}
           </a-tag>
-        </span>
-        <span slot="date" slot-scope="text">
-          {{ $dayjs(text).format('YYYY-MM-DD HH:mm:ss') }}
         </span>
         <span slot="action" slot-scope="text, record">
           <template v-if="record.parent_id === 0">
@@ -59,12 +62,37 @@
               <a-form-model-item ref="name" :label="$t('form.parent_id')" prop="parent_id">
                 <a-select v-model="form.parent_id">
                   <a-select-option :value="0">
-                    Empty
+                    -
                   </a-select-option>
                   <a-select-option v-for="item in roots" :key="item.id" :value="item.id">
-                    {{ item.name }} / {{ item.code }}
+                    {{ nameFormat(item) }}
                   </a-select-option>
                 </a-select>
+              </a-form-model-item>
+            </a-col>
+          </a-row>
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-model-item :label="$t('form.code')" prop="code">
+                <a-input v-model="form.code" />
+              </a-form-model-item>
+            </a-col>
+          </a-row>
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-model-item :label="$t('form.value_type')" prop="value_type">
+                <a-select v-model="form.value_type">
+                  <a-select-option v-for="item in valueTypes" :key="item.key" :value="item.key">
+                    {{ item.value }}
+                  </a-select-option>
+                </a-select>
+              </a-form-model-item>
+            </a-col>
+          </a-row>
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-model-item :label="$t('form.value')" prop="value">
+                <a-textarea v-model="form.value" :rows="4" />
               </a-form-model-item>
             </a-col>
           </a-row>
@@ -79,37 +107,6 @@
                     }
                   "
                 />
-              </a-form-model-item>
-            </a-col>
-          </a-row>
-          <a-row :gutter="16">
-            <a-col :span="24">
-              <a-form-model-item :label="$t('form.code')" prop="code">
-                <a-input v-model="form.code" :disabled="codeInputDisable" />
-              </a-form-model-item>
-            </a-col>
-          </a-row>
-          <a-row :gutter="16">
-            <a-col :span="24">
-              <a-form-model-item :label="$t('form.value_type')" prop="value_type">
-                <a-select v-model="form.value_type">
-                  <a-select-option value="string">
-                    String
-                  </a-select-option>
-                  <a-select-option value="json">
-                    Json
-                  </a-select-option>
-                  <a-select-option value="number">
-                    Number
-                  </a-select-option>
-                </a-select>
-              </a-form-model-item>
-            </a-col>
-          </a-row>
-          <a-row :gutter="16">
-            <a-col :span="24">
-              <a-form-model-item :label="$t('form.value')" prop="value">
-                <a-textarea v-model="form.value" :rows="4" />
               </a-form-model-item>
             </a-col>
           </a-row>
@@ -148,7 +145,7 @@
 </template>
 
 <script>
-import { SysEnum } from '@/services'
+import { SysEnum as Base } from '@/services'
 
 export default {
   name: 'Enum',
@@ -162,38 +159,13 @@ export default {
         {
           title: this.$t('form.name'),
           dataIndex: 'name',
-          width: 200,
-        },
-        {
-          title: this.$t('form.code'),
-          dataIndex: 'code',
-          width: 200,
-        },
-        {
-          title: this.$t('form.value_type'),
-          dataIndex: 'value_type',
-          width: 100,
+          width: 400,
+          scopedSlots: { customRender: 'name' },
         },
         {
           title: this.$t('form.value'),
           dataIndex: 'value',
-        },
-        {
-          title: this.$t('form.des'),
-          dataIndex: 'des',
-          width: 150,
-        },
-        {
-          title: this.$t('created_at'),
-          dataIndex: 'created_at',
-          width: 200,
-          scopedSlots: { customRender: 'date' },
-        },
-        {
-          title: this.$t('updated_at'),
-          dataIndex: 'updated_at',
-          width: 200,
-          scopedSlots: { customRender: 'date' },
+          scopedSlots: { customRender: 'common' },
         },
         {
           title: this.$t('status'),
@@ -220,7 +192,7 @@ export default {
         name: undefined,
         code: undefined,
         des: undefined,
-        value_type: 'text',
+        value_type: 'string',
         value: undefined,
         status: 1,
       },
@@ -229,36 +201,37 @@ export default {
         name: undefined,
         code: undefined,
         des: undefined,
-        value_type: 'text',
+        value_type: 'string',
         value: undefined,
         status: 1,
       },
       rules: {
         name: [
-          { required: true, message: '请输入名称', trigger: 'blur' },
+          { required: false, message: '请输入名称', trigger: 'blur' },
         ],
         code: [
           { required: true, message: '请输入编码', trigger: 'blur' },
         ],
         value_type: [
-          { required: true, message: '请选择值类型', trigger: 'blur' },
+          { required: false, message: '请选择值类型', trigger: 'blur' },
         ],
         value: [
-          { required: true, message: '请输入值内容', trigger: 'blur' },
+          { required: false, message: '请输入值内容', trigger: 'blur' },
         ],
         status: [
           { required: true, message: '请选择状态', trigger: 'blur' },
         ],
       },
       submitLoading: false,
-      codeInputDisable: false,
 
       roots: [],
+      valueTypes: [],
     }
   },
   mounted() {
     this.initIndex()
     this.getStatuses()
+    this.getValueTypes()
   },
   methods: {
     handleTableChange(pagination) {
@@ -268,7 +241,7 @@ export default {
       this.index({ page: pagination.current, per_page: pagination.pageSize })
     },
     async index(params) {
-      const res = await SysEnum.index(params)
+      const res = await Base.index(params)
       this.items = res.data.data.items
       const pagination = { ...this.pagination }
       pagination.total = res.data.data.total_count
@@ -284,7 +257,7 @@ export default {
     },
     // 获取状态列表
     async getStatuses() {
-      const res = await SysEnum.statuses()
+      const res = await Base.statuses()
       if (res.data.code === 0) {
         this.statuses = res.data.data.items
       }
@@ -295,7 +268,6 @@ export default {
       this.drawerVisible = true
       this.$nextTick(() => {
         this.form = this.formInit
-        this.codeInputDisable = false
         this.current = {}
         this.$refs.drawerForm.resetFields()
         this.form.parent_id = pid
@@ -304,11 +276,10 @@ export default {
     // 显示编辑
     async showEdit(id) {
       await this.getRoots()
-      const res = await SysEnum.edit(id)
+      const res = await Base.edit(id)
       if (res.data.code === 0) {
         const detail = res.data.data.res
         this.drawerVisible = true
-        this.codeInputDisable = true
         this.$nextTick(() => {
           this.current = detail
           this.form = detail
@@ -325,9 +296,9 @@ export default {
           this.submitLoading = true
           let res = {}
           if (this.$emptyObj(this.current)) {
-            res = await SysEnum.create(this.form)
+            res = await Base.create(this.form)
           } else {
-            res = await SysEnum.update(this.current.id, this.form)
+            res = await Base.update(this.current.id, this.form)
           }
           this.submitLoading = false
           if (res.data.code === 0) {
@@ -344,7 +315,7 @@ export default {
     },
     // 删除
     async destroy(id) {
-      const res = await SysEnum.destroy(id)
+      const res = await Base.destroy(id)
       if (res.data.code === 0) {
         this.$message.success(this.$t('result.success'))
         this.initIndex()
@@ -361,11 +332,23 @@ export default {
       this.drawerVisible = false
     },
     async getRoots() {
-      const res = await SysEnum.roots()
+      const res = await Base.roots()
       if (res.data.code === 0) {
         this.roots = res.data.data.items
       }
     },
+    // 值类型列表
+    async getValueTypes() {
+      const res = await Base.valueTypes()
+      if (res.data.code === 0) {
+        this.valueTypes = res.data.data.items
+      }
+    },
+    // 名称处理
+    nameFormat(record) {
+      const nameString = record.name ? ' / ' + record.name : ''
+      return record.code + nameString
+    }
   },
 }
 </script>

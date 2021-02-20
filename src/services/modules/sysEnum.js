@@ -29,6 +29,9 @@ const SysEnum = {
   roots() {
     return request(url + '/roots', METHOD.GET)
   },
+  valueTypes() {
+    return request(url + '/value_types', METHOD.GET)
+  },
 }
 
 export default SysEnum
