@@ -196,4 +196,4 @@ module.exports = {
     'array-bracket-spacing': [2, 'never'],
     'vue/no-mutating-props': 1,
   }
-}
+};

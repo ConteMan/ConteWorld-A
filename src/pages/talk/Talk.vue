@@ -49,7 +49,8 @@
             class="list-content"
           >
             <template v-for="(item, i) in items">
-              <div :key="i" class="list-item">
+              <platform-type-item :key="i" :item="item" />
+              <!-- <div :key="i" class="list-item">
                 <div v-if="item.platform_type === 'yuque_note'">
                   {{ item.content }}
                 </div>
@@ -64,7 +65,7 @@
                     {{ item.platform_type_des.value }}
                   </span>
                 </div>
-              </div>
+              </div> -->
             </template>
           </div>
           <div
@@ -102,13 +103,9 @@
             hide-required-mark
           >
             <a-form-model-item>
-              <a-textarea
-                v-model="form.content"
-                :class="'talk-textarea'"
-                :style="{ height: talkTextareaHeight }"
-                placeholder="Slow down, not so much to seize"
-                :auto-size="false"
-              />
+              <div class="editor">
+                <editor-content class="editor__content" :editor="editor" />
+              </div>
             </a-form-model-item>
           </a-form-model>
           <div
@@ -142,7 +139,27 @@
 import _ from 'lodash'
 import dayjs from 'dayjs'
 import infiniteScroll from 'vue-infinite-scroll'
+import { Editor, EditorContent } from 'tiptap'
+import {
+  Blockquote,
+  BulletList,
+  CodeBlock,
+  HardBreak,
+  Heading,
+  ListItem,
+  OrderedList,
+  TodoItem,
+  TodoList,
+  Bold,
+  Code,
+  Italic,
+  Link,
+  Strike,
+  Underline,
+  History,
+} from 'tiptap-extensions'
 import PageViewSlot from '@/layouts/PageViewSlot'
+import PlatformTypeItem from '@/components/list/PlatformTypeItem.vue'
 import { Talk as Base } from '@/services'
 
 export default {
@@ -153,6 +170,8 @@ export default {
   },
   components: {
     PageViewSlot,
+    EditorContent,
+    PlatformTypeItem,
   },
   data() {
     return {
@@ -180,6 +199,28 @@ export default {
       form: {
         content: '',
       },
+      editor: new Editor({
+        extensions: [
+          new Blockquote(),
+          new BulletList(),
+          new CodeBlock(),
+          new HardBreak(),
+          new Heading({ levels: [1, 2, 3] }),
+          new ListItem(),
+          new OrderedList(),
+          new TodoItem(),
+          new TodoList(),
+          new Link(),
+          new Bold(),
+          new Code(),
+          new Italic(),
+          new Strike(),
+          new Underline(),
+          new History(),
+        ],
+        content: ``,
+        autoFocus: true,
+      })
     }
   },
   computed: {
@@ -202,6 +243,9 @@ export default {
         that.pageHeight = window.innerHeight
       })()
     }
+  },
+  beforeDestroy() {
+    this.editor.destroy()
   },
   methods: {
     init() {
@@ -256,6 +300,8 @@ export default {
       }
     },
     async create() {
+      this.form.content = this.editor.getHTML()
+      this.form.content_origin = this.editor.getJSON()
       if (!this.form.content) {
         this.$message.error('写点什么吧')
         return false
