@@ -23,7 +23,7 @@
             </a-select>
             <div
               class="c-border-l item"
-              @click="() => formVisible = true"
+              @click="showTalk"
             >
               Talk
             </div>
@@ -50,22 +50,6 @@
           >
             <template v-for="(item, i) in items">
               <platform-type-item :key="i" :item="item" />
-              <!-- <div :key="i" class="list-item">
-                <div v-if="item.platform_type === 'yuque_note'">
-                  {{ item.content }}
-                </div>
-                <div v-if="item.platform_type === 'conteworld_talk'">
-                  {{ item.content }}
-                </div>
-                <div class="info">
-                  <span class="time">
-                    {{ dayjs(item.platform_created_at).format("YYYY-MM-DD HH:mm:ss") }}
-                  </span>
-                  <span class="platform-type">
-                    {{ item.platform_type_des.value }}
-                  </span>
-                </div>
-              </div> -->
             </template>
           </div>
           <div
@@ -157,9 +141,10 @@ import {
   Strike,
   Underline,
   History,
+  Placeholder,
 } from 'tiptap-extensions'
 import PageViewSlot from '@/layouts/PageViewSlot'
-import PlatformTypeItem from '@/components/list/PlatformTypeItem.vue'
+import PlatformTypeItem from '@/components/item/PlatformTypeItem.vue'
 import { Talk as Base } from '@/services'
 
 export default {
@@ -217,6 +202,13 @@ export default {
           new Strike(),
           new Underline(),
           new History(),
+          new Placeholder({
+            emptyEditorClass: 'is-editor-empty',
+            emptyNodeClass: 'is-empty',
+            emptyNodeText: 'Write something …',
+            showOnlyWhenEditable: true,
+            showOnlyCurrent: true,
+          }),
         ],
         content: ``,
         autoFocus: true,
@@ -299,6 +291,10 @@ export default {
         this.$message.error('有点问题！')
       }
     },
+    showTalk() {
+      this.editor.focus()
+      this.formVisible = true
+    },
     async create() {
       this.form.content = this.editor.getHTML()
       this.form.content_origin = this.editor.getJSON()
@@ -310,8 +306,12 @@ export default {
       const res = await Base.create(this.form)
       this.createLoading = false
       if (res.data.code === 0) {
-        this.form.content = ''
+        this.editor.setContent('')
+        this.changeShowType('list')
+        this.init()
+        this.index()
         this.$message.success('搞定！')
+        this.formVisible = false
       } else {
         this.$message.error('有点问题！')
       }

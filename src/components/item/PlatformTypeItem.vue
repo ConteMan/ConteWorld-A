@@ -1,11 +1,9 @@
 <template>
   <div :key="item.id" class="item-container">
     <div v-if="['conteworld_talk'].includes(item.platform_type)" v-html="item.content" />
-    <div v-if="['yuque_note'].includes(item.platform_type)">
-      {{ item.content }}
-    </div>
+    <div v-if="['yuque_note'].includes(item.platform_type)" v-html="yuqueNoteFormat(item.content)" />
     <div v-if="['jike_activity'].includes(item.platform_type)">
-      {{ yuqueNoteFormat(item.content) }}
+      {{ item.content }}
     </div>
     <div class="info">
       <span class="time">
@@ -36,7 +34,7 @@ export default {
   },
   methods: {
     yuqueNoteFormat(data) {
-      return data.replaceAll('<!doctype lake>', '')
+      return data.replaceAll(/\<\!doctype\s\S*\>|\<meta[\s\S]*\/\>|data-lake\S{0,10}=\"\S{0,100}\"/g, '')
     }
   },
 }
