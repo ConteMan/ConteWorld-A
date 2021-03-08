@@ -252,7 +252,6 @@ export default {
     async index(params) {
       const res = await SysConfig.index(params)
       this.items = res.data.data.items
-      console.log('------', this.items)
       const pagination = { ...this.pagination }
       pagination.total = res.data.data.total_count
       this.pagination = pagination
@@ -288,7 +287,7 @@ export default {
       if (res.data.code === 0) {
         const detail = res.data.data.res
         this.drawerVisible = true
-        this.codeInputDisable = true
+        this.codeInputDisable = false
         this.$nextTick(() => {
           this.current = detail
           this.form = detail

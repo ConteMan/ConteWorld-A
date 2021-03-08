@@ -36,7 +36,7 @@
             v-infinite-scroll="loadMore"
             class="list-content"
             infinite-scroll-delay="1000"
-            infinite-scroll-disabled="busy"
+            :infinite-scroll-disabled="busy"
             infinite-scroll-distance="50"
             infinite-scroll-immediate-check="true"
             :style="{ 'height': listContainerHeight }"
