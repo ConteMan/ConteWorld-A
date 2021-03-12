@@ -79,8 +79,7 @@ export default {
       },
       rules: {
         title: [
-          { required: true, message: 'Please input Activity name', trigger: 'blur' },
-          { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
+          { required: true, message: '请输入名称', trigger: 'blur' },
         ],
       },
       createLoading: false,
