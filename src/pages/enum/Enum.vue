@@ -119,6 +119,20 @@
           </a-row>
           <a-row :gutter="16">
             <a-col :span="24">
+              <a-form-model-item :label="$t('form.extend')" prop="extend">
+                <a-textarea v-model="form.extend" :rows="4" />
+              </a-form-model-item>
+            </a-col>
+          </a-row>
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-model-item :label="$t('form.sort')" prop="sort" :extra="$t('form.sort_extra')">
+                <a-input-number v-model="form.sort" />
+              </a-form-model-item>
+            </a-col>
+          </a-row>
+          <a-row :gutter="16">
+            <a-col :span="24">
               <a-form-model-item :label="$t('form.status')" prop="status">
                 <a-radio-group v-model="form.status">
                   <a-radio v-for="item in statuses" :key="item.key" :value="item.key">
@@ -151,13 +165,28 @@ export default {
   name: 'Enum',
   i18n: require('./i18n'),
   data() {
+    const jsonCheck = (rule, str, callback) => {
+      if (typeof str === 'string') {
+        try {
+          const obj = JSON.parse(str)
+          if (typeof obj == 'object' && obj) {
+            callback()
+          } else {
+            callback(new Error())
+          }
+        } catch (e) {
+          callback(new Error())
+        }
+      }
+      callback(new Error())
+    }
     return {
       items: [],
       page: 1,
       per_page: 10,
       columns: [
         {
-          title: this.$t('form.name'),
+          title: this.$t('form.column_name'),
           dataIndex: 'name',
           width: 400,
           scopedSlots: { customRender: 'name' },
@@ -165,6 +194,12 @@ export default {
         {
           title: this.$t('form.value'),
           dataIndex: 'value',
+          scopedSlots: { customRender: 'common' },
+        },
+        {
+          title: this.$t('form.sort'),
+          dataIndex: 'sort',
+          width: 100,
           scopedSlots: { customRender: 'common' },
         },
         {
@@ -194,6 +229,8 @@ export default {
         des: undefined,
         value_type: 'string',
         value: undefined,
+        extend: undefined,
+        sort: 0,
         status: 1,
       },
       form: {
@@ -203,6 +240,8 @@ export default {
         des: undefined,
         value_type: 'string',
         value: undefined,
+        extend: undefined,
+        sort: 0,
         status: 1,
       },
       rules: {
@@ -221,6 +260,9 @@ export default {
         status: [
           { required: true, message: '请选择状态', trigger: 'blur' },
         ],
+        extend: [
+          { required: false, validator: jsonCheck, message: '请输入正确的 JSON', trigger: 'blur' },
+        ]
       },
       submitLoading: false,
 
@@ -279,6 +321,7 @@ export default {
       const res = await Base.edit(id)
       if (res.data.code === 0) {
         const detail = res.data.data.res
+        detail.extend = JSON.stringify(detail.extend)
         this.drawerVisible = true
         this.$nextTick(() => {
           this.current = detail
