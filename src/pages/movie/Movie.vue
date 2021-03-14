@@ -16,6 +16,7 @@
                   @click="changeType(item.key)"
                 >
                   {{ item.value }}
+                  <p>{{ item.total }}</p>
                 </div>
               </template>
             </template>
@@ -45,7 +46,7 @@
               <template v-for="item in items">
                 <div :key="item.id" class="list-item">
                   <div v-if="item.platform_type === 'yuque_note'" v-html="item.content" />
-                  <div v-if="item.platform_type === 'douban_movie'">
+                  <div v-if="[ 'douban_movie', 'douban_movie_wish', 'douban_movie_do'].includes(item.platform_type)">
                     {{ item.content }}
                   </div>
                   <div class="info">
@@ -115,12 +116,7 @@ export default {
 
       dayjs,
 
-      types: [
-        {
-          key: '',
-          value: '全部',
-        }
-      ],
+      types: [],
       pageHeight: document.body.clientHeight,
       showType: 'list',
 
@@ -135,9 +131,9 @@ export default {
       return (this.pageHeight - 64) + 'px'
     }
   },
-  created() {
-    this.index()
-    this.getTypes()
+  async created() {
+    await this.getTypes()
+    await this.index()
     const that = this
     window.onresize = () => {
       return (() => {
@@ -172,7 +168,8 @@ export default {
     async getTypes() {
       const res = await Movie.types()
       if (res.data.code === 0) {
-        this.types = _.concat(this.types, res.data.data.items)
+        this.types = res.data.data.items
+        this.type = res.data.data.items[0].key
       }
     },
     changeType(type) {
