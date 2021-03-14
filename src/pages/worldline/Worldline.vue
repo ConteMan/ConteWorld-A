@@ -38,7 +38,14 @@
                 <div v-if="item.platform_type === 'yuque_note'">
                   {{ item.content }}
                 </div>
-                <div v-if="[ 'douban_movie', 'conteworld_talk'].includes(item.platform_type)">
+                <div
+                  v-if="[
+                    'douban_movie',
+                    'douban_movie_do',
+                    'douban_movie_wish',
+                    'conteworld_talk',
+                  ].includes(item.platform_type)"
+                >
                   {{ item.content }}
                 </div>
                 <div class="info">
