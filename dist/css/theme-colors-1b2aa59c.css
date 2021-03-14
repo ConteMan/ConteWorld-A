@@ -2201,14 +2201,6 @@ li.ant-select-tree-treenode-disabled>.ant-select-tree-node-content-wrapper[data-
 .movie-container .list-container .list-content .list-item[data-v-6f4a01c4]:hover{background-color:#f0f0f0}
 .movie-container .list-container .action-content .action-item[data-v-6f4a01c4]{border-bottom:1px solid #f0f0f0}
 .movie-container .list-container .action-content .action-item[data-v-6f4a01c4]:hover{background-color:#f0f0f0}
-.beauty-scroll[data-v-585030b8]{scrollbar-color:#f5222d #ffccc7}
-.beauty-scroll[data-v-585030b8]::-webkit-scrollbar-thumb{background:#f5222d}
-.beauty-scroll[data-v-585030b8]::-webkit-scrollbar-track{-webkit-box-shadow:inset 0 0 1px rgba(0,0,0,0);background:#ffa39e}
-.disabled[data-v-585030b8]{color:rgba(0,0,0,.25)}
-#nprogress .bar[data-v-585030b8]{background:#f5222d}
-#nprogress .peg[data-v-585030b8]{-webkit-box-shadow:0 0 10px #f5222d,0 0 5px #f5222d;box-shadow:0 0 10px #f5222d,0 0 5px #f5222d}
-#nprogress .spinner-icon[data-v-585030b8]{border-top-color:#f5222d;border-left-color:#f5222d}
-.drawBottom[data-v-585030b8]{background:#fff}
 .beauty-scroll[data-v-75c4b82d]{scrollbar-color:#f5222d #ffccc7}
 .beauty-scroll[data-v-75c4b82d]::-webkit-scrollbar-thumb{background:#f5222d}
 .beauty-scroll[data-v-75c4b82d]::-webkit-scrollbar-track{-webkit-box-shadow:inset 0 0 1px rgba(0,0,0,0);background:#ffa39e}
@@ -2296,3 +2288,11 @@ textarea:disabled{ background-color: #fff}
 .talk-container .list-container .list-content .list-item[data-v-a14021b8]:hover{background-color:#f0f0f0}
 .talk-container .list-container .action-content .action-item[data-v-a14021b8]{border-bottom:1px solid #f0f0f0}
 .talk-container .list-container .action-content .action-item[data-v-a14021b8]:hover{background-color:#f0f0f0}
+.beauty-scroll[data-v-c6f30980]{scrollbar-color:#f5222d #ffccc7}
+.beauty-scroll[data-v-c6f30980]::-webkit-scrollbar-thumb{background:#f5222d}
+.beauty-scroll[data-v-c6f30980]::-webkit-scrollbar-track{-webkit-box-shadow:inset 0 0 1px rgba(0,0,0,0);background:#ffa39e}
+.disabled[data-v-c6f30980]{color:rgba(0,0,0,.25)}
+#nprogress .bar[data-v-c6f30980]{background:#f5222d}
+#nprogress .peg[data-v-c6f30980]{-webkit-box-shadow:0 0 10px #f5222d,0 0 5px #f5222d;box-shadow:0 0 10px #f5222d,0 0 5px #f5222d}
+#nprogress .spinner-icon[data-v-c6f30980]{border-top-color:#f5222d;border-left-color:#f5222d}
+.drawBottom[data-v-c6f30980]{background:#fff}
