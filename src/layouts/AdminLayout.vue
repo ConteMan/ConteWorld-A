@@ -192,6 +192,7 @@ export default {
   }
 
   .admin-layout-main {
+    background: white;
     .admin-header {
       top: 0;
       right: 0;
