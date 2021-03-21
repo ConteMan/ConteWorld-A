@@ -18,9 +18,9 @@ export default {
     return {
       checked: false,
       isTagSelectOption: true
-    }
+    };
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

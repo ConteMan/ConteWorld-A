@@ -13,4 +13,4 @@ module.exports = {
       description: 'This is a demo page'
     }
   }
-}
+};

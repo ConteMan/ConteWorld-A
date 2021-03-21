@@ -11,7 +11,7 @@
 </template>
 
 <script>
-const DataSet = require('@antv/data-set')
+const DataSet = require('@antv/data-set');
 
 const sourceData = [
   { item: '引用', a: 70, b: 30, c: 40 },
@@ -20,23 +20,23 @@ const sourceData = [
   { item: '贡献', a: 40, b: 50, c: 40 },
   { item: '热度', a: 60, b: 70, c: 40 },
   { item: '引用', a: 70, b: 50, c: 40 }
-]
+];
 
-const dv = new DataSet.View().source(sourceData)
+const dv = new DataSet.View().source(sourceData);
 dv.transform({
   type: 'fold',
   fields: ['a', 'b', 'c'],
   key: 'user',
   value: 'score'
-})
+});
 
 const scale = [{
   dataKey: 'score',
   min: 0,
   max: 80
-}]
+}];
 
-const data = dv.rows
+const data = dv.rows;
 
 const axis1Opts = {
   dataKey: 'item',
@@ -48,7 +48,7 @@ const axis1Opts = {
     },
     hideFirstLine: false
   }
-}
+};
 const axis2Opts = {
   dataKey: 'score',
   line: null,
@@ -59,7 +59,7 @@ const axis2Opts = {
       lineDash: null
     }
   }
-}
+};
 
 export default {
   name: 'Radar',
@@ -70,9 +70,9 @@ export default {
       axis1Opts,
       axis2Opts,
       scale
-    }
+    };
   }
-}
+};
 </script>
 
 <style scoped>

@@ -35,40 +35,40 @@ export default {
       target: null,
       meta: null,
       selectedKeys: []
-    }
+    };
   },
   computed: {
     style() {
       return {
         left: this.left + 'px',
         top: this.top + 'px'
-      }
+      };
     }
   },
   created() {
-    window.addEventListener('click', this.closeMenu)
-    window.addEventListener('contextmenu', this.setPosition)
+    window.addEventListener('click', this.closeMenu);
+    window.addEventListener('contextmenu', this.setPosition);
   },
   beforeDestroy() {
-    window.removeEventListener('click', this.closeMenu)
-    window.removeEventListener('contextmenu', this.setPosition)
+    window.removeEventListener('click', this.closeMenu);
+    window.removeEventListener('contextmenu', this.setPosition);
   },
   methods: {
     closeMenu() {
-      this.$emit('update:visible', false)
+      this.$emit('update:visible', false);
     },
     setPosition(e) {
-      this.left = e.clientX
-      this.top = e.clientY
-      this.target = e.target
-      this.meta = e.meta
+      this.left = e.clientX;
+      this.top = e.clientY;
+      this.target = e.target;
+      this.meta = e.meta;
     },
     handleClick({ key }) {
-      this.$emit('select', key, this.target, this.meta)
-      this.closeMenu()
+      this.$emit('select', key, this.target, this.meta);
+      this.closeMenu();
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

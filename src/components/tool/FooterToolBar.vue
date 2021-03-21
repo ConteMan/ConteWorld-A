@@ -12,7 +12,7 @@
 <script>
 export default {
   name: 'FooterToolBar'
-}
+};
 </script>
 
 <style lang="less" scoped>

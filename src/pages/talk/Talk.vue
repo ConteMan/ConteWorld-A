@@ -120,10 +120,10 @@
 </template>
 
 <script>
-import _ from 'lodash'
-import dayjs from 'dayjs'
-import infiniteScroll from 'vue-infinite-scroll'
-import { Editor, EditorContent } from 'tiptap'
+import _ from 'lodash';
+import dayjs from 'dayjs';
+import infiniteScroll from 'vue-infinite-scroll';
+import { Editor, EditorContent } from 'tiptap';
 import {
   Blockquote,
   BulletList,
@@ -142,10 +142,10 @@ import {
   Underline,
   History,
   Placeholder,
-} from 'tiptap-extensions'
-import PageViewSlot from '@/layouts/PageViewSlot'
-import PlatformTypeItem from '@/components/item/PlatformTypeItem.vue'
-import { Talk as Base } from '@/services'
+} from 'tiptap-extensions';
+import PageViewSlot from '@/layouts/PageViewSlot';
+import PlatformTypeItem from '@/components/item/PlatformTypeItem.vue';
+import { Talk as Base } from '@/services';
 
 export default {
   name: 'Talk',
@@ -213,111 +213,111 @@ export default {
         content: ``,
         autoFocus: true,
       })
-    }
+    };
   },
   computed: {
     worldlineContainerHeight() {
-      return (this.pageHeight - 64) + 'px'
+      return (this.pageHeight - 64) + 'px';
     },
     listContainerHeight() {
-      return (this.pageHeight - 64 - 50) + 'px'
+      return (this.pageHeight - 64 - 50) + 'px';
     },
     talkTextareaHeight() {
-      return (this.pageHeight - 55 - 53 - 48) + 'px'
+      return (this.pageHeight - 55 - 53 - 48) + 'px';
     }
   },
   created() {
-    this.index()
-    this.getTypes()
-    const that = this
+    this.index();
+    this.getTypes();
+    const that = this;
     window.onresize = () => {
       return (() => {
-        that.pageHeight = window.innerHeight
-      })()
-    }
+        that.pageHeight = window.innerHeight;
+      })();
+    };
   },
   beforeDestroy() {
-    this.editor.destroy()
+    this.editor.destroy();
   },
   methods: {
     init() {
-      this.items = []
-      this.offset = 0
-      this.busy = false
+      this.items = [];
+      this.offset = 0;
+      this.busy = false;
     },
     async index() {
-      const { offset, limit, type } = this
-      const res = await Base.index({ offset, limit, type })
+      const { offset, limit, type } = this;
+      const res = await Base.index({ offset, limit, type });
       if (res.data.code === 0) {
-        const { items, totalCount } = res.data.data
-        this.total = totalCount
+        const { items, totalCount } = res.data.data;
+        this.total = totalCount;
         if (items.length > 0) {
-          this.items = _.concat(this.items, items)
-          this.busy = false
+          this.items = _.concat(this.items, items);
+          this.busy = false;
         } else {
-          this.busy = true
+          this.busy = true;
         }
       }
     },
     loadMore() {
-      this.offset += this.limit
-      this.index()
+      this.offset += this.limit;
+      this.index();
     },
     async getTypes() {
-      const res = await Base.types()
+      const res = await Base.types();
       if (res.data.code === 0) {
-        this.types = _.concat(this.types, res.data.data.items)
+        this.types = _.concat(this.types, res.data.data.items);
       }
     },
     changeType(type) {
-      this.changeShowType('list')
+      this.changeShowType('list');
       if (type === this.type) {
-        return true
+        return true;
       }
-      this.type = type
-      this.init()
-      this.index()
+      this.type = type;
+      this.init();
+      this.index();
     },
     changeShowType(type = 'action') {
-      this.showType = type
+      this.showType = type;
     },
     async sync() {
-      this.syncLoading = true
-      const res = await Base.sync()
-      this.syncLoading = false
+      this.syncLoading = true;
+      const res = await Base.sync();
+      this.syncLoading = false;
       if (res.data.code === 0) {
-        this.$message.success('搞定！（' + res.data.data.totalCount + '）')
+        this.$message.success('搞定！（' + res.data.data.totalCount + '）');
       } else {
-        this.$message.error('有点问题！')
+        this.$message.error('有点问题！');
       }
     },
     showTalk() {
-      this.editor.focus()
-      this.formVisible = true
+      this.editor.focus();
+      this.formVisible = true;
     },
     async create() {
-      this.form.content = this.editor.getHTML()
-      this.form.content_origin = this.editor.getJSON()
+      this.form.content = this.editor.getHTML();
+      this.form.content_origin = this.editor.getJSON();
       if (!this.form.content) {
-        this.$message.error('写点什么吧')
-        return false
+        this.$message.error('写点什么吧');
+        return false;
       }
-      this.createLoading = true
-      const res = await Base.create(this.form)
-      this.createLoading = false
+      this.createLoading = true;
+      const res = await Base.create(this.form);
+      this.createLoading = false;
       if (res.data.code === 0) {
-        this.editor.setContent('')
-        this.changeShowType('list')
-        this.init()
-        this.index()
-        this.$message.success('搞定！')
-        this.formVisible = false
+        this.editor.setContent('');
+        this.changeShowType('list');
+        this.init();
+        this.index();
+        this.$message.success('搞定！');
+        this.formVisible = false;
       } else {
-        this.$message.error('有点问题！')
+        this.$message.error('有点问题！');
       }
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

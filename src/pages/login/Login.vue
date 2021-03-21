@@ -55,11 +55,11 @@
 </template>
 
 <script>
-import CommonLayout from '@/layouts/CommonLayout'
-import { User } from '@/services'
-import { setAuthorization } from '@/utils/request'
-import { loadRoutes } from '@/utils/routerUtil'
-import { mapMutations } from 'vuex'
+import CommonLayout from '@/layouts/CommonLayout';
+import { User } from '@/services';
+import { setAuthorization } from '@/utils/request';
+import { loadRoutes } from '@/utils/routerUtil';
+import { mapMutations } from 'vuex';
 
 export default {
   name: 'Login',
@@ -71,56 +71,56 @@ export default {
       logging: false,
       error: '',
       form: this.$form.createForm(this)
-    }
+    };
   },
   computed: {
     systemName() {
-      return this.$store.state.setting.systemName
+      return this.$store.state.setting.systemName;
     }
   },
   methods: {
     ...mapMutations('account', ['setUser', 'setPermissions', 'setRoles']),
     onSubmit(e) {
-      e.preventDefault()
+      e.preventDefault();
       this.form.validateFields((err) => {
         if (!err) {
-          this.logging = true
-          const name = this.form.getFieldValue('name')
-          const password = this.form.getFieldValue('password')
+          this.logging = true;
+          const name = this.form.getFieldValue('name');
+          const password = this.form.getFieldValue('password');
           User.login(name, password)
             .then(this.afterLogin)
             .catch(e => {
-              this.logging = false
-              console.log(e.message)
-            })
+              this.logging = false;
+              console.log(e.message);
+            });
         }
-      })
+      });
     },
     afterLogin(res) {
-      this.logging = false
-      const loginRes = res.data
+      this.logging = false;
+      const loginRes = res.data;
       if (loginRes.code === 0) {
-        const { user, permissions, roles } = loginRes.data
-        this.setUser(user)
-        this.setPermissions(permissions)
-        this.setRoles(roles)
+        const { user, permissions, roles } = loginRes.data;
+        this.setUser(user);
+        this.setPermissions(permissions);
+        this.setRoles(roles);
         setAuthorization({
           token: loginRes.data.token,
           expireAt: new Date(loginRes.data.expireAt)
-        })
+        });
         // 获取路由配置
         User.getRoutesConfig().then(result => {
-          const routesConfig = result.data.data
-          loadRoutes(routesConfig)
-          this.$router.push('/dashboard')
-          this.$message.success(loginRes.msg, 3)
-        })
+          const routesConfig = result.data.data;
+          loadRoutes(routesConfig);
+          this.$router.push('/dashboard');
+          this.$message.success(loginRes.msg, 3);
+        });
       } else {
-        this.error = loginRes.msg
+        this.error = loginRes.msg;
       }
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

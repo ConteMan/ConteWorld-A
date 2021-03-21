@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { isJSON } from '@/utils/util'
+import { isJSON } from '@/utils/util';
 
 export default {
   name: 'JsonList',
@@ -31,17 +31,17 @@ export default {
     }
   },
   data() {
-    return {}
+    return {};
   },
   computed: {
     indent() {
-      return { paddingLeft: `${this.depth * 15}px` }
+      return { paddingLeft: `${this.depth * 15}px` };
     }
   },
   methods: {
     isJSON,
   }
-}
+};
 </script>
 
 <style scoped lang="less">

@@ -31,12 +31,12 @@
  *   }
  * }
  **/
-import Menu from 'ant-design-vue/es/menu'
-import Icon from 'ant-design-vue/es/icon'
-import fastEqual from 'fast-deep-equal'
-import { getI18nKey } from '@/utils/routerUtil'
+import Menu from 'ant-design-vue/es/menu';
+import Icon from 'ant-design-vue/es/icon';
+import fastEqual from 'fast-deep-equal';
+import { getI18nKey } from '@/utils/routerUtil';
 
-const { Item, SubMenu } = Menu
+const { Item, SubMenu } = Menu;
 
 export default {
   name: 'IMenu',
@@ -68,67 +68,67 @@ export default {
       selectedKeys: [],
       sOpenKeys: [],
       cachedOpenKeys: []
-    }
+    };
   },
   computed: {
     menuTheme() {
-      return this.theme === 'light' ? this.theme : 'dark'
+      return this.theme === 'light' ? this.theme : 'dark';
     }
   },
   created() {
-    this.updateMenu()
+    this.updateMenu();
     if (this.options.length > 0 && !this.options[0].fullPath) {
-      this.formatOptions(this.options, '')
+      this.formatOptions(this.options, '');
     }
     // 自定义国际化配置
     if (this.i18n && this.i18n.messages) {
-      const messages = this.i18n.messages
+      const messages = this.i18n.messages;
       Object.keys(messages).forEach(key => {
-        this.$i18n.mergeLocaleMessage(key, messages[key])
-      })
+        this.$i18n.mergeLocaleMessage(key, messages[key]);
+      });
     }
   },
   watch: {
     options(val) {
       if (val.length > 0 && !val[0].fullPath) {
-        this.formatOptions(this.options, '')
+        this.formatOptions(this.options, '');
       }
     },
     i18n(val) {
       if (val && val.messages) {
-        const messages = this.i18n.messages
+        const messages = this.i18n.messages;
         Object.keys(messages).forEach(key => {
-          this.$i18n.mergeLocaleMessage(key, messages[key])
-        })
+          this.$i18n.mergeLocaleMessage(key, messages[key]);
+        });
       }
     },
     collapsed(val) {
       if (val) {
-        this.cachedOpenKeys = this.sOpenKeys
-        this.sOpenKeys = []
+        this.cachedOpenKeys = this.sOpenKeys;
+        this.sOpenKeys = [];
       } else {
-        this.sOpenKeys = this.cachedOpenKeys
+        this.sOpenKeys = this.cachedOpenKeys;
       }
     },
     '$route': function() {
-      this.updateMenu()
+      this.updateMenu();
     },
     sOpenKeys(val) {
-      this.$emit('openChange', val)
-      this.$emit('update:openKeys', val)
+      this.$emit('openChange', val);
+      this.$emit('update:openKeys', val);
     }
   },
   methods: {
     renderIcon: function(h, icon, key) {
       if (this.$scopedSlots.icon && icon && icon !== 'none') {
-        const vnodes = this.$scopedSlots.icon({ icon, key })
+        const vnodes = this.$scopedSlots.icon({ icon, key });
         vnodes.forEach(vnode => {
-          vnode.data.class = vnode.data.class ? vnode.data.class : []
-          vnode.data.class.push('anticon')
-        })
-        return vnodes
+          vnode.data.class = vnode.data.class ? vnode.data.class : [];
+          vnode.data.class.push('anticon');
+        });
+        return vnodes;
       }
-      return !icon || icon === 'none' ? null : h(Icon, { props: { type: icon }})
+      return !icon || icon === 'none' ? null : h(Icon, { props: { type: icon }});
     },
     renderMenuItem: function(h, menu) {
       return h(
@@ -144,10 +144,10 @@ export default {
           ]
           )
         ]
-      )
+      );
     },
     renderSubMenu: function(h, menu) {
-      const this_ = this
+      const this_ = this;
       const subItem = [h('span', {
         slot: 'title',
         attrs: { style: 'overflow:hidden;white-space:normal;text-overflow:clip;' }
@@ -156,63 +156,63 @@ export default {
         this.renderIcon(h, menu.meta ? menu.meta.icon : 'none', menu.fullPath),
         this.$t(getI18nKey(menu.fullPath))
       ]
-      )]
-      const itemArr = []
+      )];
+      const itemArr = [];
       menu.children.forEach(function(item) {
-        itemArr.push(this_.renderItem(h, item))
-      })
+        itemArr.push(this_.renderItem(h, item));
+      });
       return h(SubMenu, { key: menu.fullPath },
         subItem.concat(itemArr)
-      )
+      );
     },
     renderItem: function(h, menu) {
-      const meta = menu.meta
+      const meta = menu.meta;
       if (!meta || !meta.invisible) {
-        let renderChildren = false
-        const children = menu.children
+        let renderChildren = false;
+        const children = menu.children;
         if (children !== undefined) {
           for (let i = 0; i < children.length; i++) {
-            const childMeta = children[i].meta
+            const childMeta = children[i].meta;
             if (!childMeta || !childMeta.invisible) {
-              renderChildren = true
-              break
+              renderChildren = true;
+              break;
             }
           }
         }
-        return (menu.children && renderChildren) ? this.renderSubMenu(h, menu) : this.renderMenuItem(h, menu)
+        return (menu.children && renderChildren) ? this.renderSubMenu(h, menu) : this.renderMenuItem(h, menu);
       }
     },
     renderMenu: function(h, menuTree) {
-      const this_ = this
-      const menuArr = []
+      const this_ = this;
+      const menuArr = [];
       menuTree.forEach(function(menu, i) {
-        menuArr.push(this_.renderItem(h, menu, '0', i))
-      })
-      return menuArr
+        menuArr.push(this_.renderItem(h, menu, '0', i));
+      });
+      return menuArr;
     },
     formatOptions(options, parentPath) {
       options.forEach(route => {
-        const isFullPath = route.path.substring(0, 1) === '/'
-        route.fullPath = isFullPath ? route.path : parentPath + '/' + route.path
+        const isFullPath = route.path.substring(0, 1) === '/';
+        route.fullPath = isFullPath ? route.path : parentPath + '/' + route.path;
         if (route.children) {
-          this.formatOptions(route.children, route.fullPath)
+          this.formatOptions(route.children, route.fullPath);
         }
-      })
+      });
     },
     updateMenu() {
-      const menuRoutes = this.$route.matched.filter(item => item.path !== '')
-      this.selectedKeys = this.getSelectedKey(this.$route)
-      const openKeys = menuRoutes.map(item => item.path)
+      const menuRoutes = this.$route.matched.filter(item => item.path !== '');
+      this.selectedKeys = this.getSelectedKey(this.$route);
+      const openKeys = menuRoutes.map(item => item.path);
       if (!fastEqual(openKeys, this.sOpenKeys)) {
-        this.collapsed || this.mode === 'horizontal' ? this.cachedOpenKeys = openKeys : this.sOpenKeys = openKeys
+        this.collapsed || this.mode === 'horizontal' ? this.cachedOpenKeys = openKeys : this.sOpenKeys = openKeys;
       }
     },
     getSelectedKey(route) {
-      const selectedKeys = route.matched.map(item => item.path)
+      const selectedKeys = route.matched.map(item => item.path);
       if (typeof (route.meta.selectPath) !== 'undefined') {
-        selectedKeys.push(route.meta.selectPath)
+        selectedKeys.push(route.meta.selectPath);
       }
-      return selectedKeys
+      return selectedKeys;
     }
   },
   render(h) {
@@ -227,14 +227,14 @@ export default {
         },
         on: {
           'update:openKeys': (val) => {
-            this.sOpenKeys = val
+            this.sOpenKeys = val;
           },
           click: (obj) => {
-            obj.selectedKeys = [obj.key]
-            this.$emit('select', obj)
+            obj.selectedKeys = [obj.key];
+            this.$emit('select', obj);
           }
         }
       }, this.renderMenu(h, this.options)
-    )
+    );
   }
-}
+};

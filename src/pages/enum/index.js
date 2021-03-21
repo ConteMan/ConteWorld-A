@@ -1,3 +1,3 @@
-import Enum from './Enum.vue'
+import Enum from './Enum.vue';
 
-export default Enum
+export default Enum;

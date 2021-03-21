@@ -8,7 +8,7 @@
 export default {
   name: 'TaskItem',
   props: ['content']
-}
+};
 </script>
 
 <style lang="less" scoped>

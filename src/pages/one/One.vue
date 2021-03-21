@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { One } from '@/services'
+import { One } from '@/services';
 
 export default {
   name: 'One',
@@ -58,45 +58,45 @@ export default {
       pagination: {},
 
       syncLoading: false,
-    }
+    };
   },
   mounted() {
-    this.initIndex()
+    this.initIndex();
   },
   methods: {
     handleTableChange(pagination) {
-      const pager = { ...this.pagination }
-      pager.current = pagination.current
-      this.pagination = pager
-      this.index({ page: pagination.current, per_page: pagination.pageSize })
+      const pager = { ...this.pagination };
+      pager.current = pagination.current;
+      this.pagination = pager;
+      this.index({ page: pagination.current, per_page: pagination.pageSize });
     },
     async index(params) {
-      const res = await One.index(params)
-      this.items = res.data.data.items
-      const pagination = { ...this.pagination }
-      pagination.total = res.data.data.total_count
-      this.pagination = pagination
+      const res = await One.index(params);
+      this.items = res.data.data.items;
+      const pagination = { ...this.pagination };
+      pagination.total = res.data.data.total_count;
+      this.pagination = pagination;
     },
     initIndex() {
-      const params = { page: this.page, per_page: this.per_page }
-      this.index(params)
-      const pagination = { ...this.pagination }
-      pagination.current = this.page
-      this.pagination = pagination
+      const params = { page: this.page, per_page: this.per_page };
+      this.index(params);
+      const pagination = { ...this.pagination };
+      pagination.current = this.page;
+      this.pagination = pagination;
     },
     async sync() {
-      this.syncLoading = true
-      const res = await One.sync()
-      this.syncLoading = false
+      this.syncLoading = true;
+      const res = await One.sync();
+      this.syncLoading = false;
       if (res.data.code === 0) {
-        this.$message.success('同步成功 ' + res.data.data.add_num + ' 条！')
+        this.$message.success('同步成功 ' + res.data.data.add_num + ' 条！');
       } else {
-        this.$message.error(res.data.msg)
+        this.$message.error(res.data.msg);
       }
-      this.initIndex()
+      this.initIndex();
     },
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

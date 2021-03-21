@@ -90,11 +90,11 @@
 </template>
 
 <script>
-import _ from 'lodash'
-import dayjs from 'dayjs'
-import infiniteScroll from 'vue-infinite-scroll'
-import PageViewSlot from '@/layouts/PageViewSlot'
-import { Movie } from '@/services'
+import _ from 'lodash';
+import dayjs from 'dayjs';
+import infiniteScroll from 'vue-infinite-scroll';
+import PageViewSlot from '@/layouts/PageViewSlot';
+import { Movie } from '@/services';
 
 export default {
   name: 'Movie',
@@ -121,81 +121,81 @@ export default {
       showType: 'list',
 
       syncLoading: false,
-    }
+    };
   },
   computed: {
     worldlineContainerHeight() {
-      return (this.pageHeight - 64) + 'px'
+      return (this.pageHeight - 64) + 'px';
     },
     listContainerHeight() {
-      return (this.pageHeight - 64) + 'px'
+      return (this.pageHeight - 64) + 'px';
     }
   },
   async created() {
-    await this.getTypes()
-    await this.index()
-    const that = this
+    await this.getTypes();
+    await this.index();
+    const that = this;
     window.onresize = () => {
       return (() => {
-        that.pageHeight = document.body.clientHeight
-      })()
-    }
+        that.pageHeight = document.body.clientHeight;
+      })();
+    };
   },
   methods: {
     init() {
-      this.items = []
-      this.offset = 0
-      this.busy = false
+      this.items = [];
+      this.offset = 0;
+      this.busy = false;
     },
     async index() {
-      const { offset, limit, type } = this
-      const res = await Movie.index({ offset, limit, type })
+      const { offset, limit, type } = this;
+      const res = await Movie.index({ offset, limit, type });
       if (res.data.code === 0) {
-        const { items, totalCount } = res.data.data
-        this.total = totalCount
+        const { items, totalCount } = res.data.data;
+        this.total = totalCount;
         if (items.length > 0) {
-          this.items = _.concat(this.items, items)
-          this.busy = false
+          this.items = _.concat(this.items, items);
+          this.busy = false;
         } else {
-          this.busy = true
+          this.busy = true;
         }
       }
     },
     loadMore() {
-      this.offset += this.limit
-      this.index()
+      this.offset += this.limit;
+      this.index();
     },
     async getTypes() {
-      const res = await Movie.types()
+      const res = await Movie.types();
       if (res.data.code === 0) {
-        this.types = res.data.data.items
-        this.type = res.data.data.items[0].key
+        this.types = res.data.data.items;
+        this.type = res.data.data.items[0].key;
       }
     },
     changeType(type) {
-      this.changeShowType('list')
+      this.changeShowType('list');
       if (type === this.type) {
-        return true
+        return true;
       }
-      this.type = type
-      this.init()
-      this.index()
+      this.type = type;
+      this.init();
+      this.index();
     },
     changeShowType(type = 'action') {
-      this.showType = type
+      this.showType = type;
     },
     async sync() {
-      this.syncLoading = true
-      const res = await Movie.sync()
-      this.syncLoading = false
+      this.syncLoading = true;
+      const res = await Movie.sync();
+      this.syncLoading = false;
       if (res.data.code === 0) {
-        this.$message.success('搞定！（' + res.data.data.totalCount + '）')
+        this.$message.success('搞定！（' + res.data.data.totalCount + '）');
       } else {
-        this.$message.error('有点问题！')
+        this.$message.error('有点问题！');
       }
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

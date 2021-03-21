@@ -16,4 +16,4 @@ module.exports = {
     name: 'slide',
     direction: 'left'
   }
-}
+};

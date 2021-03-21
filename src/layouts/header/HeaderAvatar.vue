@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
-import { User } from '@/services'
+import { mapGetters, mapMutations } from 'vuex';
+import { User } from '@/services';
 
 export default {
   name: 'HeaderAvatar',
@@ -34,11 +34,11 @@ export default {
   methods: {
     ...mapMutations('setting', ['setSettingStatus']),
     logout() {
-      User.logout()
-      this.$router.push('/login')
+      User.logout();
+      this.$router.push('/login');
     }
   }
-}
+};
 </script>
 
 <style lang="less">

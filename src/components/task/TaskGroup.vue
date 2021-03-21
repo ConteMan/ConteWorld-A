@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Draggable from 'vuedraggable'
+import Draggable from 'vuedraggable';
 
 const dragOptions = {
   sort: true,
@@ -26,7 +26,7 @@ const dragOptions = {
   ghostClass: 'dragable-ghost',
   chosenClass: 'dragable-chose',
   dragClass: 'dragable-drag'
-}
+};
 
 export default {
   name: 'TaskGroup',
@@ -35,14 +35,14 @@ export default {
   data() {
     return {
       dragOptions: { ...dragOptions, group: this.group }
-    }
+    };
   },
   computed: {
     count() {
-      return this.$slots.default.length
+      return this.$slots.default.length;
     }
   }
-}
+};
 </script>
 
 <style lang="less">

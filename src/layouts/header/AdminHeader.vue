@@ -43,9 +43,9 @@
 </template>
 
 <script>
-import HeaderAvatar from './HeaderAvatar'
-import IMenu from '@/components/menu/menu'
-import { mapState, mapMutations } from 'vuex'
+import HeaderAvatar from './HeaderAvatar';
+import IMenu from '@/components/menu/menu';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'AdminHeader',
@@ -60,38 +60,38 @@ export default {
         { key: 'US', name: 'English', alias: 'English' }
       ],
       searchActive: false
-    }
+    };
   },
   computed: {
     ...mapState('setting', ['theme', 'isMobile', 'layout', 'systemName', 'lang', 'pageWidth', 'mobileMenuStatus']),
     headerTheme() {
       if (this.layout === 'side' && this.theme.mode === 'dark' && !this.isMobile) {
-        return 'light'
+        return 'light';
       }
-      return this.theme.mode
+      return this.theme.mode;
     },
     langAlias() {
-      const lang = this.langList.find(item => item.key === this.lang)
-      return lang.alias
+      const lang = this.langList.find(item => item.key === this.lang);
+      return lang.alias;
     },
     menuWidth() {
-      const { layout, searchActive } = this
-      const headWidth = layout === 'head' ? '100% - 188px' : '100%'
-      const extraWidth = searchActive ? '600px' : '400px'
-      return `calc(${headWidth} - ${extraWidth})`
+      const { layout, searchActive } = this;
+      const headWidth = layout === 'head' ? '100% - 188px' : '100%';
+      const extraWidth = searchActive ? '600px' : '400px';
+      return `calc(${headWidth} - ${extraWidth})`;
     }
   },
   methods: {
     ...mapMutations('setting', ['setMobileMenuStatus']),
     toggleCollapse() {
-      this.$emit('toggleCollapse')
+      this.$emit('toggleCollapse');
     },
     onSelect(obj) {
-      this.$emit('menuSelect', obj)
+      this.$emit('menuSelect', obj);
     },
     ...mapMutations('setting', ['setLang'])
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

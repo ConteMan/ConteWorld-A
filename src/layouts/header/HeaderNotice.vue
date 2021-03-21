@@ -58,22 +58,22 @@ export default {
     return {
       loading: false,
       show: false
-    }
+    };
   },
   computed: {},
   methods: {
     fetchNotice() {
       if (this.loading) {
-        this.loading = false
-        return
+        this.loading = false;
+        return;
       }
-      this.loadding = true
+      this.loadding = true;
       setTimeout(() => {
-        this.loadding = false
-      }, 1000)
+        this.loadding = false;
+      }, 1000);
     }
   }
-}
+};
 </script>
 
 <style lang="less">

@@ -23,58 +23,58 @@ const Group = {
     return {
       values: [],
       options: []
-    }
+    };
   },
   computed: {
     colors() {
-      const colors = []
+      const colors = [];
       this.options.forEach(item => {
         if (item.sChecked) {
-          colors.push(item.color)
+          colors.push(item.color);
         }
-      })
-      return colors
+      });
+      return colors;
     }
   },
   provide() {
     return {
       groupContext: this
-    }
+    };
   },
   watch: {
     values(value) {
-      this.$emit('change', value, this.colors)
+      this.$emit('change', value, this.colors);
     }
   },
   methods: {
     handleChange(option) {
       if (!option.checked) {
         if (this.values.indexOf(option.value) > -1) {
-          this.values = this.values.filter(item => item !== option.value)
+          this.values = this.values.filter(item => item !== option.value);
         }
       } else {
         if (!this.multiple) {
-          this.values = [option.value]
+          this.values = [option.value];
           this.options.forEach(item => {
             if (item.value !== option.value) {
-              item.sChecked = false
+              item.sChecked = false;
             }
-          })
+          });
         } else {
-          this.values.push(option.value)
+          this.values.push(option.value);
         }
       }
     }
   },
   render(h) {
-    const clear = h('div', { attrs: { style: 'clear: both' }})
+    const clear = h('div', { attrs: { style: 'clear: both' }});
     return h(
       'div',
       {},
       [this.$slots.default, clear]
-    )
+    );
   }
-}
+};
 
 export default {
   name: 'ColorCheckbox',
@@ -98,7 +98,7 @@ export default {
   data() {
     return {
       sChecked: this.initChecked()
-    }
+    };
   },
   computed: {},
   watch: {
@@ -107,38 +107,38 @@ export default {
         value: this.value,
         color: this.color,
         checked: this.sChecked
-      }
-      this.$emit('change', value)
-      const groupContext = this.groupContext
+      };
+      this.$emit('change', value);
+      const groupContext = this.groupContext;
       if (groupContext) {
-        groupContext.handleChange(value)
+        groupContext.handleChange(value);
       }
     }
   },
   created() {
-    const groupContext = this.groupContext
+    const groupContext = this.groupContext;
     if (groupContext) {
-      groupContext.options.push(this)
+      groupContext.options.push(this);
     }
   },
   methods: {
     toggle() {
       if (this.groupContext.multiple || !this.sChecked) {
-        this.sChecked = !this.sChecked
+        this.sChecked = !this.sChecked;
       }
     },
     initChecked() {
-      const groupContext = this.groupContext
+      const groupContext = this.groupContext;
       if (!groupContext) {
-        return this.checked
+        return this.checked;
       } else if (groupContext.multiple) {
-        return groupContext.defaultValues.indexOf(this.value) > -1
+        return groupContext.defaultValues.indexOf(this.value) > -1;
       } else {
-        return groupContext.defaultValues[0] === this.value
+        return groupContext.defaultValues[0] === this.value;
       }
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

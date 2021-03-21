@@ -1,3 +1,3 @@
-import Worldline from './Worldline'
+import Worldline from './Worldline';
 
-export default Worldline
+export default Worldline;

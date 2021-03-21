@@ -1,3 +1,3 @@
-import One from './One'
+import One from './One';
 
-export default One
+export default One;

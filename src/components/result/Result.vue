@@ -18,7 +18,7 @@
 export default {
   name: 'Result',
   props: ['isSuccess', 'title', 'description']
-}
+};
 </script>
 
 <style lang="less" scoped>

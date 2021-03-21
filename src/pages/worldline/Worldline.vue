@@ -70,11 +70,11 @@
 </template>
 
 <script>
-import _ from 'lodash'
-import dayjs from 'dayjs'
-import infiniteScroll from 'vue-infinite-scroll'
-import PageViewSlot from '@/layouts/PageViewSlot'
-import { Worldline } from '@/services'
+import _ from 'lodash';
+import dayjs from 'dayjs';
+import infiniteScroll from 'vue-infinite-scroll';
+import PageViewSlot from '@/layouts/PageViewSlot';
+import { Worldline } from '@/services';
 
 export default {
   name: 'Worldline',
@@ -103,60 +103,60 @@ export default {
         }
       ],
       pageHeight: window.innerHeight
-    }
+    };
   },
   computed: {
     worldlineContainerHeight() {
-      return (this.pageHeight - 64) + 'px'
+      return (this.pageHeight - 64) + 'px';
     },
     listContainerHeight() {
-      return (this.pageHeight - 64 - 50 - 1) + 'px'
+      return (this.pageHeight - 64 - 50 - 1) + 'px';
     }
   },
   created() {
-    this.index()
-    this.getPlatformTypes()
-    const that = this
+    this.index();
+    this.getPlatformTypes();
+    const that = this;
     window.onresize = () => {
       return (() => {
-        that.pageHeight = window.innerHeight
-      })()
-    }
+        that.pageHeight = window.innerHeight;
+      })();
+    };
   },
   methods: {
     init() {
-      this.items = []
-      this.offset = 0
-      this.busy = false
-      this.total = 0
+      this.items = [];
+      this.offset = 0;
+      this.busy = false;
+      this.total = 0;
     },
     async index() {
-      const { offset, limit, platformType } = this
-      const res = await Worldline.index({ offset, limit, platformType })
-      const { items, totalCount } = res.data.data
-      this.total = totalCount
+      const { offset, limit, platformType } = this;
+      const res = await Worldline.index({ offset, limit, platformType });
+      const { items, totalCount } = res.data.data;
+      this.total = totalCount;
       if (items.length > 0) {
-        this.items = _.concat(this.items, items)
-        this.busy = false
+        this.items = _.concat(this.items, items);
+        this.busy = false;
       } else {
-        this.busy = true
+        this.busy = true;
       }
     },
     loadMore() {
-      this.offset += this.limit
-      this.index()
+      this.offset += this.limit;
+      this.index();
     },
     async getPlatformTypes() {
-      const res = await Worldline.platformTypes()
-      this.platformTypes = _.concat(this.platformTypes, res.data.data.items)
+      const res = await Worldline.platformTypes();
+      this.platformTypes = _.concat(this.platformTypes, res.data.data.items);
     },
     changePlatformType(platformType) {
-      this.platformType = platformType
-      this.init()
-      this.index()
+      this.platformType = platformType;
+      this.init();
+      this.index();
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

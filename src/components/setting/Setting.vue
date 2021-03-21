@@ -161,18 +161,18 @@
 </template>
 
 <script>
-import SettingItem from './SettingItem'
-import { ColorCheckbox, ImgCheckbox } from '@/components/checkbox'
-import Clipboard from 'clipboard'
-import { mapState, mapMutations } from 'vuex'
-import { formatConfig } from '@/utils/formatter'
-import { setting } from '@/config/default'
-import sysConfig from '@/config/config'
-import fastEqual from 'fast-deep-equal'
-import deepMerge from 'deepmerge'
+import SettingItem from './SettingItem';
+import { ColorCheckbox, ImgCheckbox } from '@/components/checkbox';
+import Clipboard from 'clipboard';
+import { mapState, mapMutations } from 'vuex';
+import { formatConfig } from '@/utils/formatter';
+import { setting } from '@/config/default';
+import sysConfig from '@/config/config';
+import fastEqual from 'fast-deep-equal';
+import deepMerge from 'deepmerge';
 
-const ColorCheckboxGroup = ColorCheckbox.Group
-const ImgCheckboxGroup = ImgCheckbox.Group
+const ColorCheckboxGroup = ColorCheckbox.Group;
+const ImgCheckboxGroup = ImgCheckbox.Group;
 export default {
   name: 'Setting',
   i18n: require('./i18n'),
@@ -181,72 +181,72 @@ export default {
     return {
       copyConfig: 'Sorry, you have copied nothing O(∩_∩)O~',
       isDev: process.env.NODE_ENV === 'development'
-    }
+    };
   },
   computed: {
     directions() {
-      return this.animates.find(item => item.name == this.animate.name).directions
+      return this.animates.find(item => item.name == this.animate.name).directions;
     },
     ...mapState('setting', ['theme', 'layout', 'animate', 'animates', 'palettes', 'multiPage', 'weekMode', 'fixedHeader', 'fixedSideBar', 'hideSetting', 'pageWidth'])
   },
   watch: {
     'animate.name': function(val) {
-      this.setAnimate({ name: val, direction: this.directions[0] })
+      this.setAnimate({ name: val, direction: this.directions[0] });
     }
   },
   methods: {
     getPopupContainer() {
-      return this.$el.parentNode
+      return this.$el.parentNode;
     },
     copyCode() {
-      const config = this.extractConfig(false)
+      const config = this.extractConfig(false);
       this.copyConfig = `// 自定义配置，参考 ./default/setting.config.js，需要自定义的属性在这里配置即可
       module.exports = ${formatConfig(config)}
-      `
-      const clipboard = new Clipboard('#copyBtn')
+      `;
+      const clipboard = new Clipboard('#copyBtn');
       clipboard.on('success', () => {
         this.$message.success(`复制成功，覆盖文件 src/config/config.js 然后重启项目即可生效`).then(() => {
-          const localConfig = localStorage.getItem(process.env.VUE_APP_SETTING_KEY)
+          const localConfig = localStorage.getItem(process.env.VUE_APP_SETTING_KEY);
           if (localConfig) {
-            console.warn('检测到本地有历史保存的主题配置，想要要拷贝的配置代码生效，您可能需要先重置配置')
-            this.$message.warn('检测到本地有历史保存的主题配置，想要要拷贝的配置代码生效，您可能需要先重置配置', 5)
+            console.warn('检测到本地有历史保存的主题配置，想要要拷贝的配置代码生效，您可能需要先重置配置');
+            this.$message.warn('检测到本地有历史保存的主题配置，想要要拷贝的配置代码生效，您可能需要先重置配置', 5);
           }
-        })
-        clipboard.destroy()
-      })
+        });
+        clipboard.destroy();
+      });
     },
     saveSetting() {
-      const closeMessage = this.$message.loading('正在保存到本地，请稍后...', 0)
-      const config = this.extractConfig(true)
-      localStorage.setItem(process.env.VUE_APP_SETTING_KEY, JSON.stringify(config))
-      setTimeout(closeMessage, 800)
+      const closeMessage = this.$message.loading('正在保存到本地，请稍后...', 0);
+      const config = this.extractConfig(true);
+      localStorage.setItem(process.env.VUE_APP_SETTING_KEY, JSON.stringify(config));
+      setTimeout(closeMessage, 800);
     },
     resetSetting() {
       this.$confirm({
         title: '重置主题会刷新页面，当前页面内容不会保留，确认重置？',
         onOk() {
-          localStorage.removeItem(process.env.VUE_APP_SETTING_KEY)
-          window.location.reload()
+          localStorage.removeItem(process.env.VUE_APP_SETTING_KEY);
+          window.location.reload();
         }
-      })
+      });
     },
     // 提取配置
     extractConfig(local = false) {
-      const config = {}
-      const mySetting = this.$store.state.setting
-      const dftSetting = local ? deepMerge(setting, sysConfig) : setting
+      const config = {};
+      const mySetting = this.$store.state.setting;
+      const dftSetting = local ? deepMerge(setting, sysConfig) : setting;
       Object.keys(mySetting).forEach(key => {
-        const dftValue = dftSetting[key]; const myValue = mySetting[key]
+        const dftValue = dftSetting[key]; const myValue = mySetting[key];
         if (dftValue != undefined && !fastEqual(dftValue, myValue)) {
-          config[key] = myValue
+          config[key] = myValue;
         }
-      })
-      return config
+      });
+      return config;
     },
     ...mapMutations('setting', ['setTheme', 'setLayout', 'setMultiPage', 'setWeekMode',
       'setFixedSideBar', 'setFixedHeader', 'setAnimate', 'setHideSetting', 'setPageWidth'])
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

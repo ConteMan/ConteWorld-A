@@ -9,7 +9,7 @@
 export default {
   name: 'SettingItem',
   props: ['title']
-}
+};
 </script>
 
 <style lang="less" scoped>

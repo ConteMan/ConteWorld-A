@@ -51,10 +51,10 @@
 </template>
 
 <script>
-import PageViewSlot from '@/layouts/PageViewSlot'
-import { mavonEditor } from 'mavon-editor'
-import 'mavon-editor/dist/css/index.css'
-import { Article } from '@/services'
+import PageViewSlot from '@/layouts/PageViewSlot';
+import { mavonEditor } from 'mavon-editor';
+import 'mavon-editor/dist/css/index.css';
+import { Article } from '@/services';
 
 export default {
   name: 'ArticleUpdate',
@@ -89,51 +89,51 @@ export default {
 
       statuses: [],
       tags: [],
-    }
+    };
   },
   mounted() {
-    const id = this.$route.query.id
-    this.id = id
-    this.edit(id)
-    this.getStatuses()
-    this.getTags()
+    const id = this.$route.query.id;
+    this.id = id;
+    this.edit(id);
+    this.getStatuses();
+    this.getTags();
   },
   methods: {
     async edit(id) {
-      const res = await Article.edit(id)
+      const res = await Article.edit(id);
       if (res.data.code === 0) {
-        this.form = res.data.data.item
+        this.form = res.data.data.item;
       }
     },
     async update() {
-      const res = await Article.update(this.id, this.form)
+      const res = await Article.update(this.id, this.form);
       if (res.data.code === 0) {
-        this.$message.success('更新成功')
+        this.$message.success('更新成功');
       }
     },
     async getStatuses() {
-      const res = await Article.statuses()
+      const res = await Article.statuses();
       if (res.data.code === 0) {
-        this.statuses = res.data.data.items
+        this.statuses = res.data.data.items;
       }
     },
     async getTags() {
-      const res = await Article.tags()
+      const res = await Article.tags();
       if (res.data.code === 0) {
-        this.tags = res.data.data.items
+        this.tags = res.data.data.items;
       }
     },
     statusChange(value) {
-      this.form.status = value
+      this.form.status = value;
     },
     tagChange(value) {
-      this.form.tags = value
+      this.form.tags = value;
     },
     infoAtChange(value) {
-      this.form.info_at = value
+      this.form.info_at = value;
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

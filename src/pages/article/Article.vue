@@ -77,9 +77,9 @@
 </template>
 
 <script>
-import PageViewSlot from '@/layouts/PageViewSlot'
-import AdvanceTable from '@/components/table/advance/AdvanceTable'
-import { Article } from '@/services'
+import PageViewSlot from '@/layouts/PageViewSlot';
+import AdvanceTable from '@/components/table/advance/AdvanceTable';
+import { Article } from '@/services';
 
 export default {
   name: 'Article',
@@ -153,113 +153,113 @@ export default {
       tags: [],
       currentId: 0,
       current: {},
-    }
+    };
   },
   async created() {
-    await this.getTags()
-    await this.getStatuses()
-    await this.index()
+    await this.getTags();
+    await this.getStatuses();
+    await this.index();
   },
   methods: {
     async index() {
-      this.loading = true
-      const { page, per_page, conditions } = this
-      const res = await Article.index({ page, per_page, ...conditions })
-      const { items, page: re_page, per_page: re_per_page, total_count: re_total } = res.data.data
-      this.items = items
-      this.page = re_page
-      this.per_page = re_per_page
-      this.total = re_total
-      this.loading = false
+      this.loading = true;
+      const { page, per_page, conditions } = this;
+      const res = await Article.index({ page, per_page, ...conditions });
+      const { items, page: re_page, per_page: re_per_page, total_count: re_total } = res.data.data;
+      this.items = items;
+      this.page = re_page;
+      this.per_page = re_per_page;
+      this.total = re_total;
+      this.loading = false;
     },
     onSearch(conditions) {
-      this.page = 1
-      this.conditions = conditions
-      this.index()
+      this.page = 1;
+      this.conditions = conditions;
+      this.index();
     },
     onSizeChange(current, size) {
-      this.page = 1
-      this.pageSize = size
-      this.index()
+      this.page = 1;
+      this.pageSize = size;
+      this.index();
     },
     onRefresh(conditions) {
-      this.conditions = conditions
-      this.index()
+      this.conditions = conditions;
+      this.index();
     },
     onReset(conditions) {
-      this.conditions = conditions
-      this.index()
+      this.conditions = conditions;
+      this.index();
     },
     onPageChange(page, pageSize) {
-      this.page = page
-      this.pageSize = pageSize
-      this.index()
+      this.page = page;
+      this.pageSize = pageSize;
+      this.index();
     },
     turnUpdate(id) {
-      this.$router.push({ path: '/article/update', query: { id: id }})
+      this.$router.push({ path: '/article/update', query: { id: id }});
     },
     async edit(id) {
-      const res = await Article.edit(id)
+      const res = await Article.edit(id);
       if (res.data.code === 0) {
-        const detail = res.data.data.item
+        const detail = res.data.data.item;
         this.current = {
           status: detail.status,
-        }
+        };
       }
     },
     async update() {
-      const res = await Article.update(this.currentId, this.current)
+      const res = await Article.update(this.currentId, this.current);
       if (res.data.code === 0) {
-        this.$message.success(this.$t('result.success'))
+        this.$message.success(this.$t('result.success'));
       } else {
-        this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'))
+        this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'));
       }
     },
     async getStatuses() {
-      const res = await Article.statuses()
+      const res = await Article.statuses();
       if (res.data.code === 0) {
-        this.statuses = res.data.data.items
+        this.statuses = res.data.data.items;
       }
     },
     async getTags() {
-      const res = await Article.tags()
+      const res = await Article.tags();
       if (res.data.code === 0) {
-        this.tags = res.data.data.items
-        this.columns[3].search.selectOptions = this.tagToObj(res.data.data.items)
+        this.tags = res.data.data.items;
+        this.columns[3].search.selectOptions = this.tagToObj(res.data.data.items);
       }
     },
     tagToObj(tags) {
-      const tmp = []
+      const tmp = [];
       tags.forEach(item => {
-        tmp.push({ title: item, value: item })
-      })
-      return tmp
+        tmp.push({ title: item, value: item });
+      });
+      return tmp;
     },
     statusChange(value) {
-      this.current.status = value
+      this.current.status = value;
     },
     async statusModalClick(id) {
-      this.statusModalVisible = !this.statusModalVisible
+      this.statusModalVisible = !this.statusModalVisible;
       if (this.statusModalVisible) {
-        this.currentId = id
-        await this.edit(id)
+        this.currentId = id;
+        await this.edit(id);
       } else {
-        this.currentId = 0
-        this.current = {}
+        this.currentId = 0;
+        this.current = {};
       }
     },
     async statusOK() {
-      await this.update()
-      this.statusModalVisible = false
-      await this.index()
+      await this.update();
+      this.statusModalVisible = false;
+      await this.index();
     },
     statusCancel() {
-      this.statusModalVisible = false
-      this.currentId = 0
-      this.current = {}
+      this.statusModalVisible = false;
+      this.currentId = 0;
+      this.current = {};
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

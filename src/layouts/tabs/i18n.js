@@ -22,4 +22,4 @@ module.exports = {
       warn: 'This is the last page, you can\'t close it',
     },
   }
-}
+};

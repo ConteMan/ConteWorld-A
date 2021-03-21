@@ -1,7 +1,7 @@
-import enquireJs from 'enquire.js'
+import enquireJs from 'enquire.js';
 
 export function isDef(v) {
-  return v !== undefined && v !== null
+  return v !== undefined && v !== null;
 }
 
 /**
@@ -9,46 +9,46 @@ export function isDef(v) {
  */
 export function remove(arr, item) {
   if (arr.length) {
-    const index = arr.indexOf(item)
+    const index = arr.indexOf(item);
     if (index > -1) {
-      return arr.splice(index, 1)
+      return arr.splice(index, 1);
     }
   }
 }
 
 export function isRegExp(v) {
-  return _toString.call(v) === '[object RegExp]'
+  return _toString.call(v) === '[object RegExp]';
 }
 
 export function enquireScreen(call) {
   const handler = {
     match: function() {
-      call && call(true)
+      call && call(true);
     },
     unmatch: function() {
-      call && call(false)
+      call && call(false);
     }
-  }
-  enquireJs.register('only screen and (max-width: 767.99px)', handler)
+  };
+  enquireJs.register('only screen and (max-width: 767.99px)', handler);
 }
 
 export function isJSON(str) {
   if (typeof str === 'string') {
     try {
-      const obj = JSON.parse(str)
-      return !!(typeof obj === 'object' && obj)
+      const obj = JSON.parse(str);
+      return !!(typeof obj === 'object' && obj);
     } catch (e) {
-      return false
+      return false;
     }
   }
-  return !!(typeof str === 'object' && str)
+  return !!(typeof str === 'object' && str);
 }
 
-const _toString = Object.prototype.toString
+const _toString = Object.prototype.toString;
 
 export function emptyObj(obj) {
   if (Object.keys(obj).length === 0) {
-    return true
+    return true;
   }
-  return false
+  return false;
 }

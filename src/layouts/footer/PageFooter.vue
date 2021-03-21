@@ -24,7 +24,7 @@ export default {
   name: 'PageFooter',
   // eslint-disable-next-line vue/require-prop-types
   props: ['copyright', 'linkList']
-}
+};
 </script>
 
 <style lang="less" scoped>

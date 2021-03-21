@@ -1,5 +1,5 @@
-import TabsView from '@/layouts/tabs/TabsView'
-import PageView from '@/layouts/PageView'
+import TabsView from '@/layouts/tabs/TabsView';
+import PageView from '@/layouts/PageView';
 
 // 路由配置
 const options = {
@@ -146,6 +146,6 @@ const options = {
       ]
     }
   ]
-}
+};
 
-export default options
+export default options;

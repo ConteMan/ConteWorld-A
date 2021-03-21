@@ -5,21 +5,21 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from 'vuex';
 
 export default {
   name: 'Demo',
   i18n: require('./i18n'),
   data() {
-    return {}
+    return {};
   },
   computed: {
     ...mapState('setting', ['pageMinHeight']),
     desc() {
-      return this.$t('description')
+      return this.$t('description');
     }
   }
-}
+};
 </script>
 
 <style scoped lang="less">

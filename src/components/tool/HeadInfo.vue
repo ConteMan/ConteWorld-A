@@ -9,7 +9,7 @@
 export default {
   name: 'HeadInfo',
   props: ['title', 'content', 'bordered']
-}
+};
 </script>
 
 <style lang="less" scoped>

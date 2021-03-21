@@ -59,9 +59,9 @@
 </template>
 
 <script>
-import ActionSize from '@/components/table/advance/ActionSize'
-import ActionColumns from '@/components/table/advance/ActionColumns'
-import SearchArea from '@/components/table/advance/SearchArea'
+import ActionSize from '@/components/table/advance/ActionSize';
+import ActionColumns from '@/components/table/advance/ActionColumns';
+import SearchArea from '@/components/table/advance/SearchArea';
 
 export default {
   name: 'AdvanceTable',
@@ -69,7 +69,7 @@ export default {
   provide() {
     return {
       table: this
-    }
+    };
   },
   props: {
     tableLayout: String,
@@ -108,100 +108,100 @@ export default {
       sSize: this.size || 'default',
       fullScreen: false,
       conditions: {}
-    }
+    };
   },
   computed: {
     slots() {
-      return Object.keys(this.$slots).filter(slot => slot !== 'title')
+      return Object.keys(this.$slots).filter(slot => slot !== 'title');
     },
     scopedSlots() {
-      return Object.keys(this.$scopedSlots).filter(slot => slot !== 'expandedRowRender' && slot !== 'title')
+      return Object.keys(this.$scopedSlots).filter(slot => slot !== 'expandedRowRender' && slot !== 'title');
     }
   },
   created() {
-    this.addListener()
+    this.addListener();
   },
   beforeDestroy() {
-    this.removeListener()
+    this.removeListener();
   },
   methods: {
     refresh() {
-      this.$emit('refresh', this.conditions)
+      this.$emit('refresh', this.conditions);
     },
     onSearchChange(conditions, searchOptions) {
-      this.conditions = conditions
-      this.$emit('search', conditions, searchOptions)
+      this.conditions = conditions;
+      this.$emit('search', conditions, searchOptions);
     },
     toggleScreen() {
       if (this.fullScreen) {
-        this.outFullScreen()
+        this.outFullScreen();
       } else {
-        this.inFullScreen()
+        this.inFullScreen();
       }
     },
     inFullScreen() {
-      const el = this.$refs.table
-      el.classList.add('beauty-scroll')
+      const el = this.$refs.table;
+      el.classList.add('beauty-scroll');
       if (el.requestFullscreen) {
-        el.requestFullscreen()
-        return true
+        el.requestFullscreen();
+        return true;
       } else if (el.webkitRequestFullScreen) {
-        el.webkitRequestFullScreen()
-        return true
+        el.webkitRequestFullScreen();
+        return true;
       } else if (el.mozRequestFullScreen) {
-        el.mozRequestFullScreen()
-        return true
+        el.mozRequestFullScreen();
+        return true;
       } else if (el.msRequestFullscreen) {
-        el.msRequestFullscreen()
-        return true
+        el.msRequestFullscreen();
+        return true;
       }
-      this.$message.warn('对不起，您的浏览器不支持全屏模式')
-      el.classList.remove('beauty-scroll')
-      return false
+      this.$message.warn('对不起，您的浏览器不支持全屏模式');
+      el.classList.remove('beauty-scroll');
+      return false;
     },
     outFullScreen() {
       if (document.exitFullscreen) {
-        document.exitFullscreen()
+        document.exitFullscreen();
       } else if (document.webkitCancelFullScreen) {
-        document.webkitCancelFullScreen()
+        document.webkitCancelFullScreen();
       } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen()
+        document.mozCancelFullScreen();
       } else if (document.msExitFullscreen) {
-        document.msExitFullscreen()
+        document.msExitFullscreen();
       }
-      this.$refs.table.classList.remove('beauty-scroll')
+      this.$refs.table.classList.remove('beauty-scroll');
     },
     onColumnsReset(conditions) {
-      this.$emit('reset', conditions)
+      this.$emit('reset', conditions);
     },
     onExpandedRowsChange(expandedRows) {
-      this.$emit('expandedRowsChange', expandedRows)
+      this.$emit('expandedRowsChange', expandedRows);
     },
     onChange(pagination, filters, sorter, options) {
-      this.$emit('change', pagination, filters, sorter, options)
+      this.$emit('change', pagination, filters, sorter, options);
     },
     onExpand(expanded, record) {
-      this.$emit('expand', expanded, record)
+      this.$emit('expand', expanded, record);
     },
     addListener() {
-      document.addEventListener('fullscreenchange', this.fullScreenListener)
-      document.addEventListener('webkitfullscreenchange', this.fullScreenListener)
-      document.addEventListener('mozfullscreenchange', this.fullScreenListener)
-      document.addEventListener('msfullscreenchange', this.fullScreenListener)
+      document.addEventListener('fullscreenchange', this.fullScreenListener);
+      document.addEventListener('webkitfullscreenchange', this.fullScreenListener);
+      document.addEventListener('mozfullscreenchange', this.fullScreenListener);
+      document.addEventListener('msfullscreenchange', this.fullScreenListener);
     },
     removeListener() {
-      document.removeEventListener('fullscreenchange', this.fullScreenListener)
-      document.removeEventListener('webkitfullscreenchange', this.fullScreenListener)
-      document.removeEventListener('mozfullscreenchange', this.fullScreenListener)
-      document.removeEventListener('msfullscreenchange', this.fullScreenListener)
+      document.removeEventListener('fullscreenchange', this.fullScreenListener);
+      document.removeEventListener('webkitfullscreenchange', this.fullScreenListener);
+      document.removeEventListener('mozfullscreenchange', this.fullScreenListener);
+      document.removeEventListener('msfullscreenchange', this.fullScreenListener);
     },
     fullScreenListener(e) {
       if (e.target.id === this.id) {
-        this.fullScreen = !this.fullScreen
+        this.fullScreen = !this.fullScreen;
       }
     }
   }
-}
+};
 </script>
 
 <style scoped lang="less">

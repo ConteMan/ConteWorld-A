@@ -35,32 +35,32 @@ export default {
   data() {
     return {
       sValue: this.value || this.defaultValue || ''
-    }
+    };
   },
   computed: {
     lenSuffix() {
-      return this.maxLength && `${(this.sValue + '').length}/${this.maxLength}`
+      return this.maxLength && `${(this.sValue + '').length}/${this.maxLength}`;
     }
   },
   watch: {
     value(val) {
-      this.sValue = val
+      this.sValue = val;
     }
   },
   methods: {
     onChange(e) {
-      this.$emit('change', e)
-      this.$emit('change.value', e.target.value)
+      this.$emit('change', e);
+      this.$emit('change.value', e.target.value);
     },
     onInput(e) {
-      this.$emit('input', e)
+      this.$emit('input', e);
     },
     onPressEnter(e) {
-      this.$emit('pressEnter', e)
+      this.$emit('pressEnter', e);
     },
     onKeydown(e) {
-      this.$emit('keydown', e)
+      this.$emit('keydown', e);
     }
   }
-}
+};
 </script>

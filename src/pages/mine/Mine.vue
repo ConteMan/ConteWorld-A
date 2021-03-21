@@ -17,30 +17,30 @@
 </template>
 
 <script>
-import { User } from '@/services'
+import { User } from '@/services';
 
 export default {
   name: 'Mine',
   data() {
     const validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('Please input the password'))
+        callback(new Error('Please input the password'));
       } else {
         if (this.form.checkPass !== '') {
-          this.$refs.form.validateField('checkPass')
+          this.$refs.form.validateField('checkPass');
         }
-        callback()
+        callback();
       }
-    }
+    };
     const validatePass2 = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('Please input the password again'))
+        callback(new Error('Please input the password again'));
       } else if (value !== this.form.pass) {
-        callback(new Error("Two inputs don't match!"))
+        callback(new Error("Two inputs don't match!"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       form: {
         pass: '',
@@ -50,7 +50,7 @@ export default {
         pass: [{ validator: validatePass, trigger: 'change' }],
         checkPass: [{ validator: validatePass2, trigger: 'change' }]
       }
-    }
+    };
   },
   methods: {
     changePassword() {
@@ -58,27 +58,27 @@ export default {
         if (valid) {
           User.changePassword(this.form.pass).then(
             res => this.afterChange(res)
-          )
+          );
         } else {
-          console.log('error submit!!')
-          return false
+          console.log('error submit!!');
+          return false;
         }
-      })
+      });
     },
     afterChange(res) {
-      console.log(res)
+      console.log(res);
       if (res.data.code === 0) {
-        this.resetForm()
-        this.$message.success(res.data.msg, 3)
+        this.resetForm();
+        this.$message.success(res.data.msg, 3);
       } else {
-        this.$message.error(res.data.msg, 3)
+        this.$message.error(res.data.msg, 3);
       }
     },
     resetForm() {
-      this.$refs['form'].resetFields()
+      this.$refs['form'].resetFields();
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

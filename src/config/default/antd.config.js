@@ -80,5 +80,5 @@ const ANTD = {
       'btn-primary-color': '#141414',
     }
   }
-}
-module.exports = ANTD
+};
+module.exports = ANTD;

@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import Config from './typeConfig'
+import Config from './typeConfig';
 
 export default {
   name: 'ExceptionPage',
@@ -22,17 +22,17 @@ export default {
   data() {
     return {
       config: Config
-    }
+    };
   },
   methods: {
     backHome() {
       if (this.homeRoute) {
-        this.$router.push(this.homeRoute)
+        this.$router.push(this.homeRoute);
       }
-      this.$emit('backHome', this.type)
+      this.$emit('backHome', this.type);
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

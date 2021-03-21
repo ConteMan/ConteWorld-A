@@ -1,3 +1,3 @@
-import Config from './Config.vue'
+import Config from './Config.vue';
 
-export default Config
+export default Config;

@@ -44,22 +44,22 @@ export default {
     return {
       trend: this.isIncrease ? 'up' : 'down',
       rate: this.percent
-    }
+    };
   },
   created() {
-    this.trend = this.caulateTrend()
-    this.rate = this.caulateRate()
+    this.trend = this.caulateTrend();
+    this.rate = this.caulateRate();
   },
   methods: {
     caulateRate() {
-      return (this.percent === null ? Math.abs(this.value - this.target) * 100 / this.target : this.percent).toFixed(this.scale)
+      return (this.percent === null ? Math.abs(this.value - this.target) * 100 / this.target : this.percent).toFixed(this.scale);
     },
     caulateTrend() {
-      const isIncrease = this.isIncrease === null ? this.value >= this.target : this.isIncrease
-      return isIncrease ? 'up' : 'down'
+      const isIncrease = this.isIncrease === null ? this.value >= this.target : this.isIncrease;
+      return isIncrease ? 'up' : 'down';
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
