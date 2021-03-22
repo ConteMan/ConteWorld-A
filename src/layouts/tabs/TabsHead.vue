@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
-import { getI18nKey } from '@/utils/routerUtil'
+import { mapState, mapMutations } from 'vuex';
+import { getI18nKey } from '@/utils/routerUtil';
 
 export default {
   name: 'TabsHead',
@@ -57,7 +57,7 @@ export default {
     pageList: {
       type: Array,
       default: () => {
-        return []
+        return [];
       },
     },
     active: {
@@ -72,48 +72,48 @@ export default {
   data() {
     return {
       affixed: false,
-    }
+    };
   },
   computed: {
     ...mapState('setting', ['layout', 'pageWidth', 'fixedHeader', 'fixedTabs']),
     lockTitle() {
-      return this.$t(this.fixedTabs ? 'unlock' : 'lock')
+      return this.$t(this.fixedTabs ? 'unlock' : 'lock');
     }
   },
   created() {
-    this.affixed = this.fixedTabs
+    this.affixed = this.fixedTabs;
   },
   methods: {
     ...mapMutations('setting', ['setFixedTabs']),
     onLockClick() {
-      this.setFixedTabs(!this.fixedTabs)
+      this.setFixedTabs(!this.fixedTabs);
       if (this.fixedTabs) {
         setTimeout(() => {
-          this.affixed = true
-        }, 200)
+          this.affixed = true;
+        }, 200);
       } else {
-        this.affixed = false
+        this.affixed = false;
       }
     },
     onTabClick(key) {
       if (this.active !== key) {
-        this.$emit('change', key)
+        this.$emit('change', key);
       }
     },
     onClose(key) {
-      this.$emit('close', key)
+      this.$emit('close', key);
     },
     onRefresh(page) {
-      this.$emit('refresh', page.fullPath, page)
+      this.$emit('refresh', page.fullPath, page);
     },
     onContextmenu(pageKey, e) {
-      this.$emit('contextmenu', pageKey, e)
+      this.$emit('contextmenu', pageKey, e);
     },
     pageName(page) {
-      return this.$t(getI18nKey(page.keyPath))
+      return this.$t(getI18nKey(page.keyPath));
     }
   }
-}
+};
 </script>
 
 <style scoped lang="less">

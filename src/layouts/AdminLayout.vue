@@ -62,14 +62,14 @@
 </template>
 
 <script>
-import AdminHeader from './header/AdminHeader'
-import PageFooter from './footer/PageFooter'
-import Drawer from '../components/tool/Drawer'
-import SideMenu from '../components/menu/SideMenu'
-import Setting from '../components/setting/Setting'
-import { mapState, mapMutations, mapGetters } from 'vuex'
+import AdminHeader from './header/AdminHeader';
+import PageFooter from './footer/PageFooter';
+import Drawer from '../components/tool/Drawer';
+import SideMenu from '../components/menu/SideMenu';
+import Setting from '../components/setting/Setting';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 
-const minHeight = window.innerHeight - 64 - 24 - 122
+const minHeight = window.innerHeight - 64 - 24 - 122;
 
 export default {
   name: 'AdminLayout',
@@ -77,7 +77,7 @@ export default {
   provide() {
     return {
       adminLayout: this
-    }
+    };
   },
   data() {
     return {
@@ -85,7 +85,7 @@ export default {
       collapsed: false,
       showSetting: false,
       drawerOpen: false
-    }
+    };
   },
   computed: {
     ...mapState('setting',
@@ -105,65 +105,65 @@ export default {
       ]),
     ...mapGetters('setting', ['firstMenu', 'subMenu', 'menuData']),
     sideMenuWidth() {
-      return this.collapsed ? '80px' : '256px'
+      return this.collapsed ? '80px' : '256px';
     },
     headerStyle() {
-      const width = (this.fixedHeader && this.layout !== 'head' && !this.isMobile) ? `calc(100% - ${this.sideMenuWidth})` : '100%'
-      const position = this.fixedHeader ? 'fixed' : 'static'
-      return `width: ${width}; position: ${position};`
+      const width = (this.fixedHeader && this.layout !== 'head' && !this.isMobile) ? `calc(100% - ${this.sideMenuWidth})` : '100%';
+      const position = this.fixedHeader ? 'fixed' : 'static';
+      return `width: ${width}; position: ${position};`;
     },
     headMenuData() {
-      const { layout, menuData, firstMenu } = this
-      return layout === 'mix' ? firstMenu : menuData
+      const { layout, menuData, firstMenu } = this;
+      return layout === 'mix' ? firstMenu : menuData;
     },
     sideMenuData() {
-      const { layout, menuData, subMenu } = this
-      return layout === 'mix' ? subMenu : menuData
+      const { layout, menuData, subMenu } = this;
+      return layout === 'mix' ? subMenu : menuData;
     }
   },
   watch: {
     $route(val) {
-      this.setActivated(val)
+      this.setActivated(val);
     },
     layout() {
-      this.setActivated(this.$route)
+      this.setActivated(this.$route);
     },
     isMobile(val) {
       if (!val) {
-        this.setMobileMenuStatus(false)
+        this.setMobileMenuStatus(false);
       }
     }
   },
   created() {
-    this.correctPageMinHeight(minHeight - 1)
-    this.setActivated(this.$route)
+    this.correctPageMinHeight(minHeight - 1);
+    this.setActivated(this.$route);
   },
   beforeDestroy() {
-    this.correctPageMinHeight(-minHeight + 1)
+    this.correctPageMinHeight(-minHeight + 1);
   },
   methods: {
     ...mapMutations('setting', ['correctPageMinHeight', 'setActivatedFirst', 'setSettingStatus', 'setMobileMenuStatus']),
     toggleCollapse() {
-      this.collapsed = !this.collapsed
+      this.collapsed = !this.collapsed;
     },
     onMenuSelect() {
-      this.toggleCollapse()
+      this.toggleCollapse();
     },
     setActivated(route) {
       if (this.layout === 'mix') {
-        let matched = route.matched
-        matched = matched.slice(0, matched.length - 1)
-        const { firstMenu } = this
+        let matched = route.matched;
+        matched = matched.slice(0, matched.length - 1);
+        const { firstMenu } = this;
         for (const menu of firstMenu) {
           if (matched.findIndex(item => item.path === menu.fullPath) !== -1) {
-            this.setActivatedFirst(menu.fullPath)
-            break
+            this.setActivatedFirst(menu.fullPath);
+            break;
           }
         }
       }
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
@@ -192,6 +192,7 @@ export default {
   }
 
   .admin-layout-main {
+    background: white;
     .admin-header {
       top: 0;
       right: 0;

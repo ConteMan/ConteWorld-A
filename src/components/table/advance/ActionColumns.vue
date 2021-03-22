@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash.clonedeep'
+import cloneDeep from 'lodash.clonedeep';
 
 export default {
   name: 'ActionColumns',
@@ -52,112 +52,112 @@ export default {
       checkAll: true,
       checkedCounts: this.columns.length,
       backColumns: cloneDeep(this.columns)
-    }
+    };
   },
   watch: {
     checkedCounts(val) {
-      this.checkAll = val === this.columns.length
-      this.indeterminate = val > 0 && val < this.columns.length
+      this.checkAll = val === this.columns.length;
+      this.indeterminate = val > 0 && val < this.columns.length;
     }
   },
   created() {
-    this.$emit('update:visibleColumns', [...this.columns])
+    this.$emit('update:visibleColumns', [...this.columns]);
     for (const col of this.columns) {
       if (col.visible === undefined) {
-        this.$set(col, 'visible', true)
+        this.$set(col, 'visible', true);
       }
       if (!col.visible) {
-        this.checkedCounts -= 1
-        this.$set(col, 'colSpan', 0)
-        this.$set(col, 'customCell', () => ({ style: 'display: none;' }))
+        this.checkedCounts -= 1;
+        this.$set(col, 'colSpan', 0);
+        this.$set(col, 'customCell', () => ({ style: 'display: none;' }));
       }
     }
   },
   methods: {
     onCheckChange(e, col) {
       if (!col.visible) {
-        this.checkedCounts -= 1
-        this.$set(col, 'colSpan', 0)
-        this.$set(col, 'customCell', () => ({ style: 'display: none;' }))
+        this.checkedCounts -= 1;
+        this.$set(col, 'colSpan', 0);
+        this.$set(col, 'customCell', () => ({ style: 'display: none;' }));
       } else {
-        this.checkedCounts += 1
-        this.$set(col, 'colSpan', undefined)
-        this.$set(col, 'customCell', undefined)
+        this.checkedCounts += 1;
+        this.$set(col, 'colSpan', undefined);
+        this.$set(col, 'customCell', undefined);
       }
     },
     fixColumn(fixed, col) {
       if (fixed !== col.fixed) {
-        this.$set(col, 'fixed', fixed)
+        this.$set(col, 'fixed', fixed);
       } else {
-        this.$set(col, 'fixed', undefined)
+        this.$set(col, 'fixed', undefined);
       }
     },
     setSearch(col) {
-      this.$set(col, 'searchAble', !col.searchAble)
-      console.log(col)
+      this.$set(col, 'searchAble', !col.searchAble);
+      console.log(col);
       if (!col.searchAble && col.search) {
-        this.resetSearch(col)
+        this.resetSearch(col);
       }
     },
     resetSearch(col) {
       // col.search.value = col.dataType === 'boolean' ? false : undefined
-      col.search.value = undefined
-      col.search.backup = undefined
+      col.search.value = undefined;
+      col.search.backup = undefined;
     },
     resetColumns() {
-      const { columns, backColumns } = this
-      let counts = columns.length
+      const { columns, backColumns } = this;
+      let counts = columns.length;
       backColumns.forEach((back, index) => {
-        const column = columns[index]
-        column.visible = back.visible === undefined || back.visible
+        const column = columns[index];
+        column.visible = back.visible === undefined || back.visible;
         if (column.visible) {
-          this.$set(column, 'colSpan', undefined)
-          this.$set(column, 'customCell', undefined)
+          this.$set(column, 'colSpan', undefined);
+          this.$set(column, 'customCell', undefined);
         } else {
-          counts -= 1
-          this.$set(column, 'colSpan', 0)
-          this.$set(column, 'customCell', () => ({ style: 'display: none;' }))
+          counts -= 1;
+          this.$set(column, 'colSpan', 0);
+          this.$set(column, 'customCell', () => ({ style: 'display: none;' }));
         }
         if (back.fixed !== undefined) {
-          column.fixed = back.fixed
+          column.fixed = back.fixed;
         } else {
-          this.$set(column, 'fixed', undefined)
+          this.$set(column, 'fixed', undefined);
         }
-        this.$set(column, 'searchAble', back.searchAble)
+        this.$set(column, 'searchAble', back.searchAble);
         // column.searchAble = back.searchAble
-        this.resetSearch(column)
-      })
-      this.checkedCounts = counts
-      this.visible = false
-      this.$emit('reset', this.getConditions(columns))
+        this.resetSearch(column);
+      });
+      this.checkedCounts = counts;
+      this.visible = false;
+      this.$emit('reset', this.getConditions(columns));
     },
     onCheckAllChange(e) {
       if (e.target.checked) {
-        this.checkedCounts = this.columns.length
+        this.checkedCounts = this.columns.length;
         this.columns.forEach(col => {
-          col.visible = true
-          this.$set(col, 'colSpan', undefined)
-          this.$set(col, 'customCell', undefined)
-        })
+          col.visible = true;
+          this.$set(col, 'colSpan', undefined);
+          this.$set(col, 'customCell', undefined);
+        });
       } else {
-        this.checkedCounts = 0
+        this.checkedCounts = 0;
         this.columns.forEach(col => {
-          col.visible = false
-          this.$set(col, 'colSpan', 0)
-          this.$set(col, 'customCell', () => ({ style: 'display: none;' }))
-        })
+          col.visible = false;
+          this.$set(col, 'colSpan', 0);
+          this.$set(col, 'customCell', () => ({ style: 'display: none;' }));
+        });
       }
     },
     getConditions(columns) {
-      const conditions = {}
+      const conditions = {};
       columns.filter(item => item.search.value !== undefined && item.search.value !== '' && item.search.value !== null)
         .forEach(col => {
-          conditions[col.dataIndex] = col.search.value
-        })
-      return conditions
+          conditions[col.dataIndex] = col.search.value;
+        });
+      return conditions;
     }
   }
-}
+};
 </script>
 
 <style scoped lang="less">

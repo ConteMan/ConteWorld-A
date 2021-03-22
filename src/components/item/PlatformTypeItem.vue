@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import dayjs from 'dayjs'
+import dayjs from 'dayjs';
 
 export default {
   name: 'PlatformTypeItem',
@@ -30,14 +30,14 @@ export default {
   data() {
     return {
       dayjs,
-    }
+    };
   },
   methods: {
     yuqueNoteFormat(data) {
-      return data.replaceAll(/\<\!doctype\s\S*\>|\<meta[\s\S]*\/\>|data-lake\S{0,10}=\"\S{0,100}\"/g, '')
+      return data.replaceAll(/\<\!doctype\s\S*\>|\<meta[\s\S]*\/\>|data-lake\S{0,10}=\"\S{0,100}\"/g, '');
     }
   },
-}
+};
 </script>
 
 <style lang="less" scoped>

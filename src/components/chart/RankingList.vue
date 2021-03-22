@@ -15,7 +15,7 @@
 export default {
   name: 'RankingList',
   props: ['title', 'list']
-}
+};
 </script>
 
 <style lang="less" scoped>

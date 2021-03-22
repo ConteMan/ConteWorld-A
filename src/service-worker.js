@@ -9,7 +9,7 @@ workbox.routing.registerRoute(
     // 使用自定义缓存名称
     cacheName: 'css-cache'
   })
-)
+);
 
 // 缓存web的js资源
 workbox.routing.registerRoute(
@@ -20,7 +20,7 @@ workbox.routing.registerRoute(
     // 使用自定义缓存名称
     cacheName: 'js-cache'
   })
-)
+);
 
 // 缓存web的图片资源
 workbox.routing.registerRoute(
@@ -34,7 +34,7 @@ workbox.routing.registerRoute(
       })
     ]
   })
-)
+);
 
 // 我们很多资源在其他域名上，比如cdn、oss等，这里做单独处理，需要支持跨域
 // workbox.routing.registerRoute(

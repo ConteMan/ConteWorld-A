@@ -13,6 +13,6 @@ const ADMIN = {
     SIDE: 'side',
     HEAD: 'head'
   }
-}
+};
 
-module.exports = ADMIN
+module.exports = ADMIN;

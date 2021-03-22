@@ -1,27 +1,27 @@
-import routerMap from '@/router/async/router.map'
-import { loginIgnore } from '@/router'
-import { checkAuthorization } from '@/utils/request'
-import { mergeI18nFromRoutes } from '@/utils/i18n'
-import Router from 'vue-router'
-import deepMerge from 'deepmerge'
-import basicOptions from '@/router/async/config.async'
+import routerMap from '@/router/async/router.map';
+import { loginIgnore } from '@/router';
+import { checkAuthorization } from '@/utils/request';
+import { mergeI18nFromRoutes } from '@/utils/i18n';
+import Router from 'vue-router';
+import deepMerge from 'deepmerge';
+import basicOptions from '@/router/async/config.async';
 
 // 应用配置
 const appOptions = {
   router: undefined,
   i18n: undefined,
   store: undefined
-}
+};
 
 /**
  * 设置应用配置
  * @param options
  */
 function setAppOptions(options) {
-  const { router, store, i18n } = options
-  appOptions.router = router
-  appOptions.store = store
-  appOptions.i18n = i18n
+  const { router, store, i18n } = options;
+  appOptions.router = router;
+  appOptions.store = store;
+  appOptions.i18n = i18n;
 }
 
 /**
@@ -30,20 +30,20 @@ function setAppOptions(options) {
  * @param routerMap 本地路由组件注册配置
  */
 function parseRoutes(routesConfig, routerMap) {
-  const routes = []
+  const routes = [];
   routesConfig.forEach(item => {
     // 获取注册在 routerMap 中的 router，初始化 routeCfg
-    let router; let routeCfg = {}
+    let router; let routeCfg = {};
     if (typeof item === 'string' && routerMap[item]) {
-      router = routerMap[item]
-      routeCfg = { path: router.path || item, router: item }
+      router = routerMap[item];
+      routeCfg = { path: router.path || item, router: item };
     } else if (typeof item === 'object') {
-      router = routerMap[item.router]
-      routeCfg = item
+      router = routerMap[item.router];
+      routeCfg = item;
     }
     // 从 router 和 routeCfg 解析路由
     if (!router) {
-      console.warn(`can't find register for router ${routeCfg.router}, please register it in advance.`)
+      console.warn(`can't find register for router ${routeCfg.router}, please register it in advance.`);
     } else {
       const route = {
         path: routeCfg.path || router.path || routeCfg.router,
@@ -55,17 +55,17 @@ function parseRoutes(routesConfig, routerMap) {
           icon: routeCfg.icon || router.icon,
           page: routeCfg.page || router.page
         }
-      }
+      };
       if (routeCfg.invisible || router.invisible) {
-        route.meta.invisible = true
+        route.meta.invisible = true;
       }
       if (routeCfg.children && routeCfg.children.length > 0) {
-        route.children = parseRoutes(routeCfg.children, routerMap)
+        route.children = parseRoutes(routeCfg.children, routerMap);
       }
-      routes.push(route)
+      routes.push(route);
     }
-  })
-  return routes
+  });
+  return routes;
 }
 
 /**
@@ -76,43 +76,43 @@ function loadRoutes(routesConfig) {
   // 兼容 0.6.1 以下版本
   /** ************* 兼容 version < v0.6.1 *****************/
   if (arguments.length > 0) {
-    const arg0 = arguments[0]
+    const arg0 = arguments[0];
     if (arg0.router || arg0.i18n || arg0.store) {
-      routesConfig = arguments[1]
-      console.error('the usage of signature loadRoutes({router, store, i18n}, routesConfig) is out of date, please use the new signature: loadRoutes(routesConfig).')
-      console.error('方法签名 loadRoutes({router, store, i18n}, routesConfig) 的用法已过时, 请使用新的方法签名 loadRoutes(routesConfig)。')
+      routesConfig = arguments[1];
+      console.error('the usage of signature loadRoutes({router, store, i18n}, routesConfig) is out of date, please use the new signature: loadRoutes(routesConfig).');
+      console.error('方法签名 loadRoutes({router, store, i18n}, routesConfig) 的用法已过时, 请使用新的方法签名 loadRoutes(routesConfig)。');
     }
   }
   /** ************* 兼容 version < v0.6.1 *****************/
 
   // 应用配置
-  const { router, store, i18n } = appOptions
+  const { router, store, i18n } = appOptions;
 
   // 如果 routesConfig 有值，则更新到本地，否则从本地获取
   if (routesConfig) {
-    store.commit('account/setRoutesConfig', routesConfig)
+    store.commit('account/setRoutesConfig', routesConfig);
   } else {
-    routesConfig = store.getters['account/routesConfig']
+    routesConfig = store.getters['account/routesConfig'];
   }
   // 如果开启了异步路由，则加载异步路由配置
-  const asyncRoutes = store.state.setting.asyncRoutes
+  const asyncRoutes = store.state.setting.asyncRoutes;
   if (asyncRoutes) {
     if (routesConfig && routesConfig.length > 0) {
-      const routes = parseRoutes(routesConfig, routerMap)
-      const finalRoutes = mergeRoutes(basicOptions.routes, routes)
-      formatRoutes(finalRoutes)
-      router.options = { ...router.options, routes: finalRoutes }
-      router.matcher = new Router({ ...router.options, routes: [] }).matcher
-      router.addRoutes(finalRoutes)
+      const routes = parseRoutes(routesConfig, routerMap);
+      const finalRoutes = mergeRoutes(basicOptions.routes, routes);
+      formatRoutes(finalRoutes);
+      router.options = { ...router.options, routes: finalRoutes };
+      router.matcher = new Router({ ...router.options, routes: [] }).matcher;
+      router.addRoutes(finalRoutes);
     }
   }
   // 提取路由国际化数据
-  mergeI18nFromRoutes(i18n, router.options.routes)
+  mergeI18nFromRoutes(i18n, router.options.routes);
   // 初始化Admin后台菜单数据
-  const rootRoute = router.options.routes.find(item => item.path === '/')
-  const menuRoutes = rootRoute && rootRoute.children
+  const rootRoute = router.options.routes.find(item => item.path === '/');
+  const menuRoutes = rootRoute && rootRoute.children;
   if (menuRoutes) {
-    store.commit('setting/setMenuData', menuRoutes)
+    store.commit('setting/setMenuData', menuRoutes);
   }
 }
 
@@ -123,12 +123,12 @@ function loadRoutes(routesConfig) {
  * @returns {Route[]}
  */
 function mergeRoutes(target, source) {
-  const routesMap = {}
+  const routesMap = {};
   // eslint-disable-next-line no-return-assign
-  target.forEach(item => routesMap[item.path] = item)
+  target.forEach(item => routesMap[item.path] = item);
   // eslint-disable-next-line no-return-assign
-  source.forEach(item => routesMap[item.path] = item)
-  return Object.values(routesMap)
+  source.forEach(item => routesMap[item.path] = item);
+  return Object.values(routesMap);
 }
 
 /**
@@ -140,33 +140,33 @@ function mergeRoutes(target, source) {
 function deepMergeRoutes(target, source) {
   // 映射路由数组
   const mapRoutes = routes => {
-    const routesMap = {}
+    const routesMap = {};
     routes.forEach(item => {
       routesMap[item.path] = {
         ...item,
         children: item.children ? mapRoutes(item.children) : undefined
-      }
-    })
-    return routesMap
-  }
-  const tarMap = mapRoutes(target)
-  const srcMap = mapRoutes(source)
+      };
+    });
+    return routesMap;
+  };
+  const tarMap = mapRoutes(target);
+  const srcMap = mapRoutes(source);
 
   // 合并路由
-  const merge = deepMerge(tarMap, srcMap)
+  const merge = deepMerge(tarMap, srcMap);
 
   // 转换为 routes 数组
   const parseRoutesMap = routesMap => {
     return Object.values(routesMap).map(item => {
       if (item.children) {
-        item.children = parseRoutesMap(item.children)
+        item.children = parseRoutesMap(item.children);
       } else {
-        delete item.children
+        delete item.children;
       }
-      return item
-    })
-  }
-  return parseRoutesMap(merge)
+      return item;
+    });
+  };
+  return parseRoutesMap(merge);
 }
 
 /**
@@ -175,12 +175,12 @@ function deepMergeRoutes(target, source) {
  */
 function formatRoutes(routes) {
   routes.forEach(route => {
-    const { path } = route
+    const { path } = route;
     if (!path.startsWith('/') && path !== '*') {
-      route.path = '/' + path
+      route.path = '/' + path;
     }
-  })
-  formatAuthority(routes)
+  });
+  formatAuthority(routes);
 }
 
 /**
@@ -190,15 +190,15 @@ function formatRoutes(routes) {
 function loginGuard(router) {
   router.beforeEach((to, from, next) => {
     if (!loginIgnore.includes(to) && !checkAuthorization()) {
-      next({ path: '/login' })
+      next({ path: '/login' });
     } else {
       if (to.path === '/login' && checkAuthorization()) {
-        next({ path: '/dashboard' })
+        next({ path: '/dashboard' });
       } else {
-        next()
+        next();
       }
     }
-  })
+  });
 }
 
 /**
@@ -208,14 +208,14 @@ function loginGuard(router) {
  */
 function authorityGuard(router, store) {
   router.beforeEach((to, form, next) => {
-    const permissions = store.getters['account/permissions']
-    const roles = store.getters['account/roles']
+    const permissions = store.getters['account/permissions'];
+    const roles = store.getters['account/roles'];
     if (!hasPermission(to, permissions) && !hasRole(to, roles)) {
-      next({ path: '/403' })
+      next({ path: '/403' });
     } else {
-      next()
+      next();
     }
-  })
+  });
 }
 
 /**
@@ -225,14 +225,14 @@ function authorityGuard(router, store) {
  * @returns {boolean|*}
  */
 function hasPermission(route, permissions) {
-  const authority = route.meta.authority || '*'
-  let required = '*'
+  const authority = route.meta.authority || '*';
+  let required = '*';
   if (typeof authority === 'string') {
-    required = authority
+    required = authority;
   } else if (typeof authority === 'object') {
-    required = authority.permission
+    required = authority.permission;
   }
-  return required === '*' || (permissions && permissions.findIndex(item => item === required || item.id === required) !== -1)
+  return required === '*' || (permissions && permissions.findIndex(item => item === required || item.id === required) !== -1);
 }
 
 /**
@@ -241,12 +241,12 @@ function hasPermission(route, permissions) {
  * @param roles 用户角色集合
  */
 function hasRole(route, roles) {
-  const authority = route.meta.authority || '*'
-  let required
+  const authority = route.meta.authority || '*';
+  let required;
   if (typeof authority === 'object') {
-    required = authority.role
+    required = authority.role;
   }
-  return authority === '*' || (required && roles && roles.findIndex(item => item === required || item.id === required) !== -1)
+  return authority === '*' || (required && roles && roles.findIndex(item => item === required || item.id === required) !== -1);
 }
 
 /**
@@ -256,34 +256,34 @@ function hasRole(route, roles) {
  */
 function formatAuthority(routes, pAuthorities = []) {
   routes.forEach(route => {
-    const meta = route.meta
-    const defaultAuthority = pAuthorities[pAuthorities.length - 1] || { permission: '*' }
+    const meta = route.meta;
+    const defaultAuthority = pAuthorities[pAuthorities.length - 1] || { permission: '*' };
     if (meta) {
-      let authority = {}
+      let authority = {};
       if (!meta.authority) {
-        authority = defaultAuthority
+        authority = defaultAuthority;
       } else if (typeof meta.authority === 'string') {
-        authority.permission = meta.authority
+        authority.permission = meta.authority;
       } else if (typeof meta.authority === 'object') {
-        authority = meta.authority
-        const { role } = authority
+        authority = meta.authority;
+        const { role } = authority;
         if (typeof role === 'string') {
-          authority.role = [role]
+          authority.role = [role];
         }
         if (!authority.permission && !authority.role) {
-          authority = defaultAuthority
+          authority = defaultAuthority;
         }
       }
-      meta.authority = authority
+      meta.authority = authority;
     } else {
-      const authority = defaultAuthority
-      route.meta = { authority }
+      const authority = defaultAuthority;
+      route.meta = { authority };
     }
-    route.meta.pAuthorities = pAuthorities
+    route.meta.pAuthorities = pAuthorities;
     if (route.children) {
-      formatAuthority(route.children, [...pAuthorities, route.meta.authority])
+      formatAuthority(route.children, [...pAuthorities, route.meta.authority]);
     }
-  })
+  });
 }
 
 /**
@@ -292,9 +292,9 @@ function formatAuthority(routes, pAuthorities = []) {
  * @returns {*}
  */
 function getI18nKey(path) {
-  const keys = path.split('/').filter(item => !item.startsWith(':') && item !== '')
-  keys.push('name')
-  return keys.join('.')
+  const keys = path.split('/').filter(item => !item.startsWith(':') && item !== '');
+  keys.push('name');
+  return keys.join('.');
 }
 
 /**
@@ -303,18 +303,18 @@ function getI18nKey(path) {
  * @param options
  */
 function loadGuards(guards, options) {
-  const { beforeEach, afterEach } = guards
-  const { router } = options
+  const { beforeEach, afterEach } = guards;
+  const { router } = options;
   beforeEach.forEach(guard => {
     if (guard && typeof guard === 'function') {
-      router.beforeEach((to, from, next) => guard(to, from, next, options))
+      router.beforeEach((to, from, next) => guard(to, from, next, options));
     }
-  })
+  });
   afterEach.forEach(guard => {
     if (guard && typeof guard === 'function') {
-      router.afterEach((to, from) => guard(to, from, options))
+      router.afterEach((to, from) => guard(to, from, options));
     }
-  })
+  });
 }
 
 export {
@@ -328,4 +328,4 @@ export {
   deepMergeRoutes,
   formatRoutes,
   setAppOptions
-}
+};

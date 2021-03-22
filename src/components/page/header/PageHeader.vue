@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from 'vuex';
 
 export default {
   name: 'PageHeader',
@@ -48,7 +48,7 @@ export default {
       type: Array,
       required: false,
       default: function() {
-        return []
+        return [];
       },
     },
     logo: {
@@ -65,7 +65,7 @@ export default {
   computed: {
     ...mapState('setting', ['layout', 'showPageTitle', 'pageWidth'])
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

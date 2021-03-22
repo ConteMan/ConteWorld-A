@@ -1,3 +1,3 @@
-import Token from './Token.vue'
+import Token from './Token.vue';
 
-export default Token
+export default Token;

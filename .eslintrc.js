@@ -166,7 +166,7 @@ module.exports = {
       'avoidEscape': true,
       'allowTemplateLiterals': true
     }],
-    'semi': [2, 'never'],
+    'semi': [2, 'always'],
     'semi-spacing': [2, {
       'before': false,
       'after': true
@@ -196,4 +196,4 @@ module.exports = {
     'array-bracket-spacing': [2, 'never'],
     'vue/no-mutating-props': 1,
   }
-};
+}

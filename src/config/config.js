@@ -7,11 +7,13 @@ module.exports = {
     warning: '#faad14',
     error: '#f5222d'
   },
-  fixedHeader: true,
+  layout: 'side',
+  fixedHeader: false,
+  multiPage: false,
+  pageWidth: 'fluid',
   showPageTitle: false,
   animate: {
-    disabled: false,
     name: 'slide',
     direction: 'left'
   }
-}
+};

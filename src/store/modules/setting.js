@@ -1,10 +1,10 @@
-import config from '@/config'
-import { ADMIN } from '@/config/default'
-import { formatFullPath } from '@/utils/i18n'
-import { filterMenu } from '@/utils/authority-utils'
-import { getLocalSetting } from '@/utils/themeUtil'
+import config from '@/config';
+import { ADMIN } from '@/config/default';
+import { formatFullPath } from '@/utils/i18n';
+import { filterMenu } from '@/utils/authority-utils';
+import { getLocalSetting } from '@/utils/themeUtil';
 
-const localSetting = getLocalSetting(true)
+const localSetting = getLocalSetting(true);
 
 export default {
   namespaced: true,
@@ -23,85 +23,85 @@ export default {
   getters: {
     menuData(state, getters, rootState) {
       if (state.filterMenu) {
-        const { permissions, roles } = rootState.account
-        filterMenu(state.menuData, permissions, roles)
+        const { permissions, roles } = rootState.account;
+        filterMenu(state.menuData, permissions, roles);
       }
-      return state.menuData
+      return state.menuData;
     },
     firstMenu(state) {
-      const { menuData } = state
+      const { menuData } = state;
       if (menuData.length > 0 && !menuData[0].fullPath) {
-        formatFullPath(menuData)
+        formatFullPath(menuData);
       }
       return menuData.map(item => {
-        const menuItem = { ...item }
-        delete menuItem.children
-        return menuItem
-      })
+        const menuItem = { ...item };
+        delete menuItem.children;
+        return menuItem;
+      });
     },
     subMenu(state) {
-      const { menuData, activatedFirst } = state
+      const { menuData, activatedFirst } = state;
       if (!menuData[0].fullPath) {
-        formatFullPath(menuData)
+        formatFullPath(menuData);
       }
-      const current = menuData.find(menu => menu.fullPath === activatedFirst)
-      return current && current.children ? current.children : []
+      const current = menuData.find(menu => menu.fullPath === activatedFirst);
+      return current && current.children ? current.children : [];
     }
   },
   mutations: {
     setDevice(state, isMobile) {
-      state.isMobile = isMobile
+      state.isMobile = isMobile;
     },
     setTheme(state, theme) {
-      state.theme = theme
+      state.theme = theme;
     },
     setLayout(state, layout) {
-      state.layout = layout
+      state.layout = layout;
     },
     setMultiPage(state, multiPage) {
-      state.multiPage = multiPage
+      state.multiPage = multiPage;
     },
     setAnimate(state, animate) {
-      state.animate = animate
+      state.animate = animate;
     },
     setWeekMode(state, weekMode) {
-      state.weekMode = weekMode
+      state.weekMode = weekMode;
     },
     setFixedHeader(state, fixedHeader) {
-      state.fixedHeader = fixedHeader
+      state.fixedHeader = fixedHeader;
     },
     setFixedSideBar(state, fixedSideBar) {
-      state.fixedSideBar = fixedSideBar
+      state.fixedSideBar = fixedSideBar;
     },
     setLang(state, lang) {
-      state.lang = lang
+      state.lang = lang;
     },
     setHideSetting(state, hideSetting) {
-      state.hideSetting = hideSetting
+      state.hideSetting = hideSetting;
     },
     correctPageMinHeight(state, minHeight) {
-      state.pageMinHeight += minHeight
+      state.pageMinHeight += minHeight;
     },
     setMenuData(state, menuData) {
-      state.menuData = menuData
+      state.menuData = menuData;
     },
     setAsyncRoutes(state, asyncRoutes) {
-      state.asyncRoutes = asyncRoutes
+      state.asyncRoutes = asyncRoutes;
     },
     setPageWidth(state, pageWidth) {
-      state.pageWidth = pageWidth
+      state.pageWidth = pageWidth;
     },
     setActivatedFirst(state, activatedFirst) {
-      state.activatedFirst = activatedFirst
+      state.activatedFirst = activatedFirst;
     },
     setFixedTabs(state, fixedTabs) {
-      state.fixedTabs = fixedTabs
+      state.fixedTabs = fixedTabs;
     },
     setSettingStatus(state, status) {
-      state.settingStatus = status
+      state.settingStatus = status;
     },
     setMobileMenuStatus(state, status) {
-      state.mobileMenuStatus = status
+      state.mobileMenuStatus = status;
     }
   }
-}
+};

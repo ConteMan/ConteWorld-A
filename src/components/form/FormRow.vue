@@ -13,7 +13,7 @@
 export default {
   name: 'FormRow',
   props: ['label']
-}
+};
 </script>
 
 <style lang="less" scoped>

@@ -13,12 +13,12 @@
 
 <script>
 
-const data = []
+const data = [];
 for (let i = 0; i < 12; i += 1) {
   data.push({
     x: `${i + 1}月`,
     y: Math.floor(Math.random() * 1000) + 200
-  })
+  });
 }
 const tooltip = [
   'x*y',
@@ -26,7 +26,7 @@ const tooltip = [
     name: x,
     value: y
   })
-]
+];
 
 const scale = [{
   dataKey: 'x',
@@ -36,7 +36,7 @@ const scale = [{
   title: '时间',
   min: 1,
   max: 22
-}]
+}];
 export default {
   name: 'Bar',
   props: ['title'],
@@ -45,9 +45,9 @@ export default {
       data,
       scale,
       tooltip
-    }
+    };
   }
-}
+};
 </script>
 
 <style scoped lang="less">

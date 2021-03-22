@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import PageFooter from '@/layouts/footer/PageFooter'
-import { mapState } from 'vuex'
+import PageFooter from '@/layouts/footer/PageFooter';
+import { mapState } from 'vuex';
 
 export default {
   name: 'CommonLayout',
@@ -17,7 +17,7 @@ export default {
   computed: {
     ...mapState('setting', ['footerLinks', 'copyright'])
   }
-}
+};
 </script>
 
 <style scoped lang="less">

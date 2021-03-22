@@ -130,8 +130,8 @@
 </template>
 
 <script>
-import fastEqual from 'fast-deep-equal'
-import moment from 'moment'
+import fastEqual from 'fast-deep-equal';
+import moment from 'moment';
 
 export default {
   name: 'SearchArea',
@@ -141,159 +141,159 @@ export default {
     return {
       conditions: {},
       searchOptions: []
-    }
+    };
   },
   computed: {
     searchCols() {
-      return this.columns.filter(item => item.searchAble)
+      return this.columns.filter(item => item.searchAble);
     },
     searchIdPrefix() {
-      return this.table.id + '-ipt-'
+      return this.table.id + '-ipt-';
     }
   },
   watch: {
     searchCols(newVal, oldVal) {
       if (newVal.length !== oldVal.length) {
-        const newConditions = this.getConditions(newVal)
-        const newSearchOptions = this.getSearchOptions(newVal)
+        const newConditions = this.getConditions(newVal);
+        const newSearchOptions = this.getSearchOptions(newVal);
         if (!fastEqual(newConditions, this.conditions)) {
-          this.conditions = newConditions
-          this.searchOptions = newSearchOptions
-          this.$emit('change', this.conditions, this.searchOptions)
+          this.conditions = newConditions;
+          this.searchOptions = newSearchOptions;
+          this.$emit('change', this.conditions, this.searchOptions);
         }
       }
     }
   },
   created() {
     this.columns.forEach(item => {
-      this.$set(item, 'search', { ...item.search, visible: false, value: undefined, format: this.getFormat(item) })
-    })
+      this.$set(item, 'search', { ...item.search, visible: false, value: undefined, format: this.getFormat(item) });
+    });
   },
   methods: {
     onCloseClick(e, col) {
-      e.preventDefault()
-      e.stopPropagation()
-      col.search.value = undefined
-      const { backup, value } = col.search
+      e.preventDefault();
+      e.stopPropagation();
+      col.search.value = undefined;
+      const { backup, value } = col.search;
       if (backup !== value) {
-        this.backupAndEmitChange(col)
+        this.backupAndEmitChange(col);
       }
     },
     onCancel(col) {
-      col.search.value = col.search.backup
-      col.search.visible = false
+      col.search.value = col.search.backup;
+      col.search.visible = false;
     },
     onConfirm(col) {
-      const { backup, value } = col.search
-      col.search.visible = false
+      const { backup, value } = col.search;
+      col.search.visible = false;
       if (backup !== value) {
-        this.backupAndEmitChange(col)
+        this.backupAndEmitChange(col);
       }
     },
     onSwitchChange(col) {
-      const { backup, value } = col.search
+      const { backup, value } = col.search;
       if (backup !== value) {
-        this.backupAndEmitChange(col)
+        this.backupAndEmitChange(col);
       }
     },
     onSelectChange(col) {
-      this.backupAndEmitChange(col)
+      this.backupAndEmitChange(col);
     },
     onCalendarOpenChange(open, col) {
-      col.search.visible = open
-      const { momentEqual, backupAndEmitChange } = this
-      const { value, backup, format } = col.search
+      col.search.visible = open;
+      const { momentEqual, backupAndEmitChange } = this;
+      const { value, backup, format } = col.search;
       if (!open && !momentEqual(value, backup, format)) {
-        backupAndEmitChange(col, moment(value))
+        backupAndEmitChange(col, moment(value));
       }
     },
     onCalendarChange(date, dateStr, col) {
-      const { momentEqual, backupAndEmitChange } = this
-      const { value, backup, format } = col.search
+      const { momentEqual, backupAndEmitChange } = this;
+      const { value, backup, format } = col.search;
       if (!col.search.visible && !momentEqual(value, backup, format)) {
-        backupAndEmitChange(col, moment(value))
+        backupAndEmitChange(col, moment(value));
       }
     },
     onDateChange(col) {
-      const { momentEqual, backupAndEmitChange } = this
-      const { value, backup, format } = col.search
+      const { momentEqual, backupAndEmitChange } = this;
+      const { value, backup, format } = col.search;
       if (!momentEqual(value, backup, format)) {
-        backupAndEmitChange(col, moment(value))
+        backupAndEmitChange(col, moment(value));
       }
     },
     getFormat(col) {
       if (col.search && col.search.format) {
-        return col.search.format
+        return col.search.format;
       }
-      const dataType = col.dataType
+      const dataType = col.dataType;
       switch (dataType) {
         case 'time':
-          return 'HH:mm:ss'
+          return 'HH:mm:ss';
         case 'date':
-          return 'YYYY-MM-DD'
+          return 'YYYY-MM-DD';
         case 'datetime':
-          return 'YYYY-MM-DD HH:mm:ss'
+          return 'YYYY-MM-DD HH:mm:ss';
         default:
-          return undefined
+          return undefined;
       }
     },
     backupAndEmitChange(col, backValue = col.search.value) {
-      const { getConditions, getSearchOptions } = this
-      col.search.backup = backValue
-      this.conditions = getConditions(this.searchCols)
-      this.searchOptions = getSearchOptions(this.searchCols)
-      this.$emit('change', this.conditions, this.searchOptions)
+      const { getConditions, getSearchOptions } = this;
+      col.search.backup = backValue;
+      this.conditions = getConditions(this.searchCols);
+      this.searchOptions = getSearchOptions(this.searchCols);
+      this.$emit('change', this.conditions, this.searchOptions);
     },
     getConditions(columns) {
-      const conditions = {}
+      const conditions = {};
       columns.filter(item => item.search.value !== undefined && item.search.value !== '' && item.search.value !== null)
         .forEach(col => {
-          const { value, format } = col.search
+          const { value, format } = col.search;
           if (this.formatConditions && format) {
             if (typeof format === 'function') {
-              conditions[col.dataIndex] = format(col.search.value)
+              conditions[col.dataIndex] = format(col.search.value);
             } else if (typeof format === 'string' && value.constructor.name === 'Moment') {
-              conditions[col.dataIndex] = value.format(format)
+              conditions[col.dataIndex] = value.format(format);
             } else {
-              conditions[col.dataIndex] = value
+              conditions[col.dataIndex] = value;
             }
           } else {
-            conditions[col.dataIndex] = value
+            conditions[col.dataIndex] = value;
           }
-        })
-      return conditions
+        });
+      return conditions;
     },
     getSearchOptions(columns) {
       return columns.filter(item => item.search.value !== undefined && item.search.value !== '' && item.search.value !== null)
-        .map(({ dataIndex, search }) => ({ field: dataIndex, value: search.value, format: search.format }))
+        .map(({ dataIndex, search }) => ({ field: dataIndex, value: search.value, format: search.format }));
     },
     onVisibleChange(col, index) {
       if (!col.search.visible) {
-        col.search.value = col.search.backup
+        col.search.value = col.search.backup;
       } else {
-        let input = document.getElementById(`${this.searchIdPrefix}${index}`)
+        let input = document.getElementById(`${this.searchIdPrefix}${index}`);
         if (input) {
           setTimeout(() => {
-            input.focus()
-          }, 0)
+            input.focus();
+          }, 0);
         } else {
           this.$nextTick(() => {
-            input = document.getElementById(`${this.searchIdPrefix}${index}`)
-            input.focus()
-          })
+            input = document.getElementById(`${this.searchIdPrefix}${index}`);
+            input.focus();
+          });
         }
       }
     },
     momentEqual(target, source, format) {
       if (target === source) {
-        return true
+        return true;
       } else if (target && source && target.format(format) === source.format(format)) {
-        return true
+        return true;
       }
-      return false
+      return false;
     }
   }
-}
+};
 </script>
 
 <style scoped lang="less">

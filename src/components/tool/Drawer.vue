@@ -50,25 +50,25 @@ export default {
       default: function() {
         return {
           top: '200px',
-        }
+        };
       }
     }
   },
   data() {
-    return {}
+    return {};
   },
   methods: {
     open() {
-      this.$emit('change', true)
+      this.$emit('change', true);
     },
     close() {
-      this.$emit('change', false)
+      this.$emit('change', false);
     },
     toggle() {
-      this.$emit('change', !this.visible)
+      this.$emit('change', !this.visible);
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

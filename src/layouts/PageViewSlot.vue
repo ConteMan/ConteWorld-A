@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import PageLayout from './PageLayout'
-import PageToggleTransition from '../components/transition/PageToggleTransition'
-import { mapState } from 'vuex'
+import PageLayout from './PageLayout';
+import PageToggleTransition from '../components/transition/PageToggleTransition';
+import { mapState } from 'vuex';
 
 export default {
   name: 'PageView',
@@ -34,21 +34,21 @@ export default {
         linkList: [],
         extraImage: '',
       }
-    }
+    };
   },
   computed: {
     ...mapState('setting', ['isMobile', 'multiPage', 'animate']),
     desc() {
-      return this.page.desc
+      return this.page.desc;
     },
     linkList() {
-      return this.page.linkList
+      return this.page.linkList;
     },
     extraImage() {
-      return this.page.extraImage
+      return this.page.extraImage;
     }
   },
-}
+};
 </script>
 
 <style lang="less" scoped>

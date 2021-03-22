@@ -1,3 +1,3 @@
-import Talk from './Talk'
+import Talk from './Talk';
 
-export default Talk
+export default Talk;

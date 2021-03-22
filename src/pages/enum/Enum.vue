@@ -159,7 +159,7 @@
 </template>
 
 <script>
-import { SysEnum as Base } from '@/services'
+import { SysEnum as Base } from '@/services';
 
 export default {
   name: 'Enum',
@@ -168,18 +168,18 @@ export default {
     const jsonCheck = (rule, str, callback) => {
       if (typeof str === 'string') {
         try {
-          const obj = JSON.parse(str)
+          const obj = JSON.parse(str);
           if (typeof obj == 'object' && obj) {
-            callback()
+            callback();
           } else {
-            callback(new Error())
+            callback(new Error());
           }
         } catch (e) {
-          callback(new Error())
+          callback(new Error());
         }
       }
-      callback(new Error())
-    }
+      callback(new Error());
+    };
     return {
       items: [],
       page: 1,
@@ -268,132 +268,132 @@ export default {
 
       roots: [],
       valueTypes: [],
-    }
+    };
   },
   mounted() {
-    this.initIndex()
-    this.getStatuses()
-    this.getValueTypes()
+    this.initIndex();
+    this.getStatuses();
+    this.getValueTypes();
   },
   methods: {
     handleTableChange(pagination) {
-      const pager = { ...this.pagination }
-      pager.current = pagination.current
-      this.pagination = pager
-      this.index({ page: pagination.current, per_page: pagination.pageSize })
+      const pager = { ...this.pagination };
+      pager.current = pagination.current;
+      this.pagination = pager;
+      this.index({ page: pagination.current, per_page: pagination.pageSize });
     },
     async index(params) {
-      const res = await Base.index(params)
-      this.items = res.data.data.items
-      const pagination = { ...this.pagination }
-      pagination.total = res.data.data.total_count
-      this.pagination = pagination
+      const res = await Base.index(params);
+      this.items = res.data.data.items;
+      const pagination = { ...this.pagination };
+      pagination.total = res.data.data.total_count;
+      this.pagination = pagination;
     },
     // 初始化列表
     initIndex() {
-      const params = { page: this.page, per_page: this.per_page }
-      this.index(params)
-      const pagination = { ...this.pagination }
-      pagination.current = this.page
-      this.pagination = pagination
+      const params = { page: this.page, per_page: this.per_page };
+      this.index(params);
+      const pagination = { ...this.pagination };
+      pagination.current = this.page;
+      this.pagination = pagination;
     },
     // 获取状态列表
     async getStatuses() {
-      const res = await Base.statuses()
+      const res = await Base.statuses();
       if (res.data.code === 0) {
-        this.statuses = res.data.data.items
+        this.statuses = res.data.data.items;
       }
     },
     // 显示添加
     async showAdd(pid = 0) {
-      await this.getRoots()
-      this.drawerVisible = true
+      await this.getRoots();
+      this.drawerVisible = true;
       this.$nextTick(() => {
-        this.form = this.formInit
-        this.current = {}
-        this.$refs.drawerForm.resetFields()
-        this.form.parent_id = pid
-      })
+        this.form = this.formInit;
+        this.current = {};
+        this.$refs.drawerForm.resetFields();
+        this.form.parent_id = pid;
+      });
     },
     // 显示编辑
     async showEdit(id) {
-      await this.getRoots()
-      const res = await Base.edit(id)
+      await this.getRoots();
+      const res = await Base.edit(id);
       if (res.data.code === 0) {
-        const detail = res.data.data.res
-        detail.extend = JSON.stringify(detail.extend)
-        this.drawerVisible = true
+        const detail = res.data.data.res;
+        detail.extend = JSON.stringify(detail.extend);
+        this.drawerVisible = true;
         this.$nextTick(() => {
-          this.current = detail
-          this.form = detail
-          this.$refs.drawerForm.resetFields()
-        })
+          this.current = detail;
+          this.form = detail;
+          this.$refs.drawerForm.resetFields();
+        });
       } else {
-        this.$message.error(res.data.msg ? res.data.msg : this.$t('result.editError'))
+        this.$message.error(res.data.msg ? res.data.msg : this.$t('result.editError'));
       }
     },
     // 提交
     async submit() {
       this.$refs.drawerForm.validate(async valid => {
         if (valid) {
-          this.submitLoading = true
-          let res = {}
+          this.submitLoading = true;
+          let res = {};
           if (this.$emptyObj(this.current)) {
-            res = await Base.create(this.form)
+            res = await Base.create(this.form);
           } else {
-            res = await Base.update(this.current.id, this.form)
+            res = await Base.update(this.current.id, this.form);
           }
-          this.submitLoading = false
+          this.submitLoading = false;
           if (res.data.code === 0) {
-            this.$message.success(this.$t('result.success'))
-            this.drawerVisible = false
-            this.initIndex()
+            this.$message.success(this.$t('result.success'));
+            this.drawerVisible = false;
+            this.initIndex();
           } else {
-            this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'))
+            this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'));
           }
         } else {
-          return false
+          return false;
         }
-      })
+      });
     },
     // 删除
     async destroy(id) {
-      const res = await Base.destroy(id)
+      const res = await Base.destroy(id);
       if (res.data.code === 0) {
-        this.$message.success(this.$t('result.success'))
-        this.initIndex()
+        this.$message.success(this.$t('result.success'));
+        this.initIndex();
       } else {
-        this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'))
+        this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'));
       }
     },
     // 重置表格
     resetForm() {
-      this.$refs.drawerForm.resetFields()
+      this.$refs.drawerForm.resetFields();
     },
     // 关闭抽屉
     drawerClose() {
-      this.drawerVisible = false
+      this.drawerVisible = false;
     },
     async getRoots() {
-      const res = await Base.roots()
+      const res = await Base.roots();
       if (res.data.code === 0) {
-        this.roots = res.data.data.items
+        this.roots = res.data.data.items;
       }
     },
     // 值类型列表
     async getValueTypes() {
-      const res = await Base.valueTypes()
+      const res = await Base.valueTypes();
       if (res.data.code === 0) {
-        this.valueTypes = res.data.data.items
+        this.valueTypes = res.data.data.items;
       }
     },
     // 名称处理
     nameFormat(record) {
-      const nameString = record.name ? ' / ' + record.name : ''
-      return record.code + nameString
+      const nameString = record.name ? ' / ' + record.name : '';
+      return record.code + nameString;
     }
   },
-}
+};
 </script>
 
 <style lang="less" scoped>

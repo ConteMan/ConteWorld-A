@@ -30,9 +30,9 @@
 </template>
 
 <script>
-import PageHeader from '@/components/page/header/PageHeader'
-import { mapState, mapMutations } from 'vuex'
-import { getI18nKey } from '@/utils/routerUtil'
+import PageHeader from '@/components/page/header/PageHeader';
+import { mapState, mapMutations } from 'vuex';
+import { getI18nKey } from '@/utils/routerUtil';
 
 export default {
   name: 'PageLayout',
@@ -57,7 +57,7 @@ export default {
     linkList: {
       type: Array,
       default: function() {
-        return []
+        return [];
       },
     },
     avatar: {
@@ -73,84 +73,84 @@ export default {
     return {
       page: {},
       pageHeaderHeight: 0,
-    }
+    };
   },
   computed: {
     ...mapState('setting', ['layout', 'multiPage', 'pageMinHeight', 'pageWidth']),
     pageTitle() {
-      const pageTitle = this.page && this.page.title
-      return pageTitle === undefined ? (this.title || this.routeName) : this.$t(pageTitle)
+      const pageTitle = this.page && this.page.title;
+      return pageTitle === undefined ? (this.title || this.routeName) : this.$t(pageTitle);
     },
     routeName() {
-      const route = this.$route
-      return this.$t(getI18nKey(route.matched[route.matched.length - 1].path))
+      const route = this.$route;
+      return this.$t(getI18nKey(route.matched[route.matched.length - 1].path));
     },
     breadcrumb() {
       if (!this.showHeader || !this.showBreadcrumb) {
-        return []
+        return [];
       }
-      const page = this.page
-      const breadcrumb = page && page.breadcrumb
+      const page = this.page;
+      const breadcrumb = page && page.breadcrumb;
       if (breadcrumb) {
-        const i18nBreadcrumb = []
+        const i18nBreadcrumb = [];
         breadcrumb.forEach(item => {
-          i18nBreadcrumb.push(this.$t(item))
-        })
-        return i18nBreadcrumb
+          i18nBreadcrumb.push(this.$t(item));
+        });
+        return i18nBreadcrumb;
       } else {
-        return this.getRouteBreadcrumb()
+        return this.getRouteBreadcrumb();
       }
     },
     marginCorrect() {
-      return this.multiPage ? 24 : 0
+      return this.multiPage ? 24 : 0;
     }
   },
   watch: {
     $route() {
-      this.page = this.$route.meta.page
+      this.page = this.$route.meta.page;
     }
   },
   updated() {
     if (!this._inactive) {
-      this.updatePageHeight()
+      this.updatePageHeight();
     }
   },
   activated() {
-    this.updatePageHeight()
+    this.updatePageHeight();
   },
   deactivated() {
-    this.updatePageHeight(0)
+    this.updatePageHeight(0);
   },
   mounted() {
-    this.updatePageHeight()
+    this.updatePageHeight();
   },
   created() {
-    this.page = this.$route.meta.page
+    this.page = this.$route.meta.page;
   },
   beforeDestroy() {
-    this.updatePageHeight(0)
+    this.updatePageHeight(0);
   },
   methods: {
     ...mapMutations('setting', ['correctPageMinHeight']),
     getRouteBreadcrumb() {
-      const routes = this.$route.matched
-      const breadcrumb = []
+      const routes = this.$route.matched;
+      const breadcrumb = [];
       routes.forEach(route => {
-        const path = route.path.length === 0 ? '/home' : route.path
-        breadcrumb.push(this.$t(getI18nKey(path)))
-      })
-      return breadcrumb
+        const path = route.path.length === 0 ? '/home' : route.path;
+        breadcrumb.push(this.$t(getI18nKey(path)));
+      });
+      return breadcrumb;
     },
     /**
      * 用于计算页面内容最小高度
      * @param newHeight
      */
     updatePageHeight(newHeight = this.$refs.pageHeader.$el.offsetHeight + this.marginCorrect) {
-      this.correctPageMinHeight(this.pageHeaderHeight - newHeight)
-      this.pageHeaderHeight = newHeight
+      this.correctPageMinHeight(this.pageHeaderHeight - newHeight);
+      this.pageHeaderHeight = newHeight;
     }
   }
-}
+};
 </script>
 
 <style lang="less">

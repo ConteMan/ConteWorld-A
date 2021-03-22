@@ -27,14 +27,14 @@ export default {
   data() {
     return {
       selectedKeys: ['middle']
-    }
+    };
   },
   methods: {
     onClick({ key }) {
-      this.$emit('input', key)
+      this.$emit('input', key);
     }
   }
-}
+};
 </script>
 
 <style scoped lang="less">

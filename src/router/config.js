@@ -1,5 +1,5 @@
-import TabsView from '@/layouts/tabs/TabsView'
-import PageView from '@/layouts/PageView'
+import TabsView from '@/layouts/tabs/TabsView';
+import PageView from '@/layouts/PageView';
 
 // 路由配置
 const options = {
@@ -60,15 +60,6 @@ const options = {
             selectPath: '/article',
           },
           component: () => import('@/pages/article/ArticleUpdate'),
-        },
-        // 说说
-        {
-          path: 'talk',
-          name: '说说',
-          meta: {
-            icon: 'message'
-          },
-          component: () => import('@/pages/talk')
         },
         // 电影
         {
@@ -144,8 +135,24 @@ const options = {
           ]
         },
       ]
+    },
+    {
+      path: '/talk',
+      name: '说说',
+      component: TabsView,
+      children: [
+        // 说说
+        {
+          path: '',
+          name: '说说',
+          meta: {
+            icon: 'message'
+          },
+          component: () => import('@/pages/talk')
+        },
+      ]
     }
   ]
-}
+};
 
-export default options
+export default options;
