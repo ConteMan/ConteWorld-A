@@ -4,116 +4,56 @@
     :show-header="false"
   >
     <template #router-view>
-      <div class="talk-container" :style="{ 'height': worldlineContainerHeight }">
-
-        <div class="bar">
-          <div class="type">
-            <a-select
-              :class="['talk-type', 'no-shadow', 'c-border-l']"
-              :default-value="type"
-              style="width: 180px"
-              :dropdown-match-select-width="false"
-              :show-arrow="true"
-              :get-popup-container="trigger => trigger.parentNode"
-              @change="changeType"
-            >
-              <template v-for="item in types">
-                <a-select-option :key="item.key" :value="item.key">{{ item.value }}</a-select-option>
-              </template>
-            </a-select>
-            <div
-              class="c-border-l item"
-              @click="showTalk"
-            >
-              Talk
-            </div>
-            <div
-              class="c-border-l c-border-r item"
-              :class="{ 'active': showType === 'action' }"
-              @click="changeShowType()"
-            >
-              More
-            </div>
-          </div>
-        </div>
-
-        <div class="list-container" :style="{ 'height': listContainerHeight }">
-          <div
-            v-show="showType === 'list'"
-            v-infinite-scroll="loadMore"
-            infinite-scroll-delay="1000"
-            infinite-scroll-disabled="busy"
-            infinite-scroll-distance="50"
-            infinite-scroll-immediate-check="true"
-            :style="{ 'height': listContainerHeight }"
-            class="list-content"
-          >
-            <template v-for="(item, i) in items">
-              <platform-type-item :key="i" :item="item" />
-            </template>
-          </div>
-          <div
-            v-show="showType === 'action'"
-            class="action-content"
-          >
-            <div class="action-item">
-              <div class="left">
-                同步数据
-              </div>
-              <div class="right">
-                <a-button
-                  size="small"
-                  :loading="syncLoading"
-                  @click="sync()"
-                >
-                  确定
-                </a-button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <a-drawer
-          title="记录此刻"
-          :closable="false"
-          :width="'100%'"
-          :visible="formVisible"
-          :body-style="{ maxWidth: '100%' }"
-          @close="() => formVisible = false"
+      <div class="talk-container" :style="{ 'height': containerHeight + 'px' }">
+        <div
+          id="talk-editor"
+          class="talk-editor editor"
         >
-          <a-form-model
-            :form="form"
-            layout="vertical"
-            hide-required-mark
-          >
-            <a-form-model-item>
-              <div class="editor">
-                <editor-content class="editor__content" :editor="editor" />
-              </div>
-            </a-form-model-item>
-          </a-form-model>
           <div
-            :style="{
-              position: 'absolute',
-              right: 0,
-              bottom: 0,
-              width: '100%',
-              borderTop: '1px solid #e9e9e9',
-              padding: '10px 24px',
-              background: '#fff',
-              textAlign: 'right',
-              zIndex: 1,
-            }"
+            id="editor-container"
+            @click="focus"
+            @keyup.ctrl.enter.capture.exact="talkSubmit"
           >
-            <a-button :style="{ marginRight: '8px' }" @click="() => formVisible = false">
-              取消
-            </a-button>
-            <a-button type="primary" @click="create">
-              发布
-            </a-button>
+            <editor-content
+              class="editor__content"
+              :editor="editor"
+            />
           </div>
-        </a-drawer>
+          <editor-menu-bar v-slot="{ commands, isActive }" :editor="editor">
+            <div class="menubar">
+              <a-button
+                type="link"
+                class="menubar__button"
+                :class="{ 'is-active': isActive.bold() }"
+                @click="commands.bold"
+              >
+                <a-icon type="bold" />
+              </a-button>
+              <a-button
+                type="primary"
+                size="small"
+                class="talk-submit"
+                @click="talkSubmit"
+              >
+                发布
+              </a-button>
+            </div>
+          </editor-menu-bar>
+        </div>
 
+        <div
+          v-infinite-scroll="loadMore"
+          infinite-scroll-delay="1000"
+          infinite-scroll-disabled="busy"
+          infinite-scroll-distance="50"
+          infinite-scroll-immediate-check="true"
+          class="list-content"
+          :style="{ 'height': listHeight + 'px' }"
+        >
+          <template v-for="(item, i) in items">
+            <platform-type-item :key="i" :item="item" />
+          </template>
+        </div>
       </div>
     </template>
   </page-view-slot>
@@ -123,12 +63,12 @@
 import _ from 'lodash';
 import dayjs from 'dayjs';
 import infiniteScroll from 'vue-infinite-scroll';
-import { Editor, EditorContent } from 'tiptap';
+import elementResizeDetectorMaker from 'element-resize-detector';
+import { Editor, EditorContent, EditorMenuBar } from 'tiptap';
 import {
   Blockquote,
   BulletList,
   CodeBlock,
-  HardBreak,
   Heading,
   ListItem,
   OrderedList,
@@ -143,6 +83,7 @@ import {
   History,
   Placeholder,
 } from 'tiptap-extensions';
+import HardBreakPlus from '@/utils/tiptap/HardBreakPlus.js';
 import PageViewSlot from '@/layouts/PageViewSlot';
 import PlatformTypeItem from '@/components/item/PlatformTypeItem.vue';
 import { Talk as Base } from '@/services';
@@ -156,6 +97,7 @@ export default {
   components: {
     PageViewSlot,
     EditorContent,
+    EditorMenuBar,
     PlatformTypeItem,
   },
   data() {
@@ -168,28 +110,15 @@ export default {
       total: 0,
 
       dayjs,
-
-      types: [
-        {
-          key: '',
-          value: '全部',
-        }
-      ],
       pageHeight: window.innerHeight,
-      showType: 'list',
+      talkEditorHeight: 100,
 
-      syncLoading: false,
-
-      formVisible: false,
-      form: {
-        content: '',
-      },
       editor: new Editor({
         extensions: [
           new Blockquote(),
           new BulletList(),
           new CodeBlock(),
-          new HardBreak(),
+          new HardBreakPlus(),
           new Heading({ levels: [1, 2, 3] }),
           new ListItem(),
           new OrderedList(),
@@ -205,36 +134,47 @@ export default {
           new Placeholder({
             emptyEditorClass: 'is-editor-empty',
             emptyNodeClass: 'is-empty',
-            emptyNodeText: 'Write something …',
+            emptyNodeText: '现在的想法是 …',
             showOnlyWhenEditable: true,
             showOnlyCurrent: true,
           }),
         ],
         content: ``,
         autoFocus: true,
-      })
+      }),
+
+      keyCode1: '',
+      keyCode2: '',
     };
   },
   computed: {
-    worldlineContainerHeight() {
-      return (this.pageHeight - 64) + 'px';
+    containerHeight() {
+      return this.pageHeight - 64;
     },
-    listContainerHeight() {
-      return (this.pageHeight - 64 - 50) + 'px';
+    listHeight() {
+      return this.pageHeight - this.talkEditorHeight - 64;
     },
-    talkTextareaHeight() {
-      return (this.pageHeight - 55 - 53 - 48) + 'px';
-    }
   },
   created() {
     this.index();
-    this.getTypes();
     const that = this;
     window.onresize = () => {
       return (() => {
         that.pageHeight = window.innerHeight;
       })();
     };
+    this.editor.focus();
+  },
+  mounted() {
+    const _this = this;
+    const ERD = elementResizeDetectorMaker();
+    ERD.listenTo(document.getElementById('talk-editor'), element => {
+      const height = element.offsetHeight;
+      _this.talkEditorHeight = height;
+    });
+    const editorContainerEl = document.getElementById('editor-container');
+    editorContainerEl.addEventListener('keydown', this.keydownDeal);
+    editorContainerEl.addEventListener('keyup', this.keyupDeal);
   },
   beforeDestroy() {
     this.editor.destroy();
@@ -263,57 +203,46 @@ export default {
       this.offset += this.limit;
       this.index();
     },
-    async getTypes() {
-      const res = await Base.types();
-      if (res.data.code === 0) {
-        this.types = _.concat(this.types, res.data.data.items);
+    async talkSubmit() {
+      if (this.createLoading) {
+        return false;
       }
-    },
-    changeType(type) {
-      this.changeShowType('list');
-      if (type === this.type) {
-        return true;
-      }
-      this.type = type;
-      this.init();
-      this.index();
-    },
-    changeShowType(type = 'action') {
-      this.showType = type;
-    },
-    async sync() {
-      this.syncLoading = true;
-      const res = await Base.sync();
-      this.syncLoading = false;
-      if (res.data.code === 0) {
-        this.$message.success('搞定！（' + res.data.data.totalCount + '）');
-      } else {
-        this.$message.error('有点问题！');
-      }
-    },
-    showTalk() {
-      this.editor.focus();
-      this.formVisible = true;
-    },
-    async create() {
-      this.form.content = this.editor.getHTML();
-      this.form.content_origin = this.editor.getJSON();
-      if (!this.form.content) {
+      const content = this.editor.getHTML();
+      const content_origin = this.editor.getJSON();
+      if (!content || content === '<p></p>') {
         this.$message.error('写点什么吧');
         return false;
       }
       this.createLoading = true;
-      const res = await Base.create(this.form);
+      const res = await Base.create({ content, content_origin });
       this.createLoading = false;
       if (res.data.code === 0) {
         this.editor.setContent('');
-        this.changeShowType('list');
         this.init();
         this.index();
         this.$message.success('搞定！');
-        this.formVisible = false;
       } else {
         this.$message.error('有点问题！');
+      }
+    },
+    focus() {
+      this.editor.focus();
+    },
+    keydownDeal(e) {
+      if (e.key === 'Meta') {
+        this.keyCode1 = 'Meta';
+      }
+      if (e.key === 'Enter') {
+        this.keyCode2 = 'Enter';
+      }
+      if (this.keyCode1 === 'Meta' && this.keyCode2 === 'Enter') {
+        this.talkSubmit();
+      }
+    },
+    keyupDeal(e) {
+      if (['Meta', 'Enter'].includes(e.key)) {
+        this.keyCode1 = '';
+        this.keyCode2 = '';
       }
     }
   }

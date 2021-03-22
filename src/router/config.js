@@ -61,6 +61,15 @@ const options = {
           },
           component: () => import('@/pages/article/ArticleUpdate'),
         },
+        // 说说
+        {
+          path: '/talk',
+          name: '说说',
+          meta: {
+            icon: 'message'
+          },
+          component: () => import('@/pages/talk')
+        },
         // 电影
         {
           path: 'movie',
@@ -136,22 +145,6 @@ const options = {
         },
       ]
     },
-    {
-      path: '/talk',
-      name: '说说',
-      component: TabsView,
-      children: [
-        // 说说
-        {
-          path: '',
-          name: '说说',
-          meta: {
-            icon: 'message'
-          },
-          component: () => import('@/pages/talk')
-        },
-      ]
-    }
   ]
 };
 
