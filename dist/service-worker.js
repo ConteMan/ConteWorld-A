@@ -1,4 +1,4 @@
-importScripts("/precache-manifest.6536f3c2b9531e3045a17287203684f6.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("/precache-manifest.b3ff81e2187ac1237c1abae4d12d0c5a.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 /* eslint-disable no-undef */
 
@@ -11,7 +11,7 @@ workbox.routing.registerRoute(
     // 使用自定义缓存名称
     cacheName: 'css-cache'
   })
-)
+);
 
 // 缓存web的js资源
 workbox.routing.registerRoute(
@@ -22,7 +22,7 @@ workbox.routing.registerRoute(
     // 使用自定义缓存名称
     cacheName: 'js-cache'
   })
-)
+);
 
 // 缓存web的图片资源
 workbox.routing.registerRoute(
@@ -36,7 +36,7 @@ workbox.routing.registerRoute(
       })
     ]
   })
-)
+);
 
 // 我们很多资源在其他域名上，比如cdn、oss等，这里做单独处理，需要支持跨域
 // workbox.routing.registerRoute(
