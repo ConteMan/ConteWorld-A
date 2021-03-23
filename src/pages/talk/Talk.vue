@@ -30,6 +30,21 @@
                 <a-icon type="bold" />
               </a-button>
               <a-button
+                type="link"
+                class="menubar__button"
+                :class="{ 'is-active': isActive.italic() }"
+                @click="commands.italic"
+              >
+                <a-icon type="italic" />
+              </a-button>
+              <a-switch
+                v-model="isPublic"
+                class="public-switch"
+                size="small"
+                checked-children="公开"
+                un-checked-children="私密"
+              />
+              <a-button
                 type="primary"
                 size="small"
                 class="talk-submit"
@@ -51,7 +66,7 @@
           :style="{ 'height': listHeight + 'px' }"
         >
           <template v-for="(item, i) in items">
-            <platform-type-item :key="i" :item="item" />
+            <platform-type-item :key="i" :item="item" @remove-item="removeItem" />
           </template>
         </div>
       </div>
@@ -145,6 +160,8 @@ export default {
 
       keyCode1: '',
       keyCode2: '',
+
+      isPublic: false,
     };
   },
   computed: {
@@ -214,7 +231,7 @@ export default {
         return false;
       }
       this.createLoading = true;
-      const res = await Base.create({ content, content_origin });
+      const res = await Base.create({ content, content_origin, is_public: this.isPublic });
       this.createLoading = false;
       if (res.data.code === 0) {
         this.editor.setContent('');
@@ -244,6 +261,13 @@ export default {
         this.keyCode1 = '';
         this.keyCode2 = '';
       }
+    },
+    removeItem(id) {
+      console.log({ id });
+      _.remove(this.items, item => {
+        return item.id === id;
+      });
+      this.items = [...this.items];
     }
   }
 };
