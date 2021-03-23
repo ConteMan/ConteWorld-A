@@ -18,7 +18,17 @@
       min-height: 50px;
     }
     .menubar {
-      margin: 0 -18px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin: 0 -5px;
+      .menubar__button {
+        padding: 0 5px;
+      }
+      .public-switch {
+        position: absolute;
+        right: 80px;
+      }
       .talk-submit {
         position: absolute;
         right: 20px;

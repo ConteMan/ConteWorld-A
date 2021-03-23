@@ -33,7 +33,21 @@ const Talk = {
    */
   create(data) {
     return request(url, METHOD.POST, data);
-  }
+  },
+
+  /**
+   * 更新
+   */
+  update(data) {
+    return request(url + `/${data.id}`, METHOD.PUT, data);
+  },
+
+  /**
+   * 删除
+   */
+  delete(id) {
+    return request(url + `/${id}`, METHOD.DELETE);
+  },
 };
 
 export default Talk;
