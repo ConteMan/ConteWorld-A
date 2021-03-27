@@ -109,6 +109,10 @@ export default {
           scopedSlots: { customRender: 'platform' },
         },
         {
+          title: 'SLUG',
+          dataIndex: 'slug',
+        },
+        {
           title: this.$t('form.title'),
           dataIndex: 'title',
         },
@@ -179,7 +183,7 @@ export default {
     },
     onSizeChange(current, size) {
       this.page = 1;
-      this.pageSize = size;
+      this.per_page = size;
       this.index();
     },
     onRefresh(conditions) {
@@ -192,7 +196,7 @@ export default {
     },
     onPageChange(page, pageSize) {
       this.page = page;
-      this.pageSize = pageSize;
+      this.per_page = pageSize;
       this.index();
     },
     turnUpdate(id) {
@@ -225,7 +229,7 @@ export default {
       const res = await Article.tags();
       if (res.data.code === 0) {
         this.tags = res.data.data.items;
-        this.columns[3].search.selectOptions = this.tagToObj(res.data.data.items);
+        this.columns[4].search.selectOptions = this.tagToObj(res.data.data.items);
       }
     },
     tagToObj(tags) {

@@ -10,11 +10,6 @@
           <a-form-model-item label="标题" prop="title">
             <a-input v-model="form.title" />
           </a-form-model-item>
-          <a-form-model-item label="标签" prop="tags">
-            <a-select mode="tags" :default-value="form.tags" @change="tagChange">
-              <a-select-option v-for="item in tags" :key="item" :value="item">{{ item }}</a-select-option>
-            </a-select>
-          </a-form-model-item>
           <a-form-model-item label="内容">
             <mavon-editor v-model="form.content" class="mk-container" v-bind="markdownOption" style="height: 100%" />
           </a-form-model-item>
@@ -26,6 +21,14 @@
               @change="infoAtChange"
               @ok="infoAtChange"
             />
+          </a-form-model-item>
+          <a-form-model-item label="Slug" prop="slug">
+            <a-input v-model="form.slug" />
+          </a-form-model-item>
+          <a-form-model-item label="标签" prop="tags">
+            <a-select mode="tags" :default-value="form.tags" @change="tagChange">
+              <a-select-option v-for="item in tags" :key="item" :value="item">{{ item }}</a-select-option>
+            </a-select>
           </a-form-model-item>
           <div class="item-max-width">
             <a-form-model-item label="状态">
@@ -71,6 +74,7 @@ export default {
         boxShadow: true,
       },
       form: {
+        slug: undefined,
         title: '',
         tags: undefined,
         content: '',
@@ -79,7 +83,10 @@ export default {
       },
       rules: {
         title: [
-          { required: true, message: '请输入名称', trigger: 'blur' },
+          { required: true, message: '标题是啥', trigger: 'blur' },
+        ],
+        content: [
+          { required: true, message: '写点什么', trigger: 'blur' },
         ],
       },
       createLoading: false,
