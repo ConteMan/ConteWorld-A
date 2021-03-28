@@ -27,6 +27,13 @@
           >
             <a-icon type="italic" />
           </a-button>
+          <a-button
+            type="link"
+            class="menubar__button"
+            @click="showImagePrompt(commands.image)"
+          >
+            <a-icon type="picture" />
+          </a-button>
           <a-switch
             v-model="isPublic"
             class="public-switch"
@@ -76,6 +83,7 @@ import {
   Underline,
   History,
   Placeholder,
+  Image,
 } from 'tiptap-extensions';
 import HardBreakPlus from '@/utils/tiptap/HardBreakPlus.js';
 import { Talk as Base } from '@/services';
@@ -125,6 +133,7 @@ export default {
             showOnlyWhenEditable: true,
             showOnlyCurrent: true,
           }),
+          new Image(),
         ],
         content: `${this.item.content}`,
         autoFocus: true,
@@ -166,6 +175,12 @@ export default {
         this.$message.success('搞定！');
       } else {
         this.$message.error('有点问题！');
+      }
+    },
+    showImagePrompt(command) {
+      const src = prompt('Enter the url of your image here');
+      if (src !== null) {
+        command({ src });
       }
     },
   },

@@ -37,6 +37,13 @@
               >
                 <a-icon type="italic" />
               </a-button>
+              <a-button
+                type="link"
+                class="menubar__button"
+                @click="showImagePrompt(commands.image)"
+              >
+                <a-icon type="picture" />
+              </a-button>
               <a-switch
                 v-model="isPublic"
                 class="public-switch"
@@ -97,6 +104,7 @@ import {
   Underline,
   History,
   Placeholder,
+  Image,
 } from 'tiptap-extensions';
 import HardBreakPlus from '@/utils/tiptap/HardBreakPlus.js';
 import PageViewSlot from '@/layouts/PageViewSlot';
@@ -153,6 +161,7 @@ export default {
             showOnlyWhenEditable: true,
             showOnlyCurrent: true,
           }),
+          new Image(),
         ],
         content: ``,
         autoFocus: true,
@@ -268,7 +277,13 @@ export default {
         return item.id === id;
       });
       this.items = [...this.items];
-    }
+    },
+    showImagePrompt(command) {
+      const src = prompt('Enter the url of your image here');
+      if (src !== null) {
+        command({ src });
+      }
+    },
   }
 };
 </script>
