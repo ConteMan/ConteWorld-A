@@ -1,12 +1,12 @@
-const path = require('path')
-const webpack = require('webpack')
-const ThemeColorReplacer = require('webpack-theme-color-replacer')
-const { getThemeColors, modifyVars } = require('./src/utils/themeUtil')
-const { resolveCss } = require('./src/utils/theme-color-replacer-extend')
-const CompressionWebpackPlugin = require('compression-webpack-plugin')
+const path = require('path');
+const webpack = require('webpack');
+const ThemeColorReplacer = require('webpack-theme-color-replacer');
+const { getThemeColors, modifyVars } = require('./src/utils/themeUtil');
+const { resolveCss } = require('./src/utils/theme-color-replacer-extend');
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
 
-const productionGzipExtensions = ['js', 'css']
-const isProd = process.env.NODE_ENV === 'production'
+const productionGzipExtensions = ['js', 'css'];
+const isProd = process.env.NODE_ENV === 'production';
 
 const assetsCDN = {
   // webpack build externals
@@ -31,7 +31,7 @@ const assetsCDN = {
     '//cdn.jsdelivr.net/npm/@antv/data-set@0.11.4/build/data-set.min.js',
     '//cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js'
   ]
-}
+};
 
 module.exports = {
   devServer: {
@@ -52,10 +52,10 @@ module.exports = {
     }
   },
   configureWebpack: config => {
-    config.entry.app = ['babel-polyfill', 'whatwg-fetch', './src/main.js']
+    config.entry.app = ['babel-polyfill', 'whatwg-fetch', './src/main.js'];
     config.performance = {
       hints: false
-    }
+    };
     config.plugins.push(
       new ThemeColorReplacer({
         fileName: 'css/theme-colors-[contenthash:8].css',
@@ -63,9 +63,9 @@ module.exports = {
         injectCss: true,
         resolveCss
       })
-    )
+    );
     // Ignore all locale files of moment.js
-    config.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/))
+    config.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
     // 生产环境下将资源压缩成gzip格式
     if (isProd) {
       // add `CompressionWebpack` plugin to webpack plugins
@@ -74,11 +74,11 @@ module.exports = {
         test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
         threshold: 10240,
         minRatio: 0.8
-      }))
+      }));
     }
     // if prod, add externals
     if (isProd) {
-      config.externals = assetsCDN.externals
+      config.externals = assetsCDN.externals;
     }
   },
   chainWebpack: config => {
@@ -86,17 +86,17 @@ module.exports = {
     if (isProd) {
       config.plugin('optimize-css')
         .tap(args => {
-          args[0].cssnanoOptions.preset[1].colormin = false
-          return args
-        })
+          args[0].cssnanoOptions.preset[1].colormin = false;
+          return args;
+        });
     }
     // 生产环境下使用CDN
     if (isProd) {
       config.plugin('html')
         .tap(args => {
-          args[0].cdn = assetsCDN
-          return args
-        })
+          args[0].cdn = assetsCDN;
+          return args;
+        });
     }
   },
   css: {
@@ -115,7 +115,7 @@ module.exports = {
   productionSourceMap: false,
   pwa: {
     name: 'ConteWorld',
-    themeColor: '#4DBA87',
+    themeColor: '#f5222d',
     msTileColor: '#000000',
     appleMobileWebAppCapable: 'yes',
     appleMobileWebAppStatusBarStyle: 'black',
@@ -125,7 +125,6 @@ module.exports = {
     workboxOptions: {
       // swSrc is required in InjectManifest mode.
       swSrc: './src/service-worker.js',
-      // ...other Workbox options...
     }
   }
-}
+};
