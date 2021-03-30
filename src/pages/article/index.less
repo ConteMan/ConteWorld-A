@@ -5,3 +5,28 @@
   padding-right: 0 !important;
   padding-top: 0 !important;
 }
+
+.action-bar {
+  border-bottom: 1px solid @conte-border-grey;
+}
+
+.list-item {
+  padding: 20px 0;
+  @{deep} .ant-list-item-extra {
+    display: none;
+    margin: auto;
+  }
+  &:hover {
+    @{deep} .ant-list-item-extra {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+    }
+  }
+  .info-at {
+    color: @text-color-secondary;
+    font-size: 12px;
+    font-style: italic;
+    margin-top: 5px;
+  }
+}

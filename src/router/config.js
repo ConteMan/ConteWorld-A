@@ -41,7 +41,7 @@ const options = {
           meta: {
             icon: 'book'
           },
-          component: () => import('@/pages/article'),
+          component: () => import('@/pages/article/ArticleList.vue'),
         },
         {
           path: '/article/create',
