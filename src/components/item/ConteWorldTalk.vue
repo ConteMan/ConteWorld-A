@@ -34,30 +34,34 @@
           >
             <a-icon type="picture" />
           </a-button>
-          <a-switch
-            v-model="isPublic"
-            class="public-switch"
-            size="small"
-            checked-children="公开"
-            un-checked-children="私密"
-          />
-          <a-button
-            size="small"
-            class="talk-cancel"
-            :loading="updateLoading"
-            @click.exact="editableChange(1)"
-          >
-            取消
-          </a-button>
-          <a-button
-            type="primary"
-            size="small"
-            class="talk-submit"
-            :loading="updateLoading"
-            @click.exact="talkSubmit"
-          >
-            发布
-          </a-button>
+          <div class="action">
+            <a-space :size="14">
+              <a-switch
+                v-model="isPublic"
+                class="public-switch"
+                size="small"
+                checked-children="公开"
+                un-checked-children="私密"
+              />
+              <a-button
+                size="small"
+                class="talk-cancel"
+                :disabled="updateLoading"
+                @click.exact="editableChange(1)"
+              >
+                取消
+              </a-button>
+              <a-button
+                type="primary"
+                size="small"
+                class="talk-submit"
+                :loading="updateLoading"
+                @click.exact="talkSubmit"
+              >
+                发布
+              </a-button>
+            </a-space>
+          </div>
         </div>
       </editor-menu-bar>
     </div>
@@ -173,6 +177,7 @@ export default {
       this.updateLoading = false;
       if (res.data.code === 0) {
         this.$message.success('搞定！');
+        this.editableChange(1);
       } else {
         this.$message.error('有点问题！');
       }
@@ -203,17 +208,9 @@ export default {
       .menubar__button {
         padding: 0 5px;
       }
-      .public-switch {
+      .action {
         position: absolute;
-        right: 150px;
-      }
-      .talk-submit {
-        position: absolute;
-        right: 20px;
-      }
-      .talk-cancel {
-        position: absolute;
-        right: 80px;
+        right: 0
       }
     }
   }
