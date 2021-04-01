@@ -194,6 +194,7 @@ export default {
 
   .admin-layout-main {
     background: white;
+    min-height: 100vh;
     .admin-header {
       top: 0;
       right: 0;
@@ -209,8 +210,7 @@ export default {
   .admin-layout-content {
     padding: 24px 24px 0;
     overflow-x: hidden;
-    // min-height: calc(100vh - 93px);
-    // min-height: calc(100vh - 64px); // 无底部的样式
+    min-height: calc(100% - 64px); // 无底部的样式
   }
 
   .setting {
