@@ -161,6 +161,7 @@ export default {
   methods: {
     editableChange(status) {
       this.$emit('update:status', status);
+      this.$emit('update:isPublic', this.isPublic);
     },
     async talkSubmit() {
       if (this.updateLoading) {
