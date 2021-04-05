@@ -28,7 +28,7 @@
     </a-dropdown>
 
     <template v-if="['conteworld_talk'].includes(item.platform_type)">
-      <conte-world-talk v-bind="{ item }" :status.sync="status" />
+      <conte-world-talk v-bind="{ item }" :status.sync="status" :is-public.sync="item.is_public" />
     </template>
     <div v-if="['yuque_note'].includes(item.platform_type)" v-html="yuqueNoteFormat(item.content)" />
     <div v-if="['jike_activity'].includes(item.platform_type)">
