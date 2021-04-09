@@ -72,6 +72,12 @@
           class="list-content"
           :style="{ 'height': listHeight + 'px' }"
         >
+          <div class="contribution">
+            <contribution
+              :data="contribution"
+              :year="2021"
+            />
+          </div>
           <template v-for="(item, i) in items">
             <platform-type-item :key="i" :item="item" @remove-item="removeItem" />
           </template>
@@ -110,6 +116,7 @@ import HardBreakPlus from '@/utils/tiptap/HardBreakPlus.js';
 import PageViewSlot from '@/layouts/PageViewSlot';
 import PlatformTypeItem from '@/components/item/PlatformTypeItem.vue';
 import { Talk as Base } from '@/services';
+import Contribution from '@/components/contribution/Contribution.vue';
 
 export default {
   name: 'Talk',
@@ -122,6 +129,7 @@ export default {
     EditorContent,
     EditorMenuBar,
     PlatformTypeItem,
+    Contribution,
   },
   data() {
     return {
@@ -171,6 +179,8 @@ export default {
       keyCode2: '',
 
       isPublic: false,
+
+      contribution: {},
     };
   },
   computed: {
@@ -190,6 +200,7 @@ export default {
       })();
     };
     this.editor.focus();
+    this.getContribution();
   },
   mounted() {
     const _this = this;
@@ -284,6 +295,12 @@ export default {
         command({ src });
       }
     },
+    async getContribution() {
+      const res = await Base.contribution();
+      if (res.data.code === 0) {
+        this.contribution = res.data.data;
+      }
+    }
   }
 };
 </script>
