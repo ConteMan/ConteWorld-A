@@ -48,6 +48,15 @@ const Talk = {
   delete(id) {
     return request(url + `/${id}`, METHOD.DELETE);
   },
+
+  /**
+   * 数据统计
+   *
+   * @param {String} type - 类型
+   */
+  contribution(type = 'day') {
+    return request(url + '/contribution', METHOD.GET);
+  }
 };
 
 export default Talk;
