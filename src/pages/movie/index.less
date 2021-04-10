@@ -50,6 +50,20 @@
         &:hover {
           background-color: @conte-border-grey;
         }
+        .title {
+          padding: 12px 0;
+        }
+        .rate,.comment {
+          padding: 0 0 10px 0;
+          @{deep} .ant-rate-star-zero {
+            display: none;
+          }
+        }
+        .comment {
+          color: @gray-7;
+          font-size: 12px;
+          font-style: italic;
+        }
         .info {
           text-align: left;
           color: @conte-font-grey;

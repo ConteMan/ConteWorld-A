@@ -73,10 +73,11 @@ const respCommon = {
   onRejected(error, options) {
     const { message } = options;
     if (error.response.status === 422) {
-      return Promise.resolve(error.response);
+      return error;
+      // return Promise.resolve(error.response);
     } else {
       message.error(error.message);
-      return Promise.reject(error);
+      return error;
     }
   }
 };

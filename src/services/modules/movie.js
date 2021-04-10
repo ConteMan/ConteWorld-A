@@ -24,8 +24,8 @@ const Movie = {
   /**
    * 同步数据
    */
-  sync() {
-    return request(url + '/sync', METHOD.GET);
+  sync(force) {
+    return request(url + '/sync', METHOD.POST, { force });
   }
 };
 
