@@ -45,9 +45,16 @@
             <template v-if="items.length">
               <template v-for="item in items">
                 <div :key="item.id" class="list-item">
-                  <div v-if="item.platform_type === 'yuque_note'" v-html="item.content" />
                   <div v-if="[ 'douban_movie', 'douban_movie_wish', 'douban_movie_do'].includes(item.platform_type)">
-                    {{ item.content }}
+                    <div class="title">
+                      <a :href="item.content_origin.link" target="_blank">{{ item.content }}</a>
+                    </div>
+                    <div class="rate">
+                      <a-rate v-if="item.content_origin.rate" v-model="item.content_origin.rate" disabled />
+                    </div>
+                    <div v-if="item.content_origin.comment" class="comment">
+                      {{ item.content_origin.comment }}
+                    </div>
                   </div>
                   <div class="info">
                     <span class="time">
@@ -64,6 +71,7 @@
               </template>
             </template>
           </div>
+
           <div
             v-show="showType === 'action'"
             class="action-content"
@@ -73,13 +81,22 @@
                 同步数据
               </div>
               <div class="right">
-                <a-button
-                  size="small"
-                  :loading="syncLoading"
-                  @click="sync()"
-                >
-                  确定
-                </a-button>
+                <a-space>
+                  <a-button
+                    size="small"
+                    :loading="syncLoading"
+                    @click="sync()"
+                  >
+                    同步
+                  </a-button>
+                  <a-button
+                    size="small"
+                    :loading="syncLoading"
+                    @click="sync(true)"
+                  >
+                    强制同步
+                  </a-button>
+                </a-space>
               </div>
             </div>
           </div>
@@ -184,9 +201,9 @@ export default {
     changeShowType(type = 'action') {
       this.showType = type;
     },
-    async sync() {
+    async sync(force = false) {
       this.syncLoading = true;
-      const res = await Movie.sync();
+      const res = await Movie.sync(force);
       this.syncLoading = false;
       if (res.data.code === 0) {
         this.$message.success('搞定！（' + res.data.data.totalCount + '）');
