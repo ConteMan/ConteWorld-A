@@ -6,7 +6,8 @@ const Article = {
     return request(BASE_URL + '/articles', METHOD.GET, {
       page: params.page,
       per_page: params.per_page,
-      tag: params.tags,
+      tag: params.tag,
+      status: params.status,
     });
   },
   create(data) {

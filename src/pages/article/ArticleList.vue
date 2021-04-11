@@ -11,6 +11,42 @@
       >
         写点什么 ...
       </a-button>
+      <div v-if="tags.length" class="tag">
+        <a-checkable-tag
+          class="pointer"
+          :checked="!checkedTag"
+          @change="tagChange('', $event)"
+        >
+          全部
+        </a-checkable-tag>
+        <a-checkable-tag
+          v-for="tag in tags"
+          :key="tag"
+          class="pointer"
+          :checked="checkedTag === tag"
+          @change="tagChange(tag, $event)"
+        >
+          {{ tag }}
+        </a-checkable-tag>
+      </div>
+      <div class="status">
+        <a-checkable-tag
+          class="pointer"
+          :checked="typeof checkedStatus === 'undefined'"
+          @change="indexStatusChange(undefined, $event)"
+        >
+          全部
+        </a-checkable-tag>
+        <a-checkable-tag
+          v-for="status in statuses"
+          :key="status.key"
+          class="pointer"
+          :checked="checkedStatus === status.key"
+          @change="indexStatusChange(status.key, $event)"
+        >
+          {{ status.value }}
+        </a-checkable-tag>
+      </div>
     </a-card>
 
     <a-card :bordered="false">
@@ -38,6 +74,19 @@
           </div>
           <div class="info-at">
             {{ item.info_at }}
+          </div>
+          <div v-if="item.tags.length" class="tag">
+            <a-space>
+              <a-tag
+                v-for="tag in item.tags"
+                :key="tag"
+                class="pointer"
+                color="red"
+                @click="tagChange(tag, true)"
+              >
+                {{ tag }}
+              </a-tag>
+            </a-space>
           </div>
         </a-list-item>
       </a-list>
@@ -112,18 +161,21 @@ export default {
       tags: [],
       currentId: 0,
       current: {},
+
+      checkedTag: '',
+      checkedStatus: 2,
     };
   },
   async created() {
-    // await this.getTags();
+    this.getTags();
     await this.getStatuses();
     await this.index();
   },
   methods: {
     async index() {
       this.loading = true;
-      const { page, per_page, conditions } = this;
-      const res = await Article.index({ page, per_page, ...conditions });
+      const { page, per_page, checkedTag, checkedStatus } = this;
+      const res = await Article.index({ page, per_page, tag: checkedTag, status: checkedStatus });
       const { items, page: re_page, per_page: re_per_page, total_count: re_total } = res.data.data;
       this.items = items;
       this.page = re_page;
@@ -184,7 +236,6 @@ export default {
       const res = await Article.tags();
       if (res.data.code === 0) {
         this.tags = res.data.data.items;
-        this.columns[4].search.selectOptions = this.tagToObj(res.data.data.items);
       }
     },
     tagToObj(tags) {
@@ -216,6 +267,22 @@ export default {
       this.statusModalVisible = false;
       this.currentId = 0;
       this.current = {};
+    },
+    tagChange(tag, checked) {
+      if (checked) {
+        this.checkedTag = tag;
+      } else {
+        this.checkedTag = '';
+      }
+      this.index();
+    },
+    indexStatusChange(status, checked) {
+      if (checked) {
+        this.checkedStatus = status;
+      } else {
+        this.checkedStatus = undefined;
+      }
+      this.index();
     }
   }
 };
