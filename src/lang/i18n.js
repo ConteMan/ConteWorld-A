@@ -19,6 +19,10 @@ module.exports = {
         error: '操作失败！',
         editError: '获取信息失败！',
       },
+      articleName: '文章',
+      talkName: '说说',
+      movieName: '影视',
+      oneName: '一个',
     },
     HK: {
       cancel: '取消',
@@ -39,6 +43,10 @@ module.exports = {
         error: '操作失败！',
         editError: '获取信息失败！',
       },
+      articleName: '文章',
+      talkName: '说说',
+      movieName: '影视',
+      oneName: '一个',
     },
     US: {
       cancel: 'Cancel',
@@ -59,6 +67,10 @@ module.exports = {
         error: 'Failed!',
         editError: 'Get Edit Info Failed!',
       },
+      articleName: 'Article',
+      talkName: 'Talk',
+      movieName: 'Movie',
+      oneName: 'One',
     }
   }
 };
