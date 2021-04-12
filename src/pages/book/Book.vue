@@ -4,7 +4,7 @@
     :show-header="false"
   >
     <template #router-view>
-      <div class="movie-container" :style="{ 'height': worldlineContainerHeight }">
+      <div class="base-container" :style="{ 'height': worldlineContainerHeight }">
         <div class="bar">
           <div class="type">
             <template v-if="types.length > 0">
@@ -51,6 +51,9 @@
                     </div>
                     <div class="title">
                       <a :href="item.content_origin.link" target="_blank">{{ item.content }}</a>
+                    </div>
+                    <div class="intro">
+                      {{ `${item.content_origin.author} / ${item.content_origin.publisher} / ${item.content_origin.publishDate}` }}
                     </div>
                     <div class="rate">
                       <a-rate v-if="item.content_origin.rate" v-model="item.content_origin.rate" disabled />
@@ -114,10 +117,10 @@ import _ from 'lodash';
 import dayjs from 'dayjs';
 import infiniteScroll from 'vue-infinite-scroll';
 import PageViewSlot from '@/layouts/PageViewSlot';
-import { Movie } from '@/services';
+import { Book as Base } from '@/services';
 
 export default {
-  name: 'Movie',
+  name: 'Book',
   i18n: require('./i18n'),
   directives: {
     infiniteScroll,
@@ -169,7 +172,7 @@ export default {
     },
     async index() {
       const { offset, limit, type } = this;
-      const res = await Movie.index({ offset, limit, type });
+      const res = await Base.index({ offset, limit, type });
       if (res.data.code === 0) {
         const { items, totalCount } = res.data.data;
         this.total = totalCount;
@@ -186,7 +189,7 @@ export default {
       this.index();
     },
     async getTypes() {
-      const res = await Movie.types();
+      const res = await Base.types();
       if (res.data.code === 0) {
         this.types = res.data.data.items;
         this.type = res.data.data.items[0].key;
@@ -206,7 +209,7 @@ export default {
     },
     async sync(force = false) {
       this.syncLoading = true;
-      const res = await Movie.sync(force);
+      const res = await Base.sync(force);
       this.syncLoading = false;
       if (res.data.code === 0) {
         this.$message.success('搞定！（' + res.data.data.totalCount + '）');
