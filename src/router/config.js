@@ -79,6 +79,15 @@ const options = {
           },
           component: () => import('@/pages/movie')
         },
+        // 读书
+        {
+          path: 'book',
+          name: '读书',
+          meta: {
+            icon: 'book'
+          },
+          component: () => import('@/pages/book')
+        },
         // 世界线
         {
           path: 'worldline',

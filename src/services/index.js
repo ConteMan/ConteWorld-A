@@ -8,6 +8,7 @@ import Token from '@/services/modules/token';
 import Worldline from '@/services/modules/worldline';
 import Movie from '@/services/modules/movie';
 import Talk from '@/services/modules/talk';
+import Book from '@/services/modules/book';
 
 export {
   User,
@@ -20,4 +21,5 @@ export {
   Worldline,
   Movie,
   Talk,
+  Book,
 };
