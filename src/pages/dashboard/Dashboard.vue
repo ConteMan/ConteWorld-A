@@ -7,7 +7,7 @@
       <div class="statistic">
         <a-statistic :title="$t('articleName')" :value="statistic.article" />
         <a-statistic :title="$t('talkName')" :value="statistic.talk" />
-        <a-statistic :title="$t('movieName')" :value="statistic.talk" />
+        <a-statistic :title="$t('movieName')" :value="statistic.movie" />
         <a-statistic :title="$t('oneName')" :value="statistic.one" />
       </div>
     </div>
