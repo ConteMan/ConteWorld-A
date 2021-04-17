@@ -88,6 +88,22 @@ const options = {
           },
           component: () => import('@/pages/book')
         },
+        // 软件
+        {
+          path: 'software',
+          name: '软件',
+          meta: {
+            icon: 'database'
+          },
+          component: PageView,
+          children: [
+            {
+              path: 'tag',
+              name: '标签',
+              component: () => import('@/pages/softwareTag'),
+            },
+          ]
+        },
         // 世界线
         {
           path: 'worldline',
