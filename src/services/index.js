@@ -10,6 +10,7 @@ import Movie from '@/services/modules/movie.js';
 import Talk from '@/services/modules/talk.js';
 import Book from '@/services/modules/book.js';
 import SoftwareTag from '@/services/modules/softwareTag.js';
+import Software from '@/services/modules/software.js';
 
 export {
   User,
@@ -24,4 +25,5 @@ export {
   Talk,
   Book,
   SoftwareTag,
+  Software,
 };

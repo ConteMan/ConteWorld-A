@@ -98,6 +98,11 @@ const options = {
           component: PageView,
           children: [
             {
+              path: 'list',
+              name: '列表',
+              component: () => import('@/pages/software'),
+            },
+            {
               path: 'tag',
               name: '标签',
               component: () => import('@/pages/softwareTag'),
