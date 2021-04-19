@@ -101,7 +101,7 @@
           <a-button :disabled="submitLoading" @click="drawClose">
             {{ $t('cancel') }}
           </a-button>
-          <a-button type="primary" @loading="submitLoading" @click="formSubmit">
+          <a-button type="primary" :loading="submitLoading" @click="formSubmit">
             {{ $t('submit') }}
           </a-button>
         </a-space>
@@ -242,7 +242,10 @@ export default {
           this.submitLoading = false;
           if (res.data.code === 0) {
             this.$message.success(this.$t('result.success'));
-            this.drawerVisible = false;
+            this.$refs.drawerForm.resetFields();
+            if (this.editMode) {
+              this.current = {};
+            }
             this.initIndex();
           } else {
             this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'));

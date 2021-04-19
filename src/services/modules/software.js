@@ -9,11 +9,12 @@ const Software = {
    * 列表
    */
   index(params) {
-    const { offset, limit, status } = params;
+    const { offset, limit, status, tag } = params;
     return request(url, METHOD.GET, {
       offset,
       limit,
       status,
+      tag,
     });
   },
 

@@ -11,6 +11,26 @@
       >
         {{ $t('add') }}
       </a-button>
+
+      <div class="tag">
+        <a-checkable-tag
+          class="pointer"
+          :checked="!checkedTag.length"
+          @change="indexTagChange(undefined, $event)"
+        >
+          全部
+        </a-checkable-tag>
+        <a-checkable-tag
+          v-for="item in tags"
+          :key="item.id"
+          class="pointer"
+          :checked="checkedTag.includes(item.id)"
+          @change="indexTagChange(item, $event)"
+        >
+          {{ item.name }}
+        </a-checkable-tag>
+      </div>
+
       <div class="status">
         <a-checkable-tag
           class="pointer"
@@ -115,6 +135,9 @@
             </a-select-option>
           </a-select>
         </a-form-model-item>
+        <a-form-model-item label="扩展" prop="download_url">
+          <a-textarea v-model="form.extend" :rows="4" />
+        </a-form-model-item>
         <a-form-model-item label="状态">
           <a-select dropdown-class-name="item-min-width" :value="form.status" @change="formStatusChange">
             <a-select-option v-for="item in statuses" :key="item.key" :value="item.key">{{ item.value }}</a-select-option>
@@ -126,7 +149,7 @@
           <a-button :disabled="submitLoading" @click="drawClose">
             {{ $t('cancel') }}
           </a-button>
-          <a-button type="primary" @loading="submitLoading" @click="formSubmit">
+          <a-button type="primary" :loading="submitLoading" @click="formSubmit">
             {{ $t('submit') }}
           </a-button>
         </a-space>
@@ -137,6 +160,7 @@
 
 <script>
 import { Software as Base, SoftwareTag } from '@/services';
+import _ from 'lodash';
 
 export default {
   name: 'Software',
@@ -160,12 +184,23 @@ export default {
       statuses: [],
       tags: [],
       checkedStatus: 1,
+      checkedTag: [],
 
       current: {},
 
       editMode: false,
       drawVisible: false,
       submitLoading: false,
+      formInit: {
+        name: '',
+        status: 1,
+        site_url: '',
+        download_url: '',
+        description: '',
+        version: '',
+        tags: [],
+        extend: '',
+      },
       form: {
         name: '',
         status: 1,
@@ -174,6 +209,7 @@ export default {
         description: '',
         version: '',
         tags: [],
+        extend: '',
       },
       rules: {
         name: [
@@ -192,21 +228,25 @@ export default {
     onSizeChange(current, size) {
       this.page = current;
       this.offset = (current - 1) * size;
-      this.limit = size;
+      this.limit = this.offset + size;
       this.index();
     },
     onPageChange(page, pageSize) {
       this.page = page;
       this.offset = (page - 1) * pageSize;
-      this.limit = pageSize;
+      this.limit = this.offset + pageSize;
       this.index();
     },
 
     // 列表
     async index() {
       this.loading = true;
-      const { offset, limit, checkedStatus: status } = this;
-      const res = await Base.index({ offset, limit, status });
+      const { offset, limit, checkedStatus: status, checkedTag: tag } = this;
+      let tagStr = '';
+      if (tag) {
+        tagStr = tag.join(',');
+      }
+      const res = await Base.index({ offset, limit, status, tag: tagStr });
       if (res.data.code === 0) {
         const { items, totalCount } = res.data.data;
         this.items = items;
@@ -219,6 +259,18 @@ export default {
         this.checkedStatus = status;
       } else {
         this.checkedStatus = undefined;
+      }
+      this.index();
+    },
+    indexTagChange(item, checked) {
+      if (checked) {
+        if (typeof item === 'undefined') {
+          this.checkedTag = [];
+        } else {
+          this.checkedTag.push(item.id);
+        }
+      } else {
+        _.pull(this.checkedTag, item.id);
       }
       this.index();
     },
@@ -245,6 +297,9 @@ export default {
       const res = await Base.edit(id);
       if (res.data.code === 0) {
         const item = res.data.data.item;
+        if (item.extend) {
+          item.extend = JSON.stringify(item.extend);
+        }
         this.current = item;
         this.form = item;
       }
@@ -252,15 +307,18 @@ export default {
 
     async drawOpen(editMode = false, id = 0) {
       this.editMode = Boolean(editMode);
+      this.form = { ...this.formInit };
       if (this.editMode) {
         await this.edit(id);
       }
       this.drawVisible = true;
     },
     drawClose() {
-      this.drawVisible = false;
       this.$refs.drawerForm.resetFields();
+      this.form = { ...this.formInit };
+      this.editMode = false;
       this.current = {};
+      this.drawVisible = false;
     },
 
     formStatusChange(value) {
@@ -272,17 +330,22 @@ export default {
     formSubmit() {
       this.$refs.drawerForm.validate(async valid => {
         if (valid) {
+          const submitForm = { ...this.form };
+          submitForm.extend = JSON.parse(submitForm.extend);
           this.submitLoading = true;
           let res = {};
           if (this.editMode) {
-            res = await Base.update({ id: this.current.id, ...this.form });
+            res = await Base.update({ id: this.current.id, ...submitForm });
           } else {
-            res = await Base.create(this.form);
+            res = await Base.create(submitForm);
           }
           this.submitLoading = false;
           if (res.data.code === 0) {
             this.$message.success(this.$t('result.success'));
-            this.drawerVisible = false;
+            this.$refs.drawerForm.resetFields();
+            if (this.editMode) {
+              this.drawClose();
+            }
             this.initIndex();
           } else {
             this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'));
