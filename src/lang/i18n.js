@@ -23,6 +23,7 @@ module.exports = {
       talkName: '说说',
       movieName: '影视',
       oneName: '一个',
+      softwareName: '软件',
     },
     HK: {
       cancel: '取消',
@@ -47,6 +48,7 @@ module.exports = {
       talkName: '说说',
       movieName: '影视',
       oneName: '一个',
+      softwareName: '软件',
     },
     US: {
       cancel: 'Cancel',
@@ -71,6 +73,7 @@ module.exports = {
       talkName: 'Talk',
       movieName: 'Movie',
       oneName: 'One',
+      softwareName: 'Software',
     }
   }
 };

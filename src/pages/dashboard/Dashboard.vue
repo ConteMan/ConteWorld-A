@@ -8,6 +8,7 @@
         <a-statistic :title="$t('articleName')" :value="statistic.article" />
         <a-statistic :title="$t('talkName')" :value="statistic.talk" />
         <a-statistic :title="$t('movieName')" :value="statistic.movie" />
+        <a-statistic :title="$t('softwareName')" :value="statistic.software" />
         <a-statistic :title="$t('oneName')" :value="statistic.one" />
       </div>
     </div>

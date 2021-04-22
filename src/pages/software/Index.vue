@@ -72,6 +72,9 @@
           <div class="title">
             {{ item.name }}
           </div>
+          <div v-if="item.version" class="version">
+            {{ item.version }} / {{ $dayjs(item.extend.latest.published_at).format('YYYY-MM-DD HH:mm:ss') }}
+          </div>
         </a-list-item>
       </a-list>
     </a-card>
@@ -136,7 +139,8 @@
           </a-select>
         </a-form-model-item>
         <a-form-model-item label="扩展" prop="download_url">
-          <a-textarea v-model="form.extend" :rows="4" />
+          <!-- <a-textarea v-model="form.extend" :rows="4" /> -->
+          <div id="json-editor" />
         </a-form-model-item>
         <a-form-model-item label="状态">
           <a-select dropdown-class-name="item-min-width" :value="form.status" @change="formStatusChange">
@@ -161,6 +165,9 @@
 <script>
 import { Software as Base, SoftwareTag } from '@/services';
 import _ from 'lodash';
+import JSONEditor from 'jsoneditor';
+import 'jsoneditor/dist/jsoneditor.css';
+import { isJSON } from '@/utils/util.js';
 
 export default {
   name: 'Software',
@@ -213,9 +220,12 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '标签是啥', trigger: 'blur' },
+          { required: true, message: '请输入名称', trigger: 'blur' },
         ],
       },
+
+      jsonEditorInit: false,
+      jsonEditor: {},
     };
   },
   async created() {
@@ -297,9 +307,6 @@ export default {
       const res = await Base.edit(id);
       if (res.data.code === 0) {
         const item = res.data.data.item;
-        if (item.extend) {
-          item.extend = JSON.stringify(item.extend);
-        }
         this.current = item;
         this.form = item;
       }
@@ -312,8 +319,24 @@ export default {
         await this.edit(id);
       }
       this.drawVisible = true;
+      this.$nextTick(() => {
+        if (!this.jsonEditorInit) {
+          const container = document.getElementById('json-editor');
+          const options = {
+            modes: ['tree', 'code', 'form', 'text', 'view', 'preview'],
+          };
+          this.jsonEditor = new JSONEditor(container, options);
+          this.jsonEditorInit = true;
+        }
+        if (this.editMode) {
+          this.jsonEditor.set(this.current.extend);
+        } else {
+          this.jsonEditor.set({ crawler: '' });
+        }
+      });
     },
     drawClose() {
+      this.jsonEditor.set('');
       this.$refs.drawerForm.resetFields();
       this.form = { ...this.formInit };
       this.editMode = false;
@@ -329,29 +352,39 @@ export default {
     },
     formSubmit() {
       this.$refs.drawerForm.validate(async valid => {
-        if (valid) {
-          const submitForm = { ...this.form };
-          submitForm.extend = JSON.parse(submitForm.extend);
-          this.submitLoading = true;
-          let res = {};
-          if (this.editMode) {
-            res = await Base.update({ id: this.current.id, ...submitForm });
-          } else {
-            res = await Base.create(submitForm);
-          }
-          this.submitLoading = false;
-          if (res.data.code === 0) {
-            this.$message.success(this.$t('result.success'));
-            this.$refs.drawerForm.resetFields();
-            if (this.editMode) {
-              this.drawClose();
+        try {
+          if (valid) {
+            const extend = this.jsonEditor.get();
+            if (!isJSON(extend)) {
+              this.$message.error('extend error');
+              return false;
             }
-            this.initIndex();
+            const submitForm = { ...this.form };
+            submitForm.extend = extend;
+            this.submitLoading = true;
+            let res = {};
+            if (this.editMode) {
+              res = await Base.update({ id: this.current.id, ...submitForm });
+            } else {
+              res = await Base.create(submitForm);
+            }
+            this.submitLoading = false;
+            if (res.data.code === 0) {
+              this.$message.success(this.$t('result.success'));
+              this.$refs.drawerForm.resetFields();
+              if (this.editMode) {
+                this.drawClose();
+              }
+              this.initIndex();
+            } else {
+              this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'));
+            }
           } else {
-            this.$message.error(res.data.msg ? res.data.msg : this.$t('result.error'));
+            return false;
           }
-        } else {
-          return false;
+        } catch (e) {
+          console.log(e);
+          this.$message.error('extend error');
         }
       });
     }
