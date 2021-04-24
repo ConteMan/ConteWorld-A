@@ -143,7 +143,7 @@ export default {
   methods: {
     mouseenter(e, key, val) {
       const t = val > 0 ? val : 'No';
-      this.tipText = t + ' contributions on <span style="color:#aaa">' + key + '</span>';
+      this.tipText = t + ' / <span style="color:#aaa">' + key + '</span>';
       this.$nextTick(function() {
         const w = Number(this.$refs.tipText.offsetWidth);
         const h = Number(this.$refs.tipText.offsetHeight);
