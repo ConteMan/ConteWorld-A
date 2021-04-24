@@ -210,8 +210,8 @@ export default {
       _this.talkEditorHeight = height;
     });
     const editorContainerEl = document.getElementById('editor-container');
-    editorContainerEl.addEventListener('keydown', this.keydownDeal);
-    editorContainerEl.addEventListener('keyup', this.keyupDeal);
+    editorContainerEl.addEventListener('keydown', this.keyDownDeal);
+    editorContainerEl.addEventListener('keyup', this.keyUpDeal);
   },
   beforeDestroy() {
     this.editor.destroy();
@@ -257,6 +257,7 @@ export default {
         this.editor.setContent('');
         this.init();
         this.index();
+        this.getContribution();
         this.$message.success('搞定！');
       } else {
         this.$message.error('有点问题！');
@@ -265,7 +266,7 @@ export default {
     focus() {
       this.editor.focus();
     },
-    keydownDeal(e) {
+    keyDownDeal(e) {
       if (e.key === 'Meta') {
         this.keyCode1 = 'Meta';
       }
@@ -276,7 +277,7 @@ export default {
         this.talkSubmit();
       }
     },
-    keyupDeal(e) {
+    keyUpDeal(e) {
       if (['Meta', 'Enter'].includes(e.key)) {
         this.keyCode1 = '';
         this.keyCode2 = '';
