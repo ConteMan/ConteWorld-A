@@ -72,9 +72,6 @@
           <div class="title">
             {{ item.name }}
           </div>
-          <div v-if="item.version" class="version">
-            {{ item.version }} / {{ $dayjs(item.extend.latest.published_at).format('YYYY-MM-DD HH:mm:ss') }}
-          </div>
         </a-list-item>
       </a-list>
     </a-card>
@@ -113,14 +110,14 @@
         <a-form-model-item label="名称" prop="name">
           <a-input v-model="form.name" />
         </a-form-model-item>
-        <a-form-model-item label="版本" prop="version">
-          <a-input v-model="form.version" />
+        <a-form-model-item label="网站" prop="site_url">
+          <a-input v-model="form.site_url" />
         </a-form-model-item>
         <a-form-model-item label="简介" prop="description">
           <a-input v-model="form.description" />
         </a-form-model-item>
-        <a-form-model-item label="网站" prop="site_url">
-          <a-input v-model="form.site_url" />
+        <a-form-model-item label="版本">
+          <div id="json-editor-version" class="json-editor" />
         </a-form-model-item>
         <a-form-model-item label="下载" prop="download_url">
           <a-input v-model="form.download_url" />
@@ -138,9 +135,11 @@
             </a-select-option>
           </a-select>
         </a-form-model-item>
-        <a-form-model-item label="扩展" prop="download_url">
-          <!-- <a-textarea v-model="form.extend" :rows="4" /> -->
-          <div id="json-editor" />
+        <a-form-model-item label="设置">
+          <div id="json-editor-setting" class="json-editor" />
+        </a-form-model-item>
+        <a-form-model-item label="扩展">
+          <div id="json-editor-extend" class="json-editor" />
         </a-form-model-item>
         <a-form-model-item label="状态">
           <a-select dropdown-class-name="item-min-width" :value="form.status" @change="formStatusChange">
@@ -202,20 +201,20 @@ export default {
         name: '',
         status: 1,
         site_url: '',
-        download_url: '',
         description: '',
-        version: '',
         tags: [],
+        version: '',
+        setting: '',
         extend: '',
       },
       form: {
         name: '',
         status: 1,
         site_url: '',
-        download_url: '',
         description: '',
-        version: '',
         tags: [],
+        version: '',
+        setting: '',
         extend: '',
       },
       rules: {
@@ -225,7 +224,9 @@ export default {
       },
 
       jsonEditorInit: false,
-      jsonEditor: {},
+      jsonEditorVersion: {},
+      jsonEditorSetting: {},
+      jsonEditorExtend: {},
     };
   },
   async created() {
@@ -321,22 +322,32 @@ export default {
       this.drawVisible = true;
       this.$nextTick(() => {
         if (!this.jsonEditorInit) {
-          const container = document.getElementById('json-editor');
+          const containerVersion = document.getElementById('json-editor-version');
+          const containerSetting = document.getElementById('json-editor-setting');
+          const containerExtend = document.getElementById('json-editor-extend');
           const options = {
             modes: ['tree', 'code', 'form', 'text', 'view', 'preview'],
           };
-          this.jsonEditor = new JSONEditor(container, options);
+          this.jsonEditorVersion = new JSONEditor(containerVersion, options);
+          this.jsonEditorSetting = new JSONEditor(containerSetting, options);
+          this.jsonEditorExtend = new JSONEditor(containerExtend, options);
           this.jsonEditorInit = true;
         }
         if (this.editMode) {
-          this.jsonEditor.set(this.current.extend);
+          this.jsonEditorVersion.set(this.current.version);
+          this.jsonEditorSetting.set(this.current.setting);
+          this.jsonEditorExtend.set(this.current.extend);
         } else {
-          this.jsonEditor.set({ crawler: '' });
+          this.jsonEditorVersion.set({});
+          this.jsonEditorSetting.set({});
+          this.jsonEditorExtend.set({});
         }
       });
     },
     drawClose() {
-      this.jsonEditor.set('');
+      this.jsonEditorVersion.set('');
+      this.jsonEditorSetting.set('');
+      this.jsonEditorExtend.set('');
       this.$refs.drawerForm.resetFields();
       this.form = { ...this.formInit };
       this.editMode = false;
@@ -354,20 +365,34 @@ export default {
       this.$refs.drawerForm.validate(async valid => {
         try {
           if (valid) {
-            const extend = this.jsonEditor.get();
-            if (!isJSON(extend)) {
+            const version = this.jsonEditorVersion.get();
+            if (version && !isJSON(version)) {
+              this.$message.error('version error');
+              return false;
+            }
+            const setting = this.jsonEditorSetting.get();
+            if (setting && !isJSON(setting)) {
+              this.$message.error('setting error');
+              return false;
+            }
+            const extend = this.jsonEditorExtend.get();
+            if (extend && !isJSON(extend)) {
               this.$message.error('extend error');
               return false;
             }
             const submitForm = { ...this.form };
+            submitForm.version = version;
+            submitForm.setting = setting;
             submitForm.extend = extend;
             this.submitLoading = true;
+
             let res = {};
             if (this.editMode) {
               res = await Base.update({ id: this.current.id, ...submitForm });
             } else {
               res = await Base.create(submitForm);
             }
+
             this.submitLoading = false;
             if (res.data.code === 0) {
               this.$message.success(this.$t('result.success'));
