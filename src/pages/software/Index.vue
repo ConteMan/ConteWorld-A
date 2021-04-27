@@ -72,6 +72,14 @@
           <div class="title">
             {{ item.name }}
           </div>
+          <div v-if="item.version && Object.keys(item.version)" class="version">
+            <a-space :size="20">
+              <template v-for="(versionItem, versionIndex) in item.version">
+                <span v-if="versionIndex === 'default'" :key="versionIndex">{{ versionItem.version }}</span>
+                <span v-else :key="versionIndex">{{ versionIndex }} / {{ versionItem.version }}</span>
+              </template>
+            </a-space>
+          </div>
         </a-list-item>
       </a-list>
     </a-card>
