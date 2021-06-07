@@ -11,6 +11,7 @@ import Talk from '@/services/modules/talk.js';
 import Book from '@/services/modules/book.js';
 import SoftwareTag from '@/services/modules/softwareTag.js';
 import Software from '@/services/modules/software.js';
+import Project from '@/services/modules/project.js';
 
 export {
   User,
@@ -26,4 +27,5 @@ export {
   Book,
   SoftwareTag,
   Software,
+  Project,
 };

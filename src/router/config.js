@@ -109,6 +109,15 @@ const options = {
             },
           ]
         },
+        // 项目
+        {
+          path: 'project',
+          name: '项目',
+          meta: {
+            icon: 'project'
+          },
+          component: () => import('@/pages/project')
+        },
         // 世界线
         {
           path: 'worldline',
