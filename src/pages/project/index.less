@@ -1,0 +1,82 @@
+@import "../../theme/default/public.less";
+
+@{deep} .header-bar {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+}
+
+.action-bar {
+  border-bottom: 1px solid @conte-border-grey;
+  .tag {
+    padding: 10px 0 0 0;
+  }
+  .status {
+    padding: 10px 0 0 0;
+  }
+}
+
+.list-item {
+  padding: 20px 0;
+  @{deep} .ant-list-item-extra {
+    display: none;
+    margin: auto;
+  }
+  &:hover {
+    @{deep} .ant-list-item-extra {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+    }
+  }
+  .title {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .info-at {
+    color: @text-color-secondary;
+    font-size: 12px;
+    font-style: italic;
+    margin-top: 5px;
+  }
+  .tag {
+    margin-top: 5px;
+  }
+  .version {
+    margin-top: 8px;
+    color: @gray-6;
+  }
+}
+
+.json-editor {
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+}
+
+@{deep} :focus {
+  outline-style: none;
+}
+
+@{deep} .jsoneditor {
+  min-height: 200px;
+  border: 1px solid @gray-6;
+  .jsoneditor-menu {
+    background: @gray-6;
+    border-bottom: 1px solid @gray-6;
+    a.jsoneditor-poweredBy{
+      display: none;
+    }
+  }
+}
+@{deep} .form-action {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  border-top: 1px solid #e9e9e9;
+  padding: 10px 16px;
+  background: #fff;
+  text-align: right;
+  z-index: 1;
+}

@@ -14,6 +14,7 @@ module.exports = {
       create: '创建',
       delete: '删除',
       delConfirm: '确定删除？',
+      sync: '同步',
       result: {
         success: '操作成功！',
         error: '操作失败！',
@@ -39,6 +40,7 @@ module.exports = {
       create: '创建',
       delete: '删除',
       delConfirm: '确定删除？',
+      sync: '同步',
       result: {
         success: '操作成功！',
         error: '操作失败！',
@@ -64,6 +66,7 @@ module.exports = {
       create: 'Create',
       delete: 'Delete',
       delConfirm: 'Sure Delete?',
+      sync: 'Sync',
       result: {
         success: 'Success!',
         error: 'Failed!',
