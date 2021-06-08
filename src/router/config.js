@@ -88,12 +88,21 @@ const options = {
           },
           component: () => import('@/pages/book')
         },
+        // 项目
+        {
+          path: 'project',
+          name: '项目',
+          meta: {
+            icon: 'project'
+          },
+          component: () => import('@/pages/project')
+        },
         // 软件
         {
           path: 'software',
           name: '软件',
           meta: {
-            icon: 'database'
+            icon: 'rocket'
           },
           component: PageView,
           children: [
@@ -108,24 +117,6 @@ const options = {
               component: () => import('@/pages/softwareTag'),
             },
           ]
-        },
-        // 项目
-        {
-          path: 'project',
-          name: '项目',
-          meta: {
-            icon: 'project'
-          },
-          component: () => import('@/pages/project')
-        },
-        // 世界线
-        {
-          path: 'worldline',
-          name: '世界线',
-          meta: {
-            icon: 'compass'
-          },
-          component: () => import('@/pages/worldline')
         },
         {
           path: 'database',
