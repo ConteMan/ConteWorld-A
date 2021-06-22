@@ -40,7 +40,7 @@ export default {
   props: {
     showHeader: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     desc: {
       type: String,
@@ -66,7 +66,7 @@ export default {
     },
     showBreadcrumb: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
   data() {

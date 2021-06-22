@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-card
-      class="action-bar"
+      class="action-bar no-padding-top"
       :bordered="false"
     >
       <a-button

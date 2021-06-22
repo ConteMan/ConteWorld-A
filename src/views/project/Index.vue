@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-card class="action-bar" :bordered="false">
+    <div class="action-bar">
       <a-button
         type="primary"
         size="small"
@@ -28,9 +28,9 @@
           {{ item.value }}
         </a-checkable-tag>
       </div>
-    </a-card>
+    </div>
 
-    <a-card :bordered="false">
+    <a-card class="no-padding" :bordered="false">
       <a-list
         item-layout="vertical"
         :loading="loading"
