@@ -9,8 +9,8 @@
   >
     <div :class="['logo', theme]">
       <router-link to="/dashboard">
-        <img src="@/assets/img/logo.png">
-        <h1>{{ systemName }}</h1>
+        <img v-if="collapsed" src="@/assets/img/logo.png">
+        <h1 v-if="!collapsed">{{ systemName }}</h1>
       </router-link>
     </div>
     <i-menu :theme="theme" :collapsed="collapsed" :options="menuData" class="menu" @select="onSelect" />
@@ -61,4 +61,13 @@ export default {
 
 <style lang="less" scoped>
 @import "index";
+.logo {
+  padding-left: 0 !important;
+  text-align: center;
+  h1 {
+    margin: 8px 0 0 0 !important;
+    width: 100%;
+    text-align: center;
+  }
+}
 </style>

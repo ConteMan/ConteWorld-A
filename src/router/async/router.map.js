@@ -10,28 +10,28 @@ const routerMap = {
   login: {
     authority: '*',
     path: '/login',
-    component: () => import('@/pages/login')
+    component: () => import('@/views/login')
   },
   demo: {
     name: '演示页',
     renderMenu: false,
-    component: () => import('@/pages/demo')
+    component: () => import('@/views/demo')
   },
   exp403: {
     authority: '*',
     name: 'exp403',
     path: '403',
-    component: () => import('@/pages/exception/403')
+    component: () => import('@/views/exception/403')
   },
   exp404: {
     name: 'exp404',
     path: '404',
-    component: () => import('@/pages/exception/404')
+    component: () => import('@/views/exception/404')
   },
   exp500: {
     name: 'exp500',
     path: '500',
-    component: () => import('@/pages/exception/500')
+    component: () => import('@/views/exception/500')
   },
   root: {
     path: '/',
